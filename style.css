@@ -1,0 +1,143 @@
+/* ----------------------
+   Kairavi’s Oven Magic
+   Global styles
+----------------------- */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+:root{
+  --cream:#FFF8F0;
+  --caramel:#FFB347;
+  --orange:#FF7F50;
+  --brown:#5A3E2B;
+  --choco:#3A2A20;
+  --ink:#222;
+  --muted:#6b6b6b;
+  --card:#ffffff;
+  --border:#ece3da;
+  --shadow:0 10px 25px rgba(0,0,0,.06);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--ink);
+  background:var(--cream);
+  line-height:1.6;
+}
+
+/* Header / Nav */
+.site-header{
+  position:sticky; top:0; z-index:50;
+  background:#fff; border-bottom:1px solid var(--border);
+  box-shadow:0 6px 16px rgba(0,0,0,.03);
+}
+.wrap{max-width:1120px;margin:0 auto;padding:0 18px}
+.nav{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 0;
+}
+.brand{display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--choco)}
+.brand img{width:40px;height:40px;border-radius:100%; object-fit:cover}
+.brand strong{font-size:1.1rem}
+.menu a{
+  text-decoration:none; color:var(--choco); font-weight:600; margin-left:18px;
+}
+.menu a:hover{color:var(--orange)}
+
+/* Hero */
+.hero{
+  background: radial-gradient(1000px 400px at 75% -150px, #ffe2c4 0%, rgba(255,226,196,0) 50%), linear-gradient(180deg,#ffe6cc 0%, #ffeede 60%, var(--cream) 100%);
+  border-bottom:1px solid var(--border);
+}
+.hero-inner{
+  display:grid; grid-template-columns: 1.2fr .8fr; gap:24px;
+  align-items:center; padding:42px 0;
+}
+.hero h1{font-size:2.2rem; line-height:1.2; color:var(--brown); margin:0 0 8px}
+.tagline{font-size:1.05rem; color:#7a5b46; margin:0 0 18px}
+.story{
+  background:#fff; border:1px solid var(--border); border-radius:14px; padding:14px 16px;
+  box-shadow:var(--shadow); color:#5b4a3f;
+}
+.hero-logo{
+  justify-self:end; background:#fff; border:1px solid var(--border); border-radius:18px;
+  padding:16px; box-shadow:var(--shadow)
+}
+.hero-logo img{width:120px;height:120px;object-fit:contain;display:block;margin:auto}
+.cta-row{margin-top:18px; display:flex; gap:12px; flex-wrap:wrap}
+.btn{
+  display:inline-block; padding:12px 18px; border-radius:10px; text-decoration:none; font-weight:700;
+  border:2px solid transparent; transition:.2s;
+}
+.btn-primary{background:var(--orange); color:#fff}
+.btn-primary:hover{filter:brightness(.95)}
+.btn-ghost{border-color:var(--brown); color:var(--brown); background:#fff}
+.btn-ghost:hover{background:#fff7f0}
+
+/* Sections */
+.section{padding:40px 0}
+.section h2{
+  text-align:center; margin:0 0 20px; color:var(--brown); font-size:1.7rem
+}
+.sub{color:var(--muted); text-align:center; margin:-8px 0 26px}
+
+/* Product grid */
+.grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:18px;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px; overflow:hidden; box-shadow:var(--shadow)
+}
+.card img{
+  width:100%; height:210px; object-fit:cover; display:block;
+  background:#f7efe6;
+}
+.card-body{padding:14px 14px 16px}
+.card h3{margin:0 0 6px; font-size:1.05rem; color:var(--choco)}
+.meta{display:flex; align-items:center; justify-content:space-between; color:var(--brown); font-weight:700}
+.muted{color:var(--muted); font-weight:500}
+.cart{
+  display:flex; gap:10px; align-items:center; margin-top:12px;
+}
+.qty{
+  width:80px; border:1px solid var(--border); border-radius:10px; padding:8px 10px; font-weight:600;
+}
+.addbtn{flex:1; text-align:center}
+
+/* Footer */
+footer{
+  border-top:1px solid var(--border);
+  background:#1f1f1f; color:#f7f7f7; padding:22px 0; margin-top:28px;
+}
+.footer-grid{
+  display:grid; grid-template-columns:1.2fr .8fr; gap:16px; align-items:center;
+}
+footer a{color:#fff}
+.small{font-size:.9rem; color:#c9c9c9}
+
+/* Floating WhatsApp */
+.whatsapp-float{
+  position:fixed; right:18px; bottom:18px; width:58px; height:58px;
+  background:#25D366; border-radius:50%;
+  display:grid; place-items:center; box-shadow:0 8px 18px rgba(0,0,0,.2);
+  z-index:80;
+}
+.whatsapp-float img{width:28px;height:28px}
+.whatsapp-float:hover{transform:translateY(-2px)}
+
+/* Responsive */
+@media (max-width: 900px){
+  .hero-inner{grid-template-columns:1fr}
+  .hero-logo{justify-self:center}
+  .grid{grid-template-columns: repeat(2, 1fr)}
+}
+@media (max-width: 560px){
+  .grid{grid-template-columns:1fr}
+  .nav{flex-direction:column; gap:8px}
+}
