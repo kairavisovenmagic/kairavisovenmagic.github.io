@@ -1,1 +1,16 @@
-temporary file
+| File name              | Description                                                       |
+| ---------------------- | ----------------------------------------------------------------- |
+| **logo.png**           | your round Kairavi’s Oven Magic logo                              |
+| **whatsapp.png**       | the small WhatsApp icon (around 48–64 px, transparent background) |
+| **gulkand.jpg**        | close-up of Gulkand Nankhatai                                     |
+| **wheat.jpg**          | Wheat Nankhatai                                                   |
+| **ragi.jpg**           | Ragi Nankhatai                                                    |
+| **oats.jpg**           | Oats Nankhatai                                                    |
+| **maize.jpg**          | Maize (Corn) Nankhatai                                            |
+| **jowar.jpg**          | Jowar Nankhatai                                                   |
+| **upvas.jpg**          | Upvas Nankhatai                                                   |
+| **chocolate.jpg**      | Chocolate Nankhatai                                               |
+| **ajwain-sticks.jpg**  | Ajwain Sticks                                                     |
+| **ajwain-cookies.jpg** | Ajwain Cookies                                                    |
+| **jeera.jpg**          | Jeera Nankhatai                                                   |
+| **marble.jpg**         | Marble Cookies                                                    |
