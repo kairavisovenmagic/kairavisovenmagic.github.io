@@ -110,16 +110,6 @@ body{
 }
 .addbtn{flex:1; text-align:center}
 
-/* Footer */
-footer{
-  border-top:1px solid var(--border);
-  background:#1f1f1f; color:#f7f7f7; padding:22px 0; margin-top:28px;
-}
-.footer-grid{
-  display:grid; grid-template-columns:1.2fr .8fr; gap:16px; align-items:center;
-}
-footer a{color:#fff}
-.small{font-size:.9rem; color:#c9c9c9}
 /* Reviews */
 .reviews { padding: 40px 0 }
 .reviews-grid{
@@ -139,6 +129,17 @@ footer a{color:#fff}
 @media (max-width:900px){ .reviews-grid{ grid-template-columns:repeat(2,1fr) } }
 @media (max-width:560px){ .reviews-grid{ grid-template-columns:1fr } }
 
+
+/* Footer */
+footer{
+  border-top:1px solid var(--border);
+  background:#1f1f1f; color:#f7f7f7; padding:22px 0; margin-top:28px;
+}
+.footer-grid{
+  display:grid; grid-template-columns:1.2fr .8fr; gap:16px; align-items:center;
+}
+footer a{color:#fff}
+.small{font-size:.9rem; color:#c9c9c9}
 
 /* Floating WhatsApp */
 .whatsapp-float{
