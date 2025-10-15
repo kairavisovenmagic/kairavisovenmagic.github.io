@@ -2,248 +2,178 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Karavi’s Oven Magic | Homemade Nankhatai & Cookies</title>
-  <meta name="description" content="Fresh, homemade Nankhatai and cookies — wheat, ragi, oats, maize & gulkand variants. No maida, no preservatives. Order on WhatsApp." />
-  <meta name="theme-color" content="#6b3b26" />
-  <link rel="icon" href="/favicon.png" />
-  <!-- Open Graph -->
-  <meta property="og:title" content="Karavi’s Oven Magic" />
-  <meta property="og:description" content="Fresh, homemade Nankhatai & cookies. Pune delivery." />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://example.com/cover.jpg" />
-  <meta property="og:url" content="https://<your-username>.github.io/karavis-oven-magic/" />
-  <!-- JSON-LD -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Bakery",
-    "name": "Karavi’s Oven Magic",
-    "address": {"@type":"PostalAddress","addressLocality":"Pune","addressCountry":"IN"},
-    "servesCuisine": "Bakery",
-    "url": "https://<your-username>.github.io/karavis-oven-magic/",
-    "priceRange": "₹₹",
-    "telephone": "+91-XXXXXXXXXX"
-  }
-  </script>
-  <style>
-    :root {
-      --brand: #6b3b26;      /* cocoa brown */
-      --brand-2: #f1e6d6;    /* warm cream */
-      --accent: #c68a3b;     /* honey gold */
-      --ink: #2a2a2a;
-    }
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Noto Sans", Arial, "Apple Color Emoji", "Segoe UI Emoji"; color: var(--ink); background: #fff; }
-    a { color: var(--brand); text-decoration: none; }
-    .container { width: min(1100px, 92vw); margin: 0 auto; }
-    header {
-      position: sticky; top: 0; z-index: 10;
-      backdrop-filter: blur(6px);
-      background: color-mix(in srgb, var(--brand-2) 80%, #fff 20% / 70%);
-      border-bottom: 1px solid #e9e2d8;
-    }
-    .nav { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; }
-    .brand { display: flex; gap: 10px; align-items: center; }
-    .logo { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--brand), var(--accent)); box-shadow: 0 3px 10px rgba(0,0,0,.15); }
-    .brand h1 { font-size: 1.1rem; margin: 0; color: var(--brand); letter-spacing:.3px; }
-    .links a { margin-left: 16px; font-weight: 600; }
-
-    .hero { position: relative; isolation: isolate; }
-    .hero .bg { position: absolute; inset: 0; z-index: -1; background: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat; filter: brightness(.6); }
-    .hero .inner { padding: 88px 0 72px; color: #fff; text-shadow: 0 2px 12px rgba(0,0,0,.35); }
-    .hero h2 { font-size: clamp(2rem, 3.2vw, 3rem); margin: 0 0 10px; font-weight: 800; }
-    .hero p { font-size: 1.05rem; margin: 0 0 20px; }
-    .cta { display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; background: var(--accent); color:#1b120a; border-radius: 12px; font-weight: 800; box-shadow: 0 6px 18px rgba(0,0,0,.2); }
-    .badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
-    .badge { background: rgba(255,255,255,.88); color: #3a2c23; padding: 6px 10px; border-radius: 999px; font-weight: 700; font-size: .9rem; border: 1px solid rgba(255,255,255,.6); }
-
-    .section { padding: 56px 0; }
-    .section h3 { font-size: 1.7rem; margin: 0 0 18px; color: var(--brand); }
-    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px; }
-    .card { grid-column: span 12; background: #fff; border: 1px solid #eee2d8; border-radius: 18px; overflow: hidden; box-shadow: 0 6px 24px rgba(0,0,0,.06); display: flex; flex-direction: column; }
-    .card img { width: 100%; height: 200px; object-fit: cover; }
-    .card .p { padding: 14px; }
-    .row-3 > * { grid-column: span 12; }
-    @media (min-width: 720px){ .row-3 > * { grid-column: span 4; } }
-
-    .price { font-weight: 800; color: var(--brand); font-size: 1.1rem; }
-    .btn { display: inline-block; padding: 10px 14px; border-radius: 10px; background: var(--brand); color: #fff; font-weight: 700; }
-    .btn.alt { background: var(--accent); color: #1b120a; font-weight: 800; }
-
-    .menu table { width: 100%; border-collapse: collapse; }
-    .menu th, .menu td { padding: 12px; border-bottom: 1px dashed #e8dccf; text-align: left; }
-    .menu th { background: var(--brand-2); color: var(--brand); }
-
-    blockquote { margin: 0; padding: 18px; background: #fff9f0; border-left: 6px solid var(--accent); border-radius: 12px; }
-
-    .gallery { display: grid; grid-template-columns: repeat(12, 1fr); gap: 10px; }
-    .gallery img { width: 100%; height: 180px; object-fit: cover; border-radius: 14px; }
-    .gallery > * { grid-column: span 6; }
-    @media (min-width:720px){ .gallery > * { grid-column: span 3; } }
-
-    .contact { background: linear-gradient(180deg, #fff, var(--brand-2)); border-top: 1px solid #e9e2d8; }
-    form { display: grid; gap: 12px; }
-    input, textarea { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid #e0d5c7; background: #fff; font: inherit; }
-
-    footer { padding: 28px 0 40px; background: var(--brand); color: #fcefe1; }
-    footer .foot { display: grid; gap: 16px; }
-    @media (min-width:720px){ footer .foot { grid-template-columns: 1fr auto; align-items: center; } }
-  </style>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kairavi’s Oven Magic | Homemade Cookies & Nankhatai</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="images/logo.png" />
+  <meta name="description" content="Homemade cookies & nankhatai – fresh, pure & delicious. Order on WhatsApp. Kairavi’s Oven Magic." />
 </head>
 <body>
-  <header>
-    <div class="container nav">
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <h1>Karavi’s Oven Magic</h1>
-      </div>
-      <nav class="links">
-        <a href="#products">Products</a>
-        <a href="#menu">Menu</a>
-        <a href="#reviews">Reviews</a>
-        <a href="#contact">Contact</a>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="index.html">
+        <img src="images/logo.png" alt="Kairavi’s Oven Magic logo">
+        <strong>Kairavi’s Oven Magic</strong>
+      </a>
+      <nav class="menu">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="contact.html">Contact</a>
       </nav>
     </div>
   </header>
 
+  <!-- Hero with banner + story -->
   <section class="hero">
-    <div class="bg" aria-hidden="true"></div>
-    <div class="container inner">
-      <h2>Homemade Nankhatai & Cookies — baked fresh in Pune</h2>
-      <p>No Maida • No Preservatives • Honest Ingredients</p>
-      <a class="cta" href="https://wa.me/91XXXXXXXXXX?text=Hi%20Karavi%E2%80%99s%20Oven%20Magic!%20I%20want%20to%20order%20Nankhatai." target="_blank" rel="noopener">Order on WhatsApp →</a>
-      <div class="badges">
-        <span class="badge">✔️ 100% Wheat / Ragi / Oats</span>
-        <span class="badge">✔️ Pure & Sattvik (Upvas option)</span>
-        <span class="badge">✔️ Small–batch, homemade</span>
-      </div>
-    </div>
-  </section>
-
-  <section id="products" class="section container">
-    <h3>Bestsellers</h3>
-    <div class="grid row-3">
-      <!-- Card template -->
-      <article class="card">
-        <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1600&auto=format&fit=crop" alt="Wheat Nankhatai" />
-        <div class="p">
-          <h4>Wheat Nankhatai</h4>
-          <p>Classic, melt-in-mouth goodness.</p>
-          <p class="price">₹150 / 250 g</p>
-          <a class="btn" href="https://wa.me/91XXXXXXXXXX?text=Order:%20Wheat%20Nankhatai%20250g" target="_blank" rel="noopener">Order</a>
-        </div>
-      </article>
-      <article class="card">
-        <img src="https://images.unsplash.com/photo-1516054575922-1be8a6f2de04?q=80&w=1600&auto=format&fit=crop" alt="Ragi Nankhatai" />
-        <div class="p">
-          <h4>Ragi Nankhatai</h4>
-          <p>Wholesome & nutty; crowd favorite.</p>
-          <p class="price">₹250 / 250 g</p>
-          <a class="btn" href="https://wa.me/91XXXXXXXXXX?text=Order:%20Ragi%20Nankhatai%20250g" target="_blank" rel="noopener">Order</a>
-        </div>
-      </article>
-      <article class="card">
-        <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?q=80&w=1600&auto=format&fit=crop" alt="Gulkand Nankhatai" />
-        <div class="p">
-          <h4>Gulkand Nankhatai</h4>
-          <p>Rosey-sweet, aromatic delight.</p>
-          <p class="price">₹250 / 250 g</p>
-          <a class="btn" href="https://wa.me/91XXXXXXXXXX?text=Order:%20Gulkand%20Nankhatai%20250g" target="_blank" rel="noopener">Order</a>
-        </div>
-      </article>
-      <article class="card">
-        <img src="https://images.unsplash.com/photo-1546857091-df4b2053ddc5?q=80&w=1600&auto=format&fit=crop" alt="Oats Nankhatai" />
-        <div class="p">
-          <h4>Oats Nankhatai</h4>
-          <p>High-fibre & lightly sweet.</p>
-          <p class="price">₹250 / 250 g</p>
-          <a class="btn" href="https://wa.me/91XXXXXXXXXX?text=Order:%20Oats%20Nankhatai%20250g" target="_blank" rel="noopener">Order</a>
-        </div>
-      </article>
-      <article class="card">
-        <img src="https://images.unsplash.com/photo-1549931319-a545dcf3bc73?q=80&w=1600&auto=format&fit=crop" alt="Maize (Corn) Nankhatai" />
-        <div class="p">
-          <h4>Maize (Corn) Nankhatai</h4>
-          <p>Crispy & crunchy, 100% maize.</p>
-          <p class="price">₹250 / 250 g</p>
-          <a class="btn" href="https://wa.me/91XXXXXXXXXX?text=Order:%20Maize%20Nankhatai%20250g" target="_blank" rel="noopener">Order</a>
-        </div>
-      </article>
-      <article class="card">
-        <img src="https://images.unsplash.com/photo-1541782814452-d2a6429a8442?q=80&w=1600&auto=format&fit=crop" alt="Upvas Nankhatai" />
-        <div class="p">
-          <h4>Upvas Nankhatai</h4>
-          <p>Pure & sattvik ingredients.</p>
-          <p class="price">₹— / 250 g</p>
-          <a class="btn" href="https://wa.me/91XXXXXXXXXX?text=Order:%20Upvas%20Nankhatai%20250g" target="_blank" rel="noopener">Order</a>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <section id="menu" class="section container menu">
-    <h3>Menu & Prices</h3>
-    <table>
-      <thead><tr><th>Item</th><th>Pack</th><th>Price</th><th>Notes</th></tr></thead>
-      <tbody>
-        <tr><td>Wheat Nankhatai</td><td>250 g</td><td>₹150</td><td>No maida</td></tr>
-        <tr><td>Ragi Nankhatai</td><td>250 g</td><td>₹250</td><td>High fibre</td></tr>
-        <tr><td>Gulkand Nankhatai</td><td>250 g</td><td>₹250</td><td>Rose delight</td></tr>
-        <tr><td>Oats Nankhatai</td><td>250 g</td><td>₹250</td><td>High fibre</td></tr>
-        <tr><td>Maize (Corn) Nankhatai</td><td>250 g</td><td>₹250</td><td>Crispy & crunchy</td></tr>
-        <tr><td>Upvas Nankhatai</td><td>250 g</td><td>₹—</td><td>Pure & sattvik</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section id="reviews" class="section container">
-    <h3>What Customers Say</h3>
-    <blockquote>
-      “Melt-in-mouth and perfectly balanced sweetness! Delivery was on time. Highly recommended.” — ⭐⭐⭐⭐⭐
-    </blockquote>
-  </section>
-
-  <section class="section container">
-    <h3>Gallery</h3>
-    <div class="gallery">
-      <img src="https://images.unsplash.com/photo-1541782814452-d2a6429a8442?q=80&w=1600&auto=format&fit=crop" alt="Nankhatai closeup" />
-      <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?q=80&w=1600&auto=format&fit=crop" alt="Cookies assortment" />
-      <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1600&auto=format&fit=crop" alt="Wheat cookies" />
-      <img src="https://images.unsplash.com/photo-1516054575922-1be8a6f2de04?q=80&w=1600&auto=format&fit=crop" alt="Ragi cookies" />
-    </div>
-  </section>
-
-  <section id="contact" class="section contact">
-    <div class="container">
-      <h3>Contact & Orders</h3>
-      <div class="grid" style="grid-template-columns: repeat(12, 1fr); gap: 24px;">
-        <div style="grid-column: span 12;">
-          <p><strong>WhatsApp:</strong> <a class="btn alt" href="https://wa.me/91XXXXXXXXXX?text=Hi%20Karavi%E2%80%99s%20Oven%20Magic,%20I%20want%20to%20order." target="_blank" rel="noopener">Message us on WhatsApp</a></p>
-          <p><strong>Email:</strong> karavisovenmagic@example.com</p>
-          <p><strong>Service area:</strong> Pune & nearby</p>
-        </div>
-        <div style="grid-column: span 12;">
-          <form action="https://formspree.io/f/your-id" method="POST">
-            <input type="text" name="name" placeholder="Your name" required />
-            <input type="email" name="email" placeholder="Email (optional)" />
-            <textarea name="message" rows="5" placeholder="Your order or message" required></textarea>
-            <button class="btn" type="submit">Send</button>
-          </form>
-          <p style="font-size:.9rem;color:#6f5c48;margin-top:8px">By submitting, you agree to be contacted regarding your order.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    <div class="container foot">
+    <div class="wrap hero-inner">
       <div>
-        <strong>Karavi’s Oven Magic</strong> — Homemade Nankhatai & Cookies • Pune<br/>
-        FSSAI: XXXXXXXXXXXXX • Veg ✔
+        <h1>Freshly Baked Happiness, Straight from Vandana’s Kitchen</h1>
+        <p class="tagline">Small-batch cookies & nankhatai made with pure ingredients — no maida, no preservatives.</p>
+
+        <div class="story">
+          <strong>Our Story:</strong>
+          <p style="margin:.4rem 0 0">
+            We started in a cozy Pune kitchen, baking for friends & family. The love grew, and so did the batches. 
+            Today, Kairavi’s Oven Magic delivers the same homemade warmth in every bite — crisp edges, soft centers, and a big smile.
+          </p>
+        </div>
+
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://wa.me/917020351710?text=Hi%20Kairavi%E2%80%99s%20Oven%20Magic!%20I%20want%20to%20order%20cookies." target="_blank">Order on WhatsApp</a>
+          <a class="btn btn-ghost" href="products.html">Browse Products</a>
+        </div>
       </div>
-      <div><a style="color:#fbd9a3" href="#top">Back to top ↑</a></div>
+
+      <div class="hero-logo">
+        <img src="images/logo.png" alt="Kairavi’s Oven Magic round logo">
+      </div>
+    </div>
+  </section>
+
+  <!-- Bestsellers preview -->
+  <section class="section">
+    <div class="wrap">
+      <h2>House Favorites</h2>
+      <p class="sub">Our customers’ most-loved boxes</p>
+
+      <div class="grid">
+        <!-- Use cookie-only photos (not packaging). Replace sample paths in /images/ -->
+        <article class="card">
+          <img src="images/gulkand.jpg" alt="Gulkand Nankhatai cookies">
+          <div class="card-body">
+            <h3>Gulkand Nankhatai</h3>
+            <div class="meta"><span>250 g</span><span>₹250</span></div>
+            <div class="cart">
+              <select class="qty">
+                <option>Qty 1</option><option>Qty 2</option><option>Qty 3</option>
+              </select>
+              <a class="btn btn-primary addbtn" href="https://wa.me/917020351710?text=Order:%20Gulkand%20Nankhatai%20250g%20x%201">Add to Cart</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <img src="images/wheat.jpg" alt="Wheat Nankhatai cookies">
+          <div class="card-body">
+            <h3>Wheat Nankhatai</h3>
+            <div class="meta"><span>250 g</span><span>₹200</span></div>
+            <div class="cart">
+              <select class="qty"><option>Qty 1</option><option>Qty 2</option><option>Qty 3</option></select>
+              <a class="btn btn-primary addbtn" href="https://wa.me/917020351710?text=Order:%20Wheat%20Nankhatai%20250g%20x%201">Add to Cart</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <img src="images/ragi.jpg" alt="Ragi Nankhatai cookies">
+          <div class="card-body">
+            <h3>Ragi Nankhatai</h3>
+            <div class="meta"><span>250 g</span><span>₹250</span></div>
+            <div class="cart">
+              <select class="qty"><option>Qty 1</option><option>Qty 2</option><option>Qty 3</option></select>
+              <a class="btn btn-primary addbtn" href="https://wa.me/917020351710?text=Order:%20Ragi%20Nankhatai%20250g%20x%201">Add to Cart</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="wrap footer-grid">
+      <div class="small">© 2025 Kairavi’s Oven Magic — Kairavi Food Products</div>
+      <div class="small" style="text-align:right">
+        Email: <a href="mailto:kairavisovenmagic@gmail.com">kairavisovenmagic@gmail.com</a> &nbsp;·&nbsp;
+        WhatsApp: <a href="https://wa.me/917020351710" target="_blank">+91 7020351710</a>
+      </div>
     </div>
   </footer>
+<!-- Customer Love / Reviews -->
+<section class="reviews">
+  <div class="wrap">
+    <h2>Customer Love</h2>
+    <p class="sub">Real feedback from people who tried Kairavi’s Oven Magic</p>
+
+    <div class="reviews-grid">
+
+      <article class="review-card">
+        <img src="images/reviews/rahul.jpg" alt="Rahul's review screenshot">
+        <div class="review-body">
+          <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          <div class="reviewer">Rahul — Pune</div>
+          <div class="quote">“Healthy meets heavenly! Tried ragi, wheat & gulkand — pure harmony in every bite. Naturally nourishing.”</div>
+        </div>
+      </article>
+
+      <article class="review-card">
+        <img src="images/reviews/vishal.jpg" alt="Vishal's review screenshot">
+        <div class="review-body">
+          <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          <div class="reviewer">Vishal — Mumbai</div>
+          <div class="quote">“No maida, no palm oil — guilt-free indulgence. Quality is superb! I’ll be ordering only from Kairavi’s now.”</div>
+        </div>
+      </article>
+
+      <article class="review-card">
+        <img src="images/reviews/sanyukta.jpg" alt="Sanyukta's review screenshot">
+        <div class="review-body">
+          <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          <div class="reviewer">Sanyukta — Pune</div>
+          <div class="quote">“Absolutely loved the nankhatai! Gulkand & Ragi were soft, perfectly balanced, and not oily. Will try other varieties!”</div>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="cta-row" style="justify-content:center; margin-top:18px">
+      <a class="btn btn-ghost" href="https://wa.me/917020351710?text=I%20want%20to%20share%20a%20review%20for%20Kairavi%E2%80%99s%20Oven%20Magic" target="_blank">Share your review on WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<!-- SEO: Aggregate rating -->
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"LocalBusiness",
+  "name":"Kairavi’s Oven Magic",
+  "url":"https://kairavisovenmagic.github.io",
+  "image":"https://kairavisovenmagic.github.io/images/logo.png",
+  "servesCuisine":"Bakery",
+  "priceRange":"₹₹",
+  "aggregateRating":{
+    "@type":"AggregateRating",
+    "ratingValue":"5.0",
+    "reviewCount":"3"
+  }
+}
+</script>
+
+  <!-- Floating WhatsApp button -->
+  <a class="whatsapp-float" href="https://wa.me/917020351710?text=Hi%2C%20I%20want%20to%20order%20cookies%20from%20Kairavi%E2%80%99s%20Oven%20Magic" target="_blank" aria-label="Chat on WhatsApp">
+    <img src="images/whatsapp.png" alt="WhatsApp">
+  </a>
 </body>
 </html>
