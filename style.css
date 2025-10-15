@@ -120,6 +120,25 @@ footer{
 }
 footer a{color:#fff}
 .small{font-size:.9rem; color:#c9c9c9}
+/* Reviews */
+.reviews { padding: 40px 0 }
+.reviews-grid{
+  display:grid; gap:18px;
+  grid-template-columns: repeat(3,1fr);
+}
+.review-card{
+  background:#fff; border:1px solid var(--border); border-radius:16px;
+  overflow:hidden; box-shadow:var(--shadow);
+  display:flex; flex-direction:column;
+}
+.review-card img{ width:100%; height:220px; object-fit:cover; display:block; }
+.review-body{ padding:14px 14px 16px; display:grid; gap:6px }
+.stars{ color:#f2b01e; letter-spacing:2px; font-size:1.1rem }
+.reviewer{ font-weight:700; color:var(--brown) }
+.quote{ color:#4e4e4e }
+@media (max-width:900px){ .reviews-grid{ grid-template-columns:repeat(2,1fr) } }
+@media (max-width:560px){ .reviews-grid{ grid-template-columns:1fr } }
+
 
 /* Floating WhatsApp */
 .whatsapp-float{
@@ -141,21 +160,3 @@ footer a{color:#fff}
   .grid{grid-template-columns:1fr}
   .nav{flex-direction:column; gap:8px}
 }
-/* Reviews */
-.reviews { padding: 40px 0 }
-.reviews-grid{
-  display:grid; gap:18px;
-  grid-template-columns: repeat(3,1fr);
-}
-.review-card{
-  background:#fff; border:1px solid var(--border); border-radius:16px;
-  overflow:hidden; box-shadow:var(--shadow);
-  display:flex; flex-direction:column;
-}
-.review-card img{ width:100%; height:220px; object-fit:cover; display:block; }
-.review-body{ padding:14px 14px 16px; display:grid; gap:6px }
-.stars{ color:#f2b01e; letter-spacing:2px; font-size:1.1rem }
-.reviewer{ font-weight:700; color:var(--brown) }
-.quote{ color:#4e4e4e }
-@media (max-width:900px){ .reviews-grid{ grid-template-columns:repeat(2,1fr) } }
-@media (max-width:560px){ .reviews-grid{ grid-template-columns:1fr } }
