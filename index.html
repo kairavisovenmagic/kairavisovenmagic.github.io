@@ -59,14 +59,14 @@
         </div>
       </div>
 
-      <!-- NEW HERO ILLUSTRATION -->
+      <!-- HERO IMAGE -->
       <div class="hero-image">
         <img src="images/vandana-hero.png" alt="Handmade Happiness from Vandana’s Kitchen"/>
       </div>
     </div>
   </section>
 
-  <!-- OUR STORY (IMAGE ONLY) -->
+  <!-- OUR STORY -->
   <section class="story-section">
     <div class="wrap image-only">
       <img src="images/our-story.jpg" alt="Our Story — From Home to Heart" class="our-story-img"/>
@@ -86,31 +86,37 @@
           <article class="slide">
             <img src="images/reviews/rahul.jpg" alt="Rahul review screenshot"/>
             <div class="review-body">
-              <div class="stars" aria-hidden="true">★★★★★</div>
+              <div class="stars">★★★★★</div>
               <div class="reviewer">Rahul — Pune</div>
-              <p class="quote">“Healthy meets heavenly! Tried ragi, wheat, 
-                and gulkand nankhatai — pure harmony in every bite. 
-                Deliciously different, naturally nourishing.”</p>
+              <p class="quote">
+                “Healthy meets heavenly! Tried ragi, wheat, and gulkand nankhatai —
+                pure harmony in every bite. Deliciously different, naturally nourishing.”
+              </p>
             </div>
           </article>
 
           <article class="slide">
             <img src="images/reviews/vishal.jpg" alt="Vishal review screenshot"/>
             <div class="review-body">
-              <div class="stars" aria-hidden="true">★★★★★</div>
+              <div class="stars">★★★★★</div>
               <div class="reviewer">Vishal — Pune</div>
-              <p class="quote">🍪✨ Cookie Bliss Unboxed! ✨🍪 Just received my packs of Gulkand & Coconut cookies from Kairavi's Oven Magic — seriously impressed! 😍  
-              Neat packaging, super-quick delivery, and authentic taste — no maida, no palm oil, only pure goodness! 🌿  
-              Definitely my go-to for something desi, delicious & different! 🌸🥥</p>
+              <p class="quote">
+                🍪✨ Cookie Bliss Unboxed! ✨🍪 Received my Gulkand & Coconut cookies from
+                Kairavi’s Oven Magic — absolutely loved them! No maida, no palm oil,
+                neat packaging, fresh aroma, authentic taste — pure happiness in every bite! 💚
+              </p>
             </div>
           </article>
 
           <article class="slide">
             <img src="images/reviews/sanyukta.jpg" alt="Sanyukta review screenshot"/>
             <div class="review-body">
-              <div class="stars" aria-hidden="true">★★★★★</div>
+              <div class="stars">★★★★★</div>
               <div class="reviewer">Sanyukta — Pune</div>
-              <p class="quote">“Absolutely loved the nankhatai! 😊 Tried two varieties — Gulkand & Ragi — both soft, light, and perfectly balanced. No oily aftertaste — just melt-in-mouth goodness!”</p>
+              <p class="quote">
+                “Absolutely loved the nankhatai! 😊 Tried two varieties — Gulkand & Ragi —
+                both soft, light, and perfectly balanced. Melt-in-mouth goodness, no oily feel.”
+              </p>
             </div>
           </article>
         </div>
@@ -126,7 +132,7 @@
       <div class="small">© 2025 Kairavi’s Oven Magic — Kairavi Food Products</div>
       <div class="small" style="text-align:right">
         Email: <a href="mailto:kairavisovenmagic@gmail.com">kairavisovenmagic@gmail.com</a><br/>
-        WhatsApp: <a href="https://wa.me/919766964845" target="_blank" rel="noopener">+91 9766964845</a>
+        WhatsApp: <a href="https://wa.me/919766964845" target="_blank">+91 9766964845</a>
       </div>
     </div>
     <div class="wrap footer-row2">
@@ -137,8 +143,8 @@
     </div>
   </footer>
 
-  <!-- Floating WhatsApp -->
-  <a class="whatsapp-float" href="https://wa.me/919766964845" target="_blank" aria-label="WhatsApp">
+  <!-- WHATSAPP FLOAT -->
+  <a class="whatsapp-float" href="https://wa.me/919766964845" target="_blank">
     <img src="images/whatsapp.png" alt="WhatsApp"/>
   </a>
 
@@ -159,17 +165,39 @@
     prev.addEventListener('click', ()=> track.scrollBy({left: -stepWidth(), behavior:'smooth'}));
     next.addEventListener('click', ()=> track.scrollBy({left:  stepWidth(), behavior:'smooth'}));
 
-    // Pointer drag for desktop + touch
+    // Pointer drag + pause autoplay
     let down=false, startX=0, startScroll=0, pid=0;
     track.addEventListener('pointerdown', e=>{
       down=true; pid=e.pointerId; startX=e.clientX; startScroll=track.scrollLeft; track.setPointerCapture(pid);
+      stopAutoplay();
     });
     track.addEventListener('pointermove', e=>{
       if(!down) return; track.scrollLeft = startScroll - (e.clientX - startX);
     });
-    const up=()=>{ down=false; };
+    const up=()=>{ down=false; startAutoplay(); };
     track.addEventListener('pointerup', up);
     track.addEventListener('pointercancel', up);
+
+    // Autoplay every 5 seconds
+    let autoId;
+    function autoplayTick(){
+      const max = track.scrollWidth - track.clientWidth;
+      const nextPos = track.scrollLeft + stepWidth();
+      if (nextPos >= max - 8) track.scrollTo({ left: 0, behavior: 'smooth' });
+      else track.scrollBy({ left: stepWidth(), behavior: 'smooth' });
+    }
+    function startAutoplay(){
+      stopAutoplay();
+      autoId = setInterval(autoplayTick, 5000);
+    }
+    function stopAutoplay(){ if(autoId) clearInterval(autoId); }
+
+    // Pause on hover/touch/tab hidden
+    ['mouseenter','focusin','touchstart'].forEach(ev => track.addEventListener(ev, stopAutoplay));
+    ['mouseleave','focusout','touchend'].forEach(ev => track.addEventListener(ev, startAutoplay));
+    document.addEventListener('visibilitychange', ()=> document.hidden ? stopAutoplay() : startAutoplay());
+
+    startAutoplay();
   </script>
 </body>
 </html>
