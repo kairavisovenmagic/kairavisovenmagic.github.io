@@ -24,7 +24,7 @@
         <strong>Kairavi’s Oven Magic</strong>
       </a>
       <nav class="menu">
-        <a href="index.html">Home</a>
+        <a href="index.html" aria-current="page">Home</a>
         <a href="products.html">Products</a>
         <a href="contact.html">Contact</a>
         <a href="cart.html">Cart</a>
@@ -48,14 +48,14 @@
         <div class="chips">
           <span class="chip">No Maida</span>
           <span class="chip">No Palm Oil</span>
-          <span class="chip">Pure Unsalted Butter</span>
-          <span class="chip">100% Wheat / Millet options</span>
+          <span class="chip">Pure Butter</span>
+          <span class="chip">100% Wheat / Millet</span>
           <span class="chip">Made Fresh to Order</span>
         </div>
 
         <div class="cta-row">
           <a class="btn btn-primary" href="products.html">Shop Cookies</a>
-          <a class="btn btn-ghost" href="https://wa.me/919766964845" target="_blank">WhatsApp Us</a>
+          <a class="btn btn-ghost" href="https://wa.me/919766964845" target="_blank" rel="noopener">WhatsApp Us</a>
         </div>
       </div>
 
@@ -65,7 +65,7 @@
     </div>
   </section>
 
-  <!-- OUR STORY -->
+  <!-- OUR STORY (IMAGE) -->
   <section class="story-section">
     <div class="wrap image-only">
       <img src="images/our-story.jpg" alt="Our Story — From Home to Heart" class="our-story-img"/>
@@ -89,8 +89,8 @@
             <div class="review-body">
               <div class="stars">★★★★★</div>
               <div class="reviewer">Rahul — Pune</div>
-              <p>“Healthy meets heavenly! Tried ragi, wheat, and gulkand nankhatai —
-              pure harmony in every bite. Deliciously different, naturally nourishing.”</p>
+              <p>“Healthy meets heavenly! 
+Tried ragi, wheat, and gulkand nankhatai — pure harmony in every bite. Deliciously different, naturally nourishing”</p>
             </div>
           </article>
 
@@ -144,7 +144,7 @@ Highly recommended for anyone who loves something desi, delicious & different! �
       <div class="small">© 2025 Kairavi’s Oven Magic — Kairavi Food Products</div>
       <div class="small" style="text-align:right">
         Email: <a href="mailto:kairavisovenmagic@gmail.com">kairavisovenmagic@gmail.com</a><br/>
-        WhatsApp: <a href="https://wa.me/919766964845" target="_blank">+91 9766964845</a>
+        WhatsApp: <a href="https://wa.me/919766964845" target="_blank" rel="noopener">+91 9766964845</a>
       </div>
     </div>
     <div class="wrap footer-row2">
@@ -155,10 +155,12 @@ Highly recommended for anyone who loves something desi, delicious & different! �
     </div>
   </footer>
 
-  <a class="whatsapp-float" href="https://wa.me/919766964845" target="_blank">
+  <!-- FLOATING WHATSAPP BUTTON -->
+  <a class="whatsapp-float" href="https://wa.me/919766964845" target="_blank" aria-label="WhatsApp">
     <img src="images/whatsapp.png" alt="WhatsApp"/>
   </a>
 
+  <!-- REVIEW CAROUSEL JS -->
   <script>
     const track = document.getElementById('reviewTrack');
     const prev  = document.querySelector('.nav-prev');
@@ -172,39 +174,30 @@ Highly recommended for anyone who loves something desi, delicious & different! �
       return rect.width + (isNaN(gap)?16:gap);
     }
 
-    prev.addEventListener('click', ()=> track.scrollBy({left: -stepWidth(), behavior:'smooth'}));
-    next.addEventListener('click', ()=> track.scrollBy({left:  stepWidth(), behavior:'smooth'}));
+    prev.addEventListener('click', ()=> track.scrollBy({left:-stepWidth(),behavior:'smooth'}));
+    next.addEventListener('click', ()=> track.scrollBy({left: stepWidth(),behavior:'smooth'}));
 
-    // drag + autoplay
-    let down=false, startX=0, startScroll=0, pid=0;
+    let down=false,startX=0,startScroll=0,pid=0;
     track.addEventListener('pointerdown', e=>{
-      down=true; pid=e.pointerId; startX=e.clientX; startScroll=track.scrollLeft; track.setPointerCapture(pid);
-      stopAutoplay();
+      down=true;pid=e.pointerId;startX=e.clientX;startScroll=track.scrollLeft;track.setPointerCapture(pid);stopAutoplay();
     });
-    track.addEventListener('pointermove', e=>{
-      if(!down) return; track.scrollLeft = startScroll - (e.clientX - startX);
-    });
-    const up=()=>{ down=false; startAutoplay(); };
-    track.addEventListener('pointerup', up);
-    track.addEventListener('pointercancel', up);
+    track.addEventListener('pointermove', e=>{ if(!down)return;track.scrollLeft=startScroll-(e.clientX-startX); });
+    const up=()=>{down=false;startAutoplay();};
+    track.addEventListener('pointerup',up);
+    track.addEventListener('pointercancel',up);
 
     let autoId;
     function autoplayTick(){
-      const max = track.scrollWidth - track.clientWidth;
-      const nextPos = track.scrollLeft + stepWidth();
-      if (nextPos >= max - 8) track.scrollTo({ left: 0, behavior: 'smooth' });
-      else track.scrollBy({ left: stepWidth(), behavior: 'smooth' });
+      const max=track.scrollWidth-track.clientWidth;
+      const nextPos=track.scrollLeft+stepWidth();
+      if(nextPos>=max-8) track.scrollTo({left:0,behavior:'smooth'});
+      else track.scrollBy({left:stepWidth(),behavior:'smooth'});
     }
-    function startAutoplay(){
-      stopAutoplay();
-      autoId = setInterval(autoplayTick, 5000);
-    }
-    function stopAutoplay(){ if(autoId) clearInterval(autoId); }
-
-    ['mouseenter','focusin','touchstart'].forEach(ev => track.addEventListener(ev, stopAutoplay));
-    ['mouseleave','focusout','touchend'].forEach(ev => track.addEventListener(ev, startAutoplay));
-    document.addEventListener('visibilitychange', ()=> document.hidden ? stopAutoplay() : startAutoplay());
-
+    function startAutoplay(){stopAutoplay();autoId=setInterval(autoplayTick,5000);}
+    function stopAutoplay(){if(autoId)clearInterval(autoId);}
+    ['mouseenter','focusin','touchstart'].forEach(ev=>track.addEventListener(ev,stopAutoplay));
+    ['mouseleave','focusout','touchend'].forEach(ev=>track.addEventListener(ev,startAutoplay));
+    document.addEventListener('visibilitychange',()=>document.hidden?stopAutoplay():startAutoplay());
     startAutoplay();
   </script>
 </body>
