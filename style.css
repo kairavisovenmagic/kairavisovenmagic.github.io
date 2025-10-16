@@ -23,6 +23,11 @@
   /* Cart */
   --ok:#20c997;
   --danger:#ff6b6b;
+
+  /* Free bar */
+  --bar-h:36px;
+  --bar-bg:#1f1f1f;
+  --bar-fg:#fff;
 }
 
 *{box-sizing:border-box}
@@ -32,11 +37,21 @@ body{
   color:var(--ink);
   background:var(--cream);
   line-height:1.6;
+  padding-top:var(--bar-h); /* room for sticky free-delivery bar */
 }
+
+/* ===== Free Delivery Sticky Bar ===== */
+.freebar{
+  position:fixed; inset:0 0 auto 0; height:var(--bar-h);
+  background:var(--bar-bg); color:var(--bar-fg);
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:.95rem; z-index:120;
+}
+.freebar a{ color:#9cf; text-decoration:none; margin-left:10px }
 
 /* Header / Nav */
 .site-header{
-  position:sticky; top:0; z-index:50;
+  position:sticky; top:var(--bar-h); z-index:50; /* sit below the freebar */
   background:#fff; border-bottom:1px solid var(--border);
   box-shadow:0 6px 16px rgba(0,0,0,.03);
 }
@@ -102,6 +117,7 @@ body{
   gap:18px;
 }
 .card{
+  position:relative;
   background:var(--card);
   border:1px solid var(--border);
   border-radius:16px; overflow:hidden; box-shadow:var(--shadow)
@@ -117,6 +133,14 @@ body{
 .row-actions{display:flex; gap:10px; align-items:center; margin-top:12px; flex-wrap:wrap}
 .addbtn{flex:1; text-align:center}
 
+/* Bestseller Ribbon */
+.ribbon{
+  position:absolute; top:10px; left:-60px;
+  background: linear-gradient(135deg,#ffb347,#ff7f50);
+  color:#fff; padding:6px 70px; transform:rotate(-20deg);
+  font-weight:800; box-shadow:var(--shadow); letter-spacing:.4px;
+}
+
 /* Qty control */
 .qty-control {
   display:inline-flex; align-items:center; gap:10px;
@@ -127,6 +151,16 @@ body{
 .qty-control .count { min-width:24px; text-align:center; font-weight:600 }
 .qty-control .remove { color:#666; font-size:16px; margin-left:4px }
 .qty-control .remove:hover { color:var(--danger) }
+
+/* Filter bar */
+.filterbar{
+  background:#fff; border:1px solid var(--border); border-radius:12px; padding:12px; margin-bottom:16px; display:flex; gap:12px; flex-wrap:wrap; align-items:center;
+  box-shadow:var(--shadow);
+}
+.filterbar input, .filterbar select{
+  padding:10px 12px; border:1px solid var(--border); border-radius:10px; font:inherit;
+}
+.filterbar label{ display:flex; align-items:center; gap:6px; color:#6b4f3a; font-weight:600 }
 
 /* Footer */
 footer{
@@ -156,12 +190,8 @@ footer a{color:#fff}
   border-top:1px solid var(--border);
   border-bottom:1px solid var(--border);
 }
-.carousel{
-  position:relative; overflow:hidden; border-radius:18px;
-}
-.track{
-  display:flex; gap:18px; scroll-behavior:smooth;
-}
+.carousel{ position:relative; overflow:hidden; border-radius:18px }
+.track{ display:flex; gap:18px; scroll-behavior:smooth }
 .slide{
   min-width:calc(33.333% - 12px);
   background:#fff; border:1px solid var(--border); border-radius:16px;
@@ -172,7 +202,6 @@ footer a{color:#fff}
 .stars{ color:#f2b01e; letter-spacing:2px; font-size:1.1rem }
 .reviewer{ font-weight:700; color:var(--brown) }
 .quote{ color:#4e4e4e }
-
 .nav-btn{
   position:absolute; top:50%; transform:translateY(-50%);
   width:42px; height:42px; border-radius:999px; border:2px solid var(--arrow);
