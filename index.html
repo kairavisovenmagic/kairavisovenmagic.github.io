@@ -11,14 +11,14 @@
 <body>
 
   <!-- FREE DELIVERY BAR -->
-  <div class="freebar">
+  <div class="freebar" role="status">
     FREE delivery over ₹999 • Pune city
     <a href="products.html">Shop now →</a>
   </div>
 
   <!-- HEADER -->
   <header class="site-header">
-    <div class="wrap nav">
+    <div class="wrap nav" role="navigation" aria-label="Main">
       <a class="brand" href="index.html">
         <img src="images/logo.png" alt="Kairavi’s Oven Magic logo"/>
         <strong>Kairavi’s Oven Magic</strong>
@@ -35,7 +35,7 @@
   <!-- HERO -->
   <section class="hero">
     <div class="wrap hero-inner">
-      <div>
+      <div class="hero-copy">
         <h1>Homemade Cookies & Nankhatai —<br/>Fresh, Pure & Delicious</h1>
         <p class="tagline">Handmade with pure unsalted butter • No maida • No palm oil</p>
 
@@ -74,7 +74,7 @@
   </section>
 
   <!-- REVIEWS -->
-  <section class="reviews">
+  <section class="reviews" aria-label="Customer reviews">
     <div class="wrap">
       <h2>Customer Love</h2>
       <p class="sub">Real feedback from people who tried Kairavi’s Oven Magic</p>
@@ -84,29 +84,29 @@
 
         <div class="track" id="reviewTrack">
           <article class="slide">
-            <img src="images/reviews/rahul.jpg" alt="Rahul review"/>
+            <img src="images/reviews/rahul.jpg" alt="Rahul review screenshot"/>
             <div class="review-body">
-              <div class="stars">★★★★★</div>
+              <div class="stars" aria-hidden="true">★★★★★</div>
               <div class="reviewer">Rahul — Pune</div>
-              <div class="quote">“Healthy meets heavenly! Tried ragi, wheat & gulkand — harmony in every bite.”</div>
+              <p class="quote">“Healthy meets heavenly! Tried ragi, wheat & gulkand — harmony in every bite.”</p>
             </div>
           </article>
 
           <article class="slide">
-            <img src="images/reviews/vishal.jpg" alt="Vishal review"/>
+            <img src="images/reviews/vishal.jpg" alt="Vishal review screenshot"/>
             <div class="review-body">
-              <div class="stars">★★★★★</div>
+              <div class="stars" aria-hidden="true">★★★★★</div>
               <div class="reviewer">Vishal — Mumbai</div>
-              <div class="quote">“No maida, no palm oil — guilt-free indulgence. Quality is superb!”</div>
+              <p class="quote">“No maida, no palm oil — guilt-free indulgence. Quality is superb!”</p>
             </div>
           </article>
 
           <article class="slide">
-            <img src="images/reviews/sanyukta.jpg" alt="Sanyukta review"/>
+            <img src="images/reviews/sanyukta.jpg" alt="Sanyukta review screenshot"/>
             <div class="review-body">
-              <div class="stars">★★★★★</div>
+              <div class="stars" aria-hidden="true">★★★★★</div>
               <div class="reviewer">Sanyukta — Pune</div>
-              <div class="quote">“Absolutely loved the nankhatai! Light, smooth and perfectly balanced.”</div>
+              <p class="quote">“Absolutely loved the nankhatai! Light, smooth and perfectly balanced.”</p>
             </div>
           </article>
         </div>
