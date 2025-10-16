@@ -9,6 +9,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+
+  <!-- FREE DELIVERY BAR -->
+  <div class="freebar">
+    FREE delivery over ₹999 • Pune city
+    <a href="products.html">Continue shopping →</a>
+  </div>
+
   <header class="site-header">
     <div class="wrap nav">
       <a class="brand" href="index.html"><img src="images/logo.png" alt=""> <strong>Kairavi’s Oven Magic</strong></a>
@@ -94,13 +101,11 @@
       summary.style.display = 'flex';
       updateCartCount();
 
-      // Build WhatsApp message
       const lines = cart.map(i=>`• ${i.name} ${i.weight} x ${i.qty} = ₹${i.price*i.qty}`);
       lines.push(`Total: ₹${total}`);
       const msg = encodeURIComponent(`Hi Kairavi’s Oven Magic! I'd like to order:\n${lines.join('\n')}\n\nName:\nArea & PIN:\nPreferred delivery date:`);
       waButton.href = WHATSAPP + msg;
 
-      // attach row handlers
       document.querySelectorAll('.cart-row').forEach(row=>{
         const idx = parseInt(row.dataset.idx,10);
         row.querySelector('.minus').onclick = ()=>{ changeQty(idx,-1) };
