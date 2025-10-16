@@ -1,7 +1,6 @@
-/* ----------------------
-   Kairavi’s Oven Magic
-   Global styles
------------------------ */
+/* ============================
+   Kairavi’s Oven Magic — Styles
+   ============================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
@@ -16,6 +15,14 @@
   --card:#ffffff;
   --border:#ece3da;
   --shadow:0 10px 25px rgba(0,0,0,.06);
+
+  /* Reviews */
+  --reviews-bg: linear-gradient(135deg,#fff1e2 0%, #ffe7d0 35%, #ffeede 100%);
+  --arrow:#6b4f3a;
+
+  /* Cart */
+  --ok:#20c997;
+  --danger:#ff6b6b;
 }
 
 *{box-sizing:border-box}
@@ -45,10 +52,15 @@ body{
   text-decoration:none; color:var(--choco); font-weight:600; margin-left:18px;
 }
 .menu a:hover{color:var(--orange)}
+.badge{
+  display:inline-block; min-width:28px; padding:2px 8px; font-size:.8rem; line-height:1.2;
+  text-align:center; color:#fff; background:var(--orange); border-radius:999px; margin-left:6px;
+}
 
 /* Hero */
 .hero{
-  background: radial-gradient(1000px 400px at 75% -150px, #ffe2c4 0%, rgba(255,226,196,0) 50%), linear-gradient(180deg,#ffe6cc 0%, #ffeede 60%, var(--cream) 100%);
+  background: radial-gradient(1000px 400px at 75% -150px, #ffe2c4 0%, rgba(255,226,196,0) 50%),
+              linear-gradient(180deg,#ffe6cc 0%, #ffeede 60%, var(--cream) 100%);
   border-bottom:1px solid var(--border);
 }
 .hero-inner{
@@ -69,7 +81,7 @@ body{
 .cta-row{margin-top:18px; display:flex; gap:12px; flex-wrap:wrap}
 .btn{
   display:inline-block; padding:12px 18px; border-radius:10px; text-decoration:none; font-weight:700;
-  border:2px solid transparent; transition:.2s;
+  border:2px solid transparent; transition:.2s; cursor:pointer
 }
 .btn-primary{background:var(--orange); color:#fff}
 .btn-primary:hover{filter:brightness(.95)}
@@ -102,42 +114,26 @@ body{
 .card h3{margin:0 0 6px; font-size:1.05rem; color:var(--choco)}
 .meta{display:flex; align-items:center; justify-content:space-between; color:var(--brown); font-weight:700}
 .muted{color:var(--muted); font-weight:500}
-.cart{
-  display:flex; gap:10px; align-items:center; margin-top:12px;
-}
-.qty{
-  width:80px; border:1px solid var(--border); border-radius:10px; padding:8px 10px; font-weight:600;
-}
+.row-actions{display:flex; gap:10px; align-items:center; margin-top:12px; flex-wrap:wrap}
 .addbtn{flex:1; text-align:center}
 
-/* Reviews */
-.reviews { padding: 40px 0 }
-.reviews-grid{
-  display:grid; gap:18px;
-  grid-template-columns: repeat(3,1fr);
+/* Qty control */
+.qty-control {
+  display:inline-flex; align-items:center; gap:10px;
+  background:#f7f7f7; border:2px solid #d7d7d7; border-radius:50px;
+  padding:6px 10px; font-size:18px;
 }
-.review-card{
-  background:#fff; border:1px solid var(--border); border-radius:16px;
-  overflow:hidden; box-shadow:var(--shadow);
-  display:flex; flex-direction:column;
-}
-.review-card img{ width:100%; height:220px; object-fit:cover; display:block; }
-.review-body{ padding:14px 14px 16px; display:grid; gap:6px }
-.stars{ color:#f2b01e; letter-spacing:2px; font-size:1.1rem }
-.reviewer{ font-weight:700; color:var(--brown) }
-.quote{ color:#4e4e4e }
-@media (max-width:900px){ .reviews-grid{ grid-template-columns:repeat(2,1fr) } }
-@media (max-width:560px){ .reviews-grid{ grid-template-columns:1fr } }
-
+.qty-control button { background:none; border:none; color:#3a3a7c; font-size:20px; cursor:pointer; padding:0 5px }
+.qty-control .count { min-width:24px; text-align:center; font-weight:600 }
+.qty-control .remove { color:#666; font-size:16px; margin-left:4px }
+.qty-control .remove:hover { color:var(--danger) }
 
 /* Footer */
 footer{
   border-top:1px solid var(--border);
   background:#1f1f1f; color:#f7f7f7; padding:22px 0; margin-top:28px;
 }
-.footer-grid{
-  display:grid; grid-template-columns:1.2fr .8fr; gap:16px; align-items:center;
-}
+.footer-grid{ display:grid; grid-template-columns:1.2fr .8fr; gap:16px; align-items:center }
 footer a{color:#fff}
 .small{font-size:.9rem; color:#c9c9c9}
 
@@ -151,13 +147,76 @@ footer a{color:#fff}
 .whatsapp-float img{width:28px;height:28px}
 .whatsapp-float:hover{transform:translateY(-2px)}
 
+/* =========================
+   Reviews — Carousel Styles
+   ========================= */
+.reviews{
+  padding:56px 0;
+  background: var(--reviews-bg);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.carousel{
+  position:relative; overflow:hidden; border-radius:18px;
+}
+.track{
+  display:flex; gap:18px; scroll-behavior:smooth;
+}
+.slide{
+  min-width:calc(33.333% - 12px);
+  background:#fff; border:1px solid var(--border); border-radius:16px;
+  overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column;
+}
+.slide img{ width:100%; height:210px; object-fit:cover; display:block }
+.review-body{ padding:14px 14px 16px; display:grid; gap:6px }
+.stars{ color:#f2b01e; letter-spacing:2px; font-size:1.1rem }
+.reviewer{ font-weight:700; color:var(--brown) }
+.quote{ color:#4e4e4e }
+
+.nav-btn{
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:42px; height:42px; border-radius:999px; border:2px solid var(--arrow);
+  background:#fff; color:var(--arrow); display:grid; place-items:center; cursor:pointer;
+  box-shadow:var(--shadow);
+}
+.nav-btn:hover{ background:#fff7f0 }
+.nav-prev{ left: -10px }
+.nav-next{ right: -10px }
+
+/* =========================
+   Cart page
+   ========================= */
+.page-head{ text-align:center; margin:0 0 10px }
+.cart-wrap{ max-width:880px; margin:0 auto }
+.cart-table{ width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; box-shadow:var(--shadow) }
+.cart-table th, .cart-table td{ padding:12px; border-bottom:1px solid var(--border); text-align:left }
+.cart-table th{ background:#fff7ee; color:#5b4a3f }
+.cart-row{ vertical-align:middle }
+.qty-sm{ display:inline-flex; align-items:center; gap:8px; padding:4px 10px; border:1px solid var(--border); border-radius:999px; background:#f7f7f7 }
+.qty-sm button{ background:none; border:none; font-size:18px; cursor:pointer; color:#3a3a7c }
+.qty-sm span{ min-width:22px; text-align:center; font-weight:600 }
+.remove-link{ color:var(--danger); cursor:pointer }
+.summary{ display:flex; justify-content:flex-end; gap:16px; align-items:center; margin:18px 0 }
+.total{ font-weight:800; color:var(--brown) }
+.toast{
+  position:fixed; left:50%; transform:translateX(-50%);
+  bottom:88px; background:#1f1f1f; color:#fff; padding:10px 14px; border-radius:10px; opacity:0; pointer-events:none;
+  transition:.25s; z-index:99;
+}
+.toast.show{ opacity:1 }
+.empty{
+  text-align:center; background:#fff; border:1px dashed var(--border); border-radius:12px; padding:30px; color:var(--muted)
+}
+
 /* Responsive */
 @media (max-width: 900px){
   .hero-inner{grid-template-columns:1fr}
   .hero-logo{justify-self:center}
   .grid{grid-template-columns: repeat(2, 1fr)}
+  .slide{ min-width:calc(50% - 9px) }
 }
 @media (max-width: 560px){
   .grid{grid-template-columns:1fr}
   .nav{flex-direction:column; gap:8px}
+  .slide{ min-width:100% }
 }
