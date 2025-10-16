@@ -1,7 +1,3 @@
-/* ============================
-   Kairavi’s Oven Magic — Global Styles
-   ============================ */
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
 :root{
@@ -10,63 +6,43 @@
   --orange:#FF7F50;
   --brown:#5A3E2B;
   --choco:#3A2A20;
-  --ink:#222;
   --muted:#6b6b6b;
-  --card:#ffffff;
   --border:#ece3da;
   --shadow:0 10px 25px rgba(0,0,0,.06);
-
-  /* Reviews */
-  --reviews-bg: linear-gradient(135deg,#fff1e2 0%, #ffe7d0 35%, #ffeede 100%);
-  --arrow:#6b4f3a;
-
-  /* Sticky free bar */
   --bar-h:36px;
-  --bar-bg:#1f1f1f;
-  --bar-fg:#fff;
+  --reviews-bg:linear-gradient(135deg,#fff1e2 0%, #ffe7d0 100%);
 }
 
+/* Base */
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{
   font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  color:var(--ink);
+  color:var(--choco);
   background:var(--cream);
   line-height:1.6;
-  padding-top:var(--bar-h); /* space for sticky Free Delivery bar */
+  padding-top:var(--bar-h);
 }
 
-/* ===== Free Delivery Sticky Bar ===== */
+/* Free delivery bar */
 .freebar{
   position:fixed; inset:0 0 auto 0; height:var(--bar-h);
-  background:var(--bar-bg); color:var(--bar-fg);
-  display:flex; align-items:center; justify-content:center;
-  font-weight:700; font-size:.95rem; z-index:120;
+  background:#1f1f1f; color:#fff; display:flex; gap:8px;
+  align-items:center; justify-content:center; font-weight:700; z-index:120;
 }
-.freebar a{ color:#9cf; text-decoration:none; margin-left:10px }
+.freebar a{color:#9cf; text-decoration:none}
 
-/* Header / Nav */
+/* Header */
 .site-header{
   position:sticky; top:var(--bar-h); z-index:50;
-  background:#fff; border-bottom:1px solid var(--border);
-  box-shadow:0 6px 16px rgba(0,0,0,.03);
+  background:#fff; border-bottom:1px solid var(--border); box-shadow:0 6px 16px rgba(0,0,0,.03);
 }
 .wrap{max-width:1120px;margin:0 auto;padding:0 18px}
-.nav{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:12px 0;
-}
-.brand{display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--choco)}
-.brand img{width:40px;height:40px;border-radius:100%; object-fit:cover}
-.brand strong{font-size:1.1rem}
-.menu a{
-  text-decoration:none; color:var(--choco); font-weight:600; margin-left:18px;
-}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--choco)}
+.brand img{width:40px;height:40px;border-radius:50%}
+.menu a{margin-left:18px;text-decoration:none;color:var(--choco);font-weight:700}
 .menu a:hover{color:var(--orange)}
-.badge{
-  display:inline-block; min-width:28px; padding:2px 8px; font-size:.8rem; line-height:1.2;
-  text-align:center; color:#fff; background:var(--orange); border-radius:999px; margin-left:6px;
-}
 
 /* Hero */
 .hero{
@@ -75,187 +51,83 @@ body{
   border-bottom:1px solid var(--border);
 }
 .hero-inner{
-  display:grid; grid-template-columns: 1.2fr .8fr; gap:24px;
-  align-items:center; padding:42px 0;
+  display:grid; grid-template-columns: 1.2fr .8fr; gap:24px; align-items:center; padding:42px 0;
 }
 .hero h1{font-size:2.2rem; line-height:1.2; color:var(--brown); margin:0 0 8px}
 .tagline{font-size:1.05rem; color:#7a5b46; margin:0 0 18px}
-.story{
-  background:#fff; border:1px solid var(--border); border-radius:14px; padding:14px 16px;
-  box-shadow:var(--shadow); color:#5b4a3f;
-}
-.hero-logo{
-  justify-self:end; background:#fff; border:1px solid var(--border); border-radius:18px;
-  padding:16px; box-shadow:var(--shadow)
-}
-.hero-logo img{width:120px;height:120px;object-fit:contain;display:block;margin:auto}
+.story{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);color:#5b4a3f}
 .cta-row{margin-top:18px; display:flex; gap:12px; flex-wrap:wrap}
-.btn{
-  display:inline-block; padding:12px 18px; border-radius:10px; text-decoration:none; font-weight:700;
-  border:2px solid transparent; transition:.2s; cursor:pointer
-}
-.btn-primary{background:var(--orange); color:#fff}
+.btn{display:inline-block;padding:12px 18px;border-radius:10px;text-decoration:none;font-weight:700;border:2px solid transparent;transition:.2s}
+.btn-primary{background:var(--orange);color:#fff}
 .btn-primary:hover{filter:brightness(.95)}
-.btn-ghost{border-color:var(--brown); color:var(--brown); background:#fff}
+.btn-ghost{border-color:var(--brown);color:var(--brown);background:#fff}
 .btn-ghost:hover{background:#fff7f0}
-
-/* Utility sections */
-.section{padding:40px 0}
-.section h2{
-  text-align:center; margin:0 0 20px; color:var(--brown); font-size:1.7rem
-}
-.sub{color:var(--muted); text-align:center; margin:-8px 0 26px}
-
-/* Product teaser grid (Home) */
-.grid{
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap:18px;
-}
-.card{
-  position:relative;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:16px; overflow:hidden; box-shadow:var(--shadow)
-}
-.card img{
-  width:100%; height:210px; object-fit:cover; display:block;
-  background:#f7efe6;
-}
-.card-body{padding:14px 14px 16px}
-.card h3{margin:0 0 6px; font-size:1.05rem; color:var(--choco)}
-.meta{display:flex; align-items:center; justify-content:space-between; color:var(--brown); font-weight:700}
-.muted{color:var(--muted); font-weight:500}
-
-/* Bestseller Ribbon */
-.ribbon{
-  position:absolute; top:10px; left:-60px;
-  background: linear-gradient(135deg,#ffb347,#ff7f50);
-  color:#fff; padding:6px 70px; transform:rotate(-20deg);
-  font-weight:800; box-shadow:var(--shadow); letter-spacing:.4px;
-}
-
-/* Chips on Hero */
 .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
 .chip{background:#fff;border:1px solid var(--border);border-radius:999px;padding:8px 12px;font-weight:700;color:#6b4f3a;box-shadow:var(--shadow)}
 
-/* Trust strip & layout helpers */
-.row-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-@media(max-width:900px){.row-3{grid-template-columns:1fr 1fr}}
-@media(max-width:560px){.row-3{grid-template-columns:1fr}}
+/* New hero illustration */
+.hero-image{justify-self:end;display:flex;align-items:center;justify-content:center}
+.hero-image img{
+  width:100%; max-width:520px; border-radius:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,.1);
+  animation:fadeInHero .9s ease forwards; opacity:0;
+  transition:transform .5s ease, box-shadow .5s ease;
+}
+.hero-image img:hover{transform:scale(1.03); box-shadow:0 12px 30px rgba(0,0,0,.15)}
+@keyframes fadeInHero{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
 
-.trust-strip{display:flex;gap:16px;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
-.trust-strip small{color:#6b6b6b}
+/* Story image only */
+.story-section{background:#fff9f3;padding:60px 0}
+.image-only{display:flex;justify-content:center}
+.our-story-img{width:100%;max-width:750px;border-radius:18px;box-shadow:0 4px 20px rgba(0,0,0,.15)}
 
-/* =========================
-   Reviews — Carousel Styles
-   ========================= */
-.reviews{
-  padding:56px 0;
-  background: var(--reviews-bg);
-  border-top:1px solid var(--border);
-  border-bottom:1px solid var(--border);
-}
-.carousel{ position:relative; overflow:hidden; border-radius:18px }
-.track{ display:flex; gap:18px; scroll-behavior:smooth }
-.slide{
-  min-width:calc(33.333% - 12px);
-  background:#fff; border:1px solid var(--border); border-radius:16px;
-  overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column;
-}
-.slide img{ width:100%; height:210px; object-fit:cover; display:block }
-.review-body{ padding:14px 14px 16px; display:grid; gap:6px }
-.stars{ color:#f2b01e; letter-spacing:2px; font-size:1.1rem }
-.reviewer{ font-weight:700; color:var(--brown) }
-.quote{ color:#4e4e4e }
-.nav-btn{
-  position:absolute; top:50%; transform:translateY(-50%);
-  width:42px; height:42px; border-radius:999px; border:2px solid var(--arrow);
-  background:#fff; color:var(--arrow); display:grid; place-items:center; cursor:pointer;
-  box-shadow:var(--shadow);
-}
-.nav-btn:hover{ background:#fff7f0 }
-.nav-prev{ left: -10px }
-.nav-next{ right: -10px }
+/* Reviews */
+.reviews{padding:56px 0;background:var(--reviews-bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.reviews h2{text-align:center;color:var(--brown);margin:0 0 6px}
+.sub{text-align:center;color:var(--muted);margin:0 0 22px}
+.carousel{position:relative;overflow:hidden}
+.track{display:flex;gap:16px;overflow-x:auto;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+.slide{flex:0 0 auto;min-width:calc(33.333% - 12px);background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+.slide img{width:100%;height:210px;object-fit:cover;display:block}
+.review-body{padding:14px 14px 16px;display:grid;gap:6px}
+.stars{color:#f2b01e;letter-spacing:2px;font-size:1.1rem}
+.reviewer{font-weight:700;color:var(--brown)}
+.quote{color:#4e4e4e}
+.nav-btn{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:42px;height:42px;border-radius:999px;border:2px solid #6b4f3a;background:#fff;color:#6b4f3a;display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow)}
+.nav-btn:hover{background:#fff7f0}
+.nav-prev{left:6px}
+.nav-next{right:6px}
 
 /* Footer */
-footer{
-  border-top:1px solid var(--border);
-  background:#1f1f1f; color:#f7f7f7; padding:22px 0; margin-top:28px;
-}
-.footer-grid{ display:grid; grid-template-columns:1.2fr .8fr; gap:16px; align-items:center }
-footer a{color:#fff}
-.small{font-size:.9rem; color:#c9c9c9}
+footer{border-top:1px solid var(--border);background:#1f1f1f;color:#f7f7f7;padding:22px 0;margin-top:28px}
+footer a{color:#ffb347}
+.footer-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;align-items:center}
+.small{font-size:.9rem;color:#ddd}
+.footer-row2{text-align:center;margin-top:8px}
+.fssai{display:inline-flex;align-items:center;gap:10px;background:#2a2a2a;padding:6px 14px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.fssai img{width:38px;height:auto}
+.fssai span{font-size:.92rem;color:#f7f7f7;font-weight:700}
 
 /* Floating WhatsApp */
-.whatsapp-float{
-  position:fixed; right:18px; bottom:18px; width:58px; height:58px;
-  background:#25D366; border-radius:50%;
-  display:grid; place-items:center; box-shadow:0 8px 18px rgba(0,0,0,.2);
-  z-index:80;
-}
+.whatsapp-float{position:fixed;right:18px;bottom:18px;width:58px;height:58px;background:#25D366;border-radius:50%;display:grid;place-items:center;box-shadow:0 8px 18px rgba(0,0,0,.2);z-index:80}
 .whatsapp-float img{width:28px;height:28px}
-.whatsapp-float:hover{transform:translateY(-2px)}
 
-/* =========================
-   Our Story — Image Only
-   ========================= */
-.story-section {
-  background: linear-gradient(180deg, #fffaf3 0%, #ffe7c5 100%);
-  padding: 60px 0;
-}
-.story-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 30px;
-}
-.image-only { justify-content:center; text-align:center }
-.our-story-img {
-  width: 100%;
-  max-width: 750px;
-  border-radius: 18px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-}
-@media (max-width: 768px) {
-  .our-story-img { max-width: 95%; border-radius: 12px; }
-}
+/* -----------------
+   Mobile polish
+   ----------------- */
+.freebar{white-space:normal;padding:6px 10px;line-height:1.25}
+@media(max-width:480px){:root{--bar-h:48px}}
 
-/* Footer second row + FSSAI styling */
-.footer-row2 {
-  margin-top: 10px;
-  text-align: center;
-}
-.fssai {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: #2a2a2a;
-  padding: 6px 14px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-.fssai img { width: 38px; height: auto; }
-.fssai span {
-  font-size: 0.9rem;
-  color: #f7f7f7;
-  font-weight: 600;
-}
-
-/* Responsive tweaks */
-@media (max-width: 900px){
+@media(max-width:900px){
   .hero-inner{grid-template-columns:1fr}
-  .hero-logo{justify-self:center}
-  .grid{grid-template-columns: repeat(2, 1fr)}
-  .slide{ min-width:calc(50% - 9px) }
+  .hero-image{justify-self:center;margin-top:10px}
+  .slide{min-width:calc(50% - 9px)}
 }
-@media (max-width: 600px) {
-  .footer-grid { grid-template-columns: 1fr; text-align: center; gap: 8px; }
-  .footer-row2 { margin-top: 6px; }
-}
-@media (max-width: 560px){
-  .grid{grid-template-columns:1fr}
-  .nav{flex-direction:column; gap:8px}
-  .slide{ min-width:100% }
+@media(max-width:560px){
+  .slide{min-width:88vw}
+  .slide img{height:180px}
+  .footer-grid{grid-template-columns:1fr;text-align:center;gap:8px}
+  .fssai img{width:34px}
+  .whatsapp-float{right:14px;bottom:14px;width:54px;height:54px}
+  .whatsapp-float img{width:26px;height:26px}
 }
