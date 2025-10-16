@@ -1,5 +1,5 @@
 /* ============================
-   Kairavi’s Oven Magic — Styles
+   Kairavi’s Oven Magic — Global Styles
    ============================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
@@ -20,11 +20,7 @@
   --reviews-bg: linear-gradient(135deg,#fff1e2 0%, #ffe7d0 35%, #ffeede 100%);
   --arrow:#6b4f3a;
 
-  /* Cart */
-  --ok:#20c997;
-  --danger:#ff6b6b;
-
-  /* Free bar */
+  /* Sticky free bar */
   --bar-h:36px;
   --bar-bg:#1f1f1f;
   --bar-fg:#fff;
@@ -37,7 +33,7 @@ body{
   color:var(--ink);
   background:var(--cream);
   line-height:1.6;
-  padding-top:var(--bar-h); /* room for sticky free-delivery bar */
+  padding-top:var(--bar-h); /* space for sticky Free Delivery bar */
 }
 
 /* ===== Free Delivery Sticky Bar ===== */
@@ -51,7 +47,7 @@ body{
 
 /* Header / Nav */
 .site-header{
-  position:sticky; top:var(--bar-h); z-index:50; /* sit below the freebar */
+  position:sticky; top:var(--bar-h); z-index:50;
   background:#fff; border-bottom:1px solid var(--border);
   box-shadow:0 6px 16px rgba(0,0,0,.03);
 }
@@ -103,14 +99,14 @@ body{
 .btn-ghost{border-color:var(--brown); color:var(--brown); background:#fff}
 .btn-ghost:hover{background:#fff7f0}
 
-/* Sections */
+/* Utility sections */
 .section{padding:40px 0}
 .section h2{
   text-align:center; margin:0 0 20px; color:var(--brown); font-size:1.7rem
 }
 .sub{color:var(--muted); text-align:center; margin:-8px 0 26px}
 
-/* Product grid */
+/* Product teaser grid (Home) */
 .grid{
   display:grid;
   grid-template-columns: repeat(3, 1fr);
@@ -130,8 +126,6 @@ body{
 .card h3{margin:0 0 6px; font-size:1.05rem; color:var(--choco)}
 .meta{display:flex; align-items:center; justify-content:space-between; color:var(--brown); font-weight:700}
 .muted{color:var(--muted); font-weight:500}
-.row-actions{display:flex; gap:10px; align-items:center; margin-top:12px; flex-wrap:wrap}
-.addbtn{flex:1; text-align:center}
 
 /* Bestseller Ribbon */
 .ribbon{
@@ -141,45 +135,17 @@ body{
   font-weight:800; box-shadow:var(--shadow); letter-spacing:.4px;
 }
 
-/* Qty control */
-.qty-control {
-  display:inline-flex; align-items:center; gap:10px;
-  background:#f7f7f7; border:2px solid #d7d7d7; border-radius:50px;
-  padding:6px 10px; font-size:18px;
-}
-.qty-control button { background:none; border:none; color:#3a3a7c; font-size:20px; cursor:pointer; padding:0 5px }
-.qty-control .count { min-width:24px; text-align:center; font-weight:600 }
-.qty-control .remove { color:#666; font-size:16px; margin-left:4px }
-.qty-control .remove:hover { color:var(--danger) }
+/* Chips on Hero */
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.chip{background:#fff;border:1px solid var(--border);border-radius:999px;padding:8px 12px;font-weight:700;color:#6b4f3a;box-shadow:var(--shadow)}
 
-/* Filter bar */
-.filterbar{
-  background:#fff; border:1px solid var(--border); border-radius:12px; padding:12px; margin-bottom:16px; display:flex; gap:12px; flex-wrap:wrap; align-items:center;
-  box-shadow:var(--shadow);
-}
-.filterbar input, .filterbar select{
-  padding:10px 12px; border:1px solid var(--border); border-radius:10px; font:inherit;
-}
-.filterbar label{ display:flex; align-items:center; gap:6px; color:#6b4f3a; font-weight:600 }
+/* Trust strip & layout helpers */
+.row-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:900px){.row-3{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.row-3{grid-template-columns:1fr}}
 
-/* Footer */
-footer{
-  border-top:1px solid var(--border);
-  background:#1f1f1f; color:#f7f7f7; padding:22px 0; margin-top:28px;
-}
-.footer-grid{ display:grid; grid-template-columns:1.2fr .8fr; gap:16px; align-items:center }
-footer a{color:#fff}
-.small{font-size:.9rem; color:#c9c9c9}
-
-/* Floating WhatsApp */
-.whatsapp-float{
-  position:fixed; right:18px; bottom:18px; width:58px; height:58px;
-  background:#25D366; border-radius:50%;
-  display:grid; place-items:center; box-shadow:0 8px 18px rgba(0,0,0,.2);
-  z-index:80;
-}
-.whatsapp-float img{width:28px;height:28px}
-.whatsapp-float:hover{transform:translateY(-2px)}
+.trust-strip{display:flex;gap:16px;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.trust-strip small{color:#6b6b6b}
 
 /* =========================
    Reviews — Carousel Styles
@@ -212,37 +178,81 @@ footer a{color:#fff}
 .nav-prev{ left: -10px }
 .nav-next{ right: -10px }
 
-/* =========================
-   Cart page
-   ========================= */
-.page-head{ text-align:center; margin:0 0 10px }
-.cart-wrap{ max-width:880px; margin:0 auto }
-.cart-table{ width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; box-shadow:var(--shadow) }
-.cart-table th, .cart-table td{ padding:12px; border-bottom:1px solid var(--border); text-align:left }
-.cart-table th{ background:#fff7ee; color:#5b4a3f }
-.cart-row{ vertical-align:middle }
-.qty-sm{ display:inline-flex; align-items:center; gap:8px; padding:4px 10px; border:1px solid var(--border); border-radius:999px; background:#f7f7f7 }
-.qty-sm button{ background:none; border:none; font-size:18px; cursor:pointer; color:#3a3a7c }
-.qty-sm span{ min-width:22px; text-align:center; font-weight:600 }
-.remove-link{ color:var(--danger); cursor:pointer }
-.summary{ display:flex; justify-content:flex-end; gap:16px; align-items:center; margin:18px 0 }
-.total{ font-weight:800; color:var(--brown) }
-.toast{
-  position:fixed; left:50%; transform:translateX(-50%);
-  bottom:88px; background:#1f1f1f; color:#fff; padding:10px 14px; border-radius:10px; opacity:0; pointer-events:none;
-  transition:.25s; z-index:99;
+/* Footer */
+footer{
+  border-top:1px solid var(--border);
+  background:#1f1f1f; color:#f7f7f7; padding:22px 0; margin-top:28px;
 }
-.toast.show{ opacity:1 }
-.empty{
-  text-align:center; background:#fff; border:1px dashed var(--border); border-radius:12px; padding:30px; color:var(--muted)
+.footer-grid{ display:grid; grid-template-columns:1.2fr .8fr; gap:16px; align-items:center }
+footer a{color:#fff}
+.small{font-size:.9rem; color:#c9c9c9}
+
+/* Floating WhatsApp */
+.whatsapp-float{
+  position:fixed; right:18px; bottom:18px; width:58px; height:58px;
+  background:#25D366; border-radius:50%;
+  display:grid; place-items:center; box-shadow:0 8px 18px rgba(0,0,0,.2);
+  z-index:80;
+}
+.whatsapp-float img{width:28px;height:28px}
+.whatsapp-float:hover{transform:translateY(-2px)}
+
+/* =========================
+   Our Story — Image Only
+   ========================= */
+.story-section {
+  background: linear-gradient(180deg, #fffaf3 0%, #ffe7c5 100%);
+  padding: 60px 0;
+}
+.story-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+.image-only { justify-content:center; text-align:center }
+.our-story-img {
+  width: 100%;
+  max-width: 750px;
+  border-radius: 18px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+@media (max-width: 768px) {
+  .our-story-img { max-width: 95%; border-radius: 12px; }
 }
 
-/* Responsive */
+/* Footer second row + FSSAI styling */
+.footer-row2 {
+  margin-top: 10px;
+  text-align: center;
+}
+.fssai {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #2a2a2a;
+  padding: 6px 14px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.fssai img { width: 38px; height: auto; }
+.fssai span {
+  font-size: 0.9rem;
+  color: #f7f7f7;
+  font-weight: 600;
+}
+
+/* Responsive tweaks */
 @media (max-width: 900px){
   .hero-inner{grid-template-columns:1fr}
   .hero-logo{justify-self:center}
   .grid{grid-template-columns: repeat(2, 1fr)}
   .slide{ min-width:calc(50% - 9px) }
+}
+@media (max-width: 600px) {
+  .footer-grid { grid-template-columns: 1fr; text-align: center; gap: 8px; }
+  .footer-row2 { margin-top: 6px; }
 }
 @media (max-width: 560px){
   .grid{grid-template-columns:1fr}
