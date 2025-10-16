@@ -4,192 +4,232 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Products | Kairavi’s Oven Magic</title>
-  <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="images/logo.png" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <meta name="description" content="Freshly baked cookies & nankhatai. Order on WhatsApp from Kairavi’s Oven Magic." />
 </head>
 <body>
 
-  <div class="freebar">FREE delivery over ₹999 • Pune city
+  <!-- FREE DELIVERY BAR -->
+  <div class="freebar">
+    FREE delivery over ₹999 • Pune city
     <a href="cart.html">View Cart →</a>
   </div>
 
+  <!-- HEADER -->
   <header class="site-header">
     <div class="wrap nav">
-      <a class="brand" href="index.html"><img src="images/logo.png" alt="Kairavi's Oven Magic logo"><strong>Kairavi’s Oven Magic</strong></a>
+      <a class="brand" href="index.html">
+        <img src="images/logo.png" alt="Kairavi's Oven Magic logo">
+        <strong>Kairavi’s Oven Magic</strong>
+      </a>
       <nav class="menu">
         <a href="index.html">Home</a>
-        <a href="products.html">Products</a>
+        <a href="products.html" aria-current="page">Products</a>
         <a href="contact.html">Contact</a>
         <a href="cart.html">Cart <span class="badge" id="cartCount">0</span></a>
       </nav>
     </div>
   </header>
 
-  <section class="section">
+  <!-- SECTION: PRODUCTS -->
+  <section class="section section-products">
     <div class="wrap">
-      <h2>Our Cookies & Nankhatai</h2>
-      <p class="sub">Rated <strong>5.0★</strong> by happy customers — thank you for the love!</p>
-
-      <!-- FILTERS -->
-      <div class="filterbar">
-        <input id="q" type="search" placeholder="Search by name (e.g., ragi, gulkand)…"/>
-        <label>Max price:
-          <select id="priceMax">
-            <option value="">No limit</option>
-            <option value="200">₹200</option>
-            <option value="250">₹250</option>
-          </select>
-        </label>
-        <label><input type="checkbox" id="onlyBest"> Bestseller only</label>
-        <button class="btn btn-ghost" id="clearFilters" type="button">Clear</button>
+      <div class="products-header">
+        <div>
+          <h2>Our Cookies & Nankhatai</h2>
+          <p class="sub">Rated <strong>5.0★</strong> by happy customers — thank you for the love!</p>
+        </div>
+        <div class="legend">
+          <span class="legend-dot best"></span><span>Bestseller</span>
+          <span class="legend-dot new"></span><span>New</span>
+        </div>
       </div>
 
+      <!-- FILTER BAR -->
+      <div class="filterbar" role="region" aria-label="Filters">
+        <div class="filter-left">
+          <div class="search-wrap">
+            <i class="fa fa-magnifying-glass"></i>
+            <input id="q" type="search" placeholder="Search by name (e.g., ragi, gulkand)…" aria-label="Search products"/>
+          </div>
+
+          <label class="select">
+            <span>Max price</span>
+            <select id="priceMax" aria-label="Maximum price">
+              <option value="">No limit</option>
+              <option value="200">₹200</option>
+              <option value="250">₹250</option>
+            </select>
+          </label>
+
+          <label class="check"><input type="checkbox" id="onlyBest"> <span>Bestseller only</span></label>
+        </div>
+
+        <div class="filter-right">
+          <button class="btn btn-ghost" id="clearFilters" type="button"><i class="fa fa-rotate-right"></i> Clear</button>
+        </div>
+      </div>
+
+      <!-- GRID -->
       <div class="grid" id="productsGrid">
-        <!-- Cards -->
+
+        <!-- CARD TEMPLATE -->
         <article class="card best" data-product="Gulkand Nankhatai" data-weight="250 g" data-price="250" data-tags="gulkand rose">
           <div class="ribbon">Bestseller</div>
-          <img src="images/gulkand.jpg" alt="Gulkand Nankhatai">
+          <figure class="thumb">
+            <img loading="lazy" src="images/gulkand.jpg" alt="Gulkand Nankhatai cookies">
+          </figure>
           <div class="card-body">
             <h3>Gulkand Nankhatai</h3>
-            <div class="meta"><span>250 g</span><span class="price" data-price="250">₹250</span></div>
+            <div class="meta">
+              <span>250 g</span>
+              <span class="price" data-price="250">₹250</span>
+            </div>
+
             <div class="row-actions">
-              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove" title="Reset"><span>🗑️</span></button></div>
-              <a class="btn btn-primary addbtn" href="#">Add to Cart</a>
+              <div class="qty-control" aria-label="Quantity control">
+                <button class="minus" aria-label="Decrease">−</button>
+                <span class="count" aria-live="polite">1</span>
+                <button class="plus" aria-label="Increase">+</button>
+                <button class="remove" title="Reset"><i class="fa fa-trash"></i></button>
+              </div>
+              <a class="btn btn-primary addbtn" href="#" target="_blank" rel="noopener">Add to Cart</a>
             </div>
           </div>
         </article>
 
         <article class="card best" data-product="Wheat Nankhatai" data-weight="250 g" data-price="200" data-tags="wheat atta">
           <div class="ribbon">Bestseller</div>
-          <img src="images/wheat.jpg" alt="Wheat Nankhatai">
+          <figure class="thumb"><img loading="lazy" src="images/wheat.jpg" alt="Wheat Nankhatai cookies"></figure>
           <div class="card-body">
             <h3>Wheat Nankhatai</h3>
             <div class="meta"><span>250 g</span><span class="price" data-price="200">₹200</span></div>
             <div class="row-actions">
-              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove">🗑️</button></div>
-              <a class="btn btn-primary addbtn" href="#">Add to Cart</a>
+              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove"><i class="fa fa-trash"></i></button></div>
+              <a class="btn btn-primary addbtn" href="#" target="_blank" rel="noopener">Add to Cart</a>
             </div>
           </div>
         </article>
 
         <article class="card" data-product="Ragi Nankhatai" data-weight="250 g" data-price="250" data-tags="ragi finger millet">
-          <img src="images/ragi.jpg" alt="Ragi Nankhatai">
+          <figure class="thumb"><img loading="lazy" src="images/ragi.jpg" alt="Ragi Nankhatai cookies"></figure>
           <div class="card-body">
             <h3>Ragi Nankhatai</h3>
             <div class="meta"><span>250 g</span><span class="price" data-price="250">₹250</span></div>
             <div class="row-actions">
-              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove">🗑️</button></div>
-              <a class="btn btn-primary addbtn" href="#">Add to Cart</a>
+              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove"><i class="fa fa-trash"></i></button></div>
+              <a class="btn btn-primary addbtn" href="#" target="_blank" rel="noopener">Add to Cart</a>
             </div>
           </div>
         </article>
 
         <article class="card" data-product="Oats Nankhatai" data-weight="250 g" data-price="250" data-tags="oats">
-          <img src="images/oats.jpg" alt="Oats Nankhatai">
+          <figure class="thumb"><img loading="lazy" src="images/oats.jpg" alt="Oats Nankhatai cookies"></figure>
           <div class="card-body">
             <h3>Oats Nankhatai</h3>
             <div class="meta"><span>250 g</span><span class="price" data-price="250">₹250</span></div>
             <div class="row-actions">
-              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove">🗑️</button></div>
-              <a class="btn btn-primary addbtn" href="#">Add to Cart</a>
+              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove"><i class="fa fa-trash"></i></button></div>
+              <a class="btn btn-primary addbtn" href="#" target="_blank" rel="noopener">Add to Cart</a>
             </div>
           </div>
         </article>
 
         <article class="card" data-product="Maize (Corn) Nankhatai" data-weight="250 g" data-price="250" data-tags="maize corn">
-          <img src="images/maize.jpg" alt="Maize Nankhatai">
+          <figure class="thumb"><img loading="lazy" src="images/maize.jpg" alt="Maize (Corn) Nankhatai cookies"></figure>
           <div class="card-body">
             <h3>Maize (Corn) Nankhatai</h3>
             <div class="meta"><span>250 g</span><span class="price" data-price="250">₹250</span></div>
             <div class="row-actions">
-              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove">🗑️</button></div>
-              <a class="btn btn-primary addbtn" href="#">Add to Cart</a>
+              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove"><i class="fa fa-trash"></i></button></div>
+              <a class="btn btn-primary addbtn" href="#" target="_blank" rel="noopener">Add to Cart</a>
             </div>
           </div>
         </article>
 
         <article class="card" data-product="Jowar Nankhatai" data-weight="250 g" data-price="250" data-tags="jowar sorghum">
-          <img src="images/jowar.jpg" alt="Jowar Nankhatai">
+          <figure class="thumb"><img loading="lazy" src="images/jowar.jpg" alt="Jowar Nankhatai cookies"></figure>
           <div class="card-body">
             <h3>Jowar Nankhatai</h3>
             <div class="meta"><span>250 g</span><span class="price" data-price="250">₹250</span></div>
             <div class="row-actions">
-              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove">🗑️</button></div>
-              <a class="btn btn-primary addbtn" href="#">Add to Cart</a>
+              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove"><i class="fa fa-trash"></i></button></div>
+              <a class="btn btn-primary addbtn" href="#" target="_blank" rel="noopener">Add to Cart</a>
             </div>
           </div>
         </article>
 
         <article class="card" data-product="Upvas Nankhatai" data-weight="250 g" data-price="250" data-tags="upvas fasting sabudana rajgira">
-          <img src="images/upvas.jpg" alt="Upvas Nankhatai">
+          <figure class="thumb"><img loading="lazy" src="images/upvas.jpg" alt="Upvas Nankhatai cookies"></figure>
           <div class="card-body">
             <h3>Upvas Nankhatai</h3>
             <div class="meta"><span>250 g</span><span class="price" data-price="250">₹250</span></div>
             <div class="row-actions">
-              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove">🗑️</button></div>
-              <a class="btn btn-primary addbtn" href="#">Add to Cart</a>
+              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove"><i class="fa fa-trash"></i></button></div>
+              <a class="btn btn-primary addbtn" href="#" target="_blank" rel="noopener">Add to Cart</a>
             </div>
           </div>
         </article>
 
         <article class="card best" data-product="Chocolate Nankhatai" data-weight="250 g" data-price="250" data-tags="chocolate choco">
           <div class="ribbon">Bestseller</div>
-          <img src="images/chocolate.jpg" alt="Chocolate Nankhatai">
+          <figure class="thumb"><img loading="lazy" src="images/chocolate.jpg" alt="Chocolate Nankhatai cookies"></figure>
           <div class="card-body">
             <h3>Chocolate Nankhatai</h3>
             <div class="meta"><span>250 g</span><span class="price" data-price="250">₹250</span></div>
             <div class="row-actions">
-              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove">🗑️</button></div>
-              <a class="btn btn-primary addbtn" href="#">Add to Cart</a>
+              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove"><i class="fa fa-trash"></i></button></div>
+              <a class="btn btn-primary addbtn" href="#" target="_blank" rel="noopener">Add to Cart</a>
             </div>
           </div>
         </article>
 
         <article class="card" data-product="Ajwain Sticks" data-weight="250 g" data-price="250" data-tags="ajwain sticks">
-          <img src="images/ajwain-sticks.jpg" alt="Ajwain Sticks">
+          <figure class="thumb"><img loading="lazy" src="images/ajwain-sticks.jpg" alt="Ajwain Sticks"></figure>
           <div class="card-body">
             <h3>Ajwain Sticks</h3>
             <div class="meta"><span>250 g</span><span class="price" data-price="250">₹250</span></div>
             <div class="row-actions">
-              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove">🗑️</button></div>
-              <a class="btn btn-primary addbtn" href="#">Add to Cart</a>
+              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove"><i class="fa fa-trash"></i></button></div>
+              <a class="btn btn-primary addbtn" href="#" target="_blank" rel="noopener">Add to Cart</a>
             </div>
           </div>
         </article>
 
         <article class="card" data-product="Ajwain Cookies" data-weight="250 g" data-price="200" data-tags="ajwain cookies">
-          <img src="images/ajwain-cookies.jpg" alt="Ajwain Cookies">
+          <figure class="thumb"><img loading="lazy" src="images/ajwain-cookies.jpg" alt="Ajwain Cookies"></figure>
           <div class="card-body">
             <h3>Ajwain Cookies</h3>
             <div class="meta"><span>250 g</span><span class="price" data-price="200">₹200</span></div>
             <div class="row-actions">
-              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove">🗑️</button></div>
-              <a class="btn btn-primary addbtn" href="#">Add to Cart</a>
+              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove"><i class="fa fa-trash"></i></button></div>
+              <a class="btn btn-primary addbtn" href="#" target="_blank" rel="noopener">Add to Cart</a>
             </div>
           </div>
         </article>
 
         <article class="card" data-product="Jeera Cookies" data-weight="250 g" data-price="250" data-tags="jeera cumin">
-          <img src="images/jeera.jpg" alt="Jeera Cookies">
+          <figure class="thumb"><img loading="lazy" src="images/jeera.jpg" alt="Jeera Cookies"></figure>
           <div class="card-body">
             <h3>Jeera Cookies</h3>
             <div class="meta"><span>250 g</span><span class="price" data-price="250">₹250</span></div>
             <div class="row-actions">
-              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove">🗑️</button></div>
-              <a class="btn btn-primary addbtn" href="#">Add to Cart</a>
+              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove"><i class="fa fa-trash"></i></button></div>
+              <a class="btn btn-primary addbtn" href="#" target="_blank" rel="noopener">Add to Cart</a>
             </div>
           </div>
         </article>
 
         <article class="card" data-product="Mini Marble Cookies" data-weight="250 g" data-price="200" data-tags="marble vanilla chocolate">
-          <img src="images/marble.jpg" alt="Mini Marble Cookies">
+          <figure class="thumb"><img loading="lazy" src="images/marble.jpg" alt="Mini Marble Cookies"></figure>
           <div class="card-body">
             <h3>Mini Marble Cookies</h3>
             <div class="meta"><span>250 g</span><span class="price" data-price="200">₹200</span></div>
             <div class="row-actions">
-              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove">🗑️</button></div>
-              <a class="btn btn-primary addbtn" href="#">Add to Cart</a>
+              <div class="qty-control"><button class="minus">−</button><span class="count">1</span><button class="plus">+</button><button class="remove"><i class="fa fa-trash"></i></button></div>
+              <a class="btn btn-primary addbtn" href="#" target="_blank" rel="noopener">Add to Cart</a>
             </div>
           </div>
         </article>
@@ -198,53 +238,104 @@
     </div>
   </section>
 
+  <!-- FOOTER -->
   <footer>
     <div class="wrap footer-grid">
       <div class="small">© 2025 Kairavi’s Oven Magic — Kairavi Food Products</div>
-      <div class="small" style="text-align:right">Email: <a href="mailto:kairavisovenmagic@gmail.com">kairavisovenmagic@gmail.com</a></div>
+      <div class="small" style="text-align:right">
+        Email: <a href="mailto:kairavisovenmagic@gmail.com">kairavisovenmagic@gmail.com</a>
+      </div>
     </div>
   </footer>
 
-  <a class="whatsapp-float" href="https://wa.me/919766964845" target="_blank" aria-label="Chat on WhatsApp">
+  <!-- WhatsApp Floating -->
+  <a class="whatsapp-float" href="https://wa.me/919766964845?text=Hi%2C%20I%20want%20to%20order%20cookies" target="_blank" aria-label="Chat on WhatsApp">
     <img src="images/whatsapp.png" alt="WhatsApp">
   </a>
 
-  <!-- Qty + Cart + Filters -->
+  <!-- Qty + Cart + Filter logic -->
   <script>
-    const CART_KEY='kom_cart';
-    const getCart=()=>JSON.parse(localStorage.getItem(CART_KEY)||'[]');
-    const saveCart=c=>{localStorage.setItem(CART_KEY,JSON.stringify(c));updateCartCount();showToast('Added to cart');}
-    const updateCartCount=()=>{const el=document.getElementById('cartCount');if(!el) return;el.textContent=getCart().reduce((s,i)=>s+i.qty,0)}
-    function showToast(msg){let t=document.querySelector('.toast');if(!t){t=document.createElement('div');t.className='toast';document.body.appendChild(t)}t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1000)}
+    const CART_KEY = 'kom_cart';
 
-    document.querySelectorAll('.card').forEach(card=>{
-      const name=card.dataset.product, weight=card.dataset.weight, base=+card.dataset.price;
-      const priceEl=card.querySelector('.price'), minus=card.querySelector('.minus'), plus=card.querySelector('.plus'), remove=card.querySelector('.remove'), count=card.querySelector('.count'), add=card.querySelector('.addbtn');
-      let qty=1; const update=()=>{priceEl.textContent=`₹${base*qty}`;count.textContent=qty}
-      minus.onclick=()=>{if(qty>1){qty--;update()}}
-      plus.onclick =()=>{if(qty<10){qty++;update()}}
-      remove.onclick=()=>{qty=1;update()}
-      add.onclick   =e=>{e.preventDefault();const cart=getCart();const key=`${name}|${weight}|${base}`;const row=cart.find(i=>i.key===key);row?row.qty+=qty:cart.push({key,name,weight,price:base,qty});saveCart(cart)}
-      update()
+    function getCart(){ return JSON.parse(localStorage.getItem(CART_KEY)||'[]'); }
+    function saveCart(c){ localStorage.setItem(CART_KEY, JSON.stringify(c)); updateCartCount(); toast('Added to cart'); }
+    function updateCartCount(){
+      const el = document.getElementById('cartCount');
+      if(!el) return;
+      const qty = getCart().reduce((s,i)=>s+i.qty,0);
+      el.textContent = qty;
+    }
+    function toast(msg){
+      let t=document.querySelector('.toast'); 
+      if(!t){ t=document.createElement('div'); t.className='toast'; document.body.appendChild(t); }
+      t.textContent=msg; t.classList.add('show'); 
+      setTimeout(()=>t.classList.remove('show'),1100);
+    }
+
+    // Initialize product cards
+    document.querySelectorAll('.card').forEach(card => {
+      const name = card.dataset.product;
+      const weight = card.dataset.weight;
+      const basePrice = parseInt(card.dataset.price || card.querySelector('.price').dataset.price, 10);
+
+      const priceEl = card.querySelector('.price');
+      const minus = card.querySelector('.minus');
+      const plus = card.querySelector('.plus');
+      const remove = card.querySelector('.remove');
+      const countEl = card.querySelector('.count');
+      const addBtn = card.querySelector('.addbtn');
+
+      let qty = 1;
+      function update(){ priceEl.textContent = `₹${basePrice * qty}`; countEl.textContent = qty; }
+      minus.addEventListener('click', () => { if (qty > 1) { qty--; update(); } });
+      plus .addEventListener('click', () => { if (qty < 10){ qty++; update(); } });
+      remove.addEventListener('click', () => { qty = 1; update(); });
+
+      addBtn.addEventListener('click', e=>{
+        e.preventDefault();
+        const cart=getCart();
+        const key=`${name}|${weight}|${basePrice}`;
+        const found=cart.find(i=>i.key===key);
+        if(found){ found.qty += qty; } else { cart.push({ key, name, weight, price: basePrice, qty }); }
+        saveCart(cart);
+      });
+
+      update();
     });
 
     updateCartCount();
 
-    // Filters
-    const q=document.getElementById('q'), priceMax=document.getElementById('priceMax'), onlyBest=document.getElementById('onlyBest'), clearFilters=document.getElementById('clearFilters');
+    // ------ Filters ------
+    const q = document.getElementById('q');
+    const priceMax = document.getElementById('priceMax');
+    const onlyBest = document.getElementById('onlyBest');
+    const clearFilters = document.getElementById('clearFilters');
+
     function applyFilters(){
-      const term=(q.value||'').toLowerCase(), max=priceMax.value?+priceMax.value:Infinity, best=onlyBest.checked;
+      const term = q.value.trim().toLowerCase();
+      const max = priceMax.value ? parseInt(priceMax.value,10) : Infinity;
+      const best = onlyBest.checked;
+
       document.querySelectorAll('.card').forEach(card=>{
-        const matchText=card.dataset.product.toLowerCase().includes(term)||(card.dataset.tags||'').toLowerCase().includes(term);
-        const matchPrice=+card.dataset.price<=max;
-        const matchBest = !best || card.classList.contains('best');
-        card.style.display=(matchText && matchPrice && matchBest)?'':'none';
-      })
+        const name = card.dataset.product.toLowerCase();
+        const tags = (card.dataset.tags||'').toLowerCase();
+        const price = parseInt(card.dataset.price,10);
+        const isBest = card.classList.contains('best');
+
+        const textMatch = !term || name.includes(term) || tags.includes(term);
+        const priceMatch = price <= max;
+        const bestMatch  = !best || isBest;
+
+        card.style.display = (textMatch && priceMatch && bestMatch) ? '' : 'none';
+      });
     }
-    [q,priceMax,onlyBest].forEach(el=>el.addEventListener('input',applyFilters));
-    clearFilters.onclick=()=>{q.value='';priceMax.value='';onlyBest.checked=false;applyFilters()}
+    [q, priceMax, onlyBest].forEach(el=> el.addEventListener('input', applyFilters));
+    clearFilters.addEventListener('click', ()=>{
+      q.value=''; priceMax.value=''; onlyBest.checked=false; applyFilters();
+    });
     applyFilters();
   </script>
+
   <div class="toast" style="display:none"></div>
 </body>
 </html>
