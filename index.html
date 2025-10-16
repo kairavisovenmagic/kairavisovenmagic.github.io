@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Kairavi’s Oven Magic — Homemade Cookies & Nankhatai</title>
-  <meta name="description" content="Homemade cookies & nankhatai made with pure butter. No maida, no palm oil. Small-batch fresh bakes from Kairavi’s Oven Magic, Pune."/>
+  <meta name="description" content="Homemade cookies & nankhatai made with pure unsalted butter. No maida, no palm oil. Small-batch fresh bakes from Kairavi’s Oven Magic, Pune."/>
   <link rel="icon" href="images/logo.png"/>
   <link rel="stylesheet" href="style.css"/>
 </head>
@@ -59,14 +59,14 @@
         </div>
       </div>
 
-      <!-- NEW HERO ILLUSTRATION -->
+      <!-- NEW HERO ILLUSTRATION (PNG) -->
       <div class="hero-image">
         <img src="images/vandana-hero.png" alt="Handmade Happiness from Vandana’s Kitchen"/>
       </div>
     </div>
   </section>
 
-  <!-- OUR STORY AS IMAGE -->
+  <!-- OUR STORY (IMAGE) -->
   <section class="story-section">
     <div class="wrap image-only">
       <img src="images/our-story.jpg" alt="Our Story — From Home to Heart" class="our-story-img"/>
@@ -138,7 +138,7 @@
     <img src="images/whatsapp.png" alt="WhatsApp"/>
   </a>
 
-  <!-- CAROUSEL JS (arrows + drag/swipe) -->
+  <!-- CAROUSEL JS (arrows + drag/swipe + snap support) -->
   <script>
     const track = document.getElementById('reviewTrack');
     const prev  = document.querySelector('.nav-prev');
@@ -155,7 +155,7 @@
     prev.addEventListener('click', ()=> track.scrollBy({left: -stepWidth(), behavior:'smooth'}));
     next.addEventListener('click', ()=> track.scrollBy({left:  stepWidth(), behavior:'smooth'}));
 
-    // pointer drag for desktop + touch
+    // pointer drag (desktop + touch)
     let down=false, startX=0, startScroll=0, pid=0;
     track.addEventListener('pointerdown', e=>{
       down=true; pid=e.pointerId; startX=e.clientX; startScroll=track.scrollLeft; track.setPointerCapture(pid);
