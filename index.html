@@ -11,14 +11,14 @@
 <body>
 
   <!-- FREE DELIVERY BAR -->
-  <div class="freebar" role="status">
+  <div class="freebar">
     FREE delivery over ₹999 • Pune city
     <a href="products.html">Shop now →</a>
   </div>
 
   <!-- HEADER -->
   <header class="site-header">
-    <div class="wrap nav" role="navigation" aria-label="Main">
+    <div class="wrap nav">
       <a class="brand" href="index.html">
         <img src="images/logo.png" alt="Kairavi’s Oven Magic logo"/>
         <strong>Kairavi’s Oven Magic</strong>
@@ -45,7 +45,7 @@
           and melt-in-the-mouth goodness.
         </div>
 
-        <div class="chips" aria-label="highlights">
+        <div class="chips">
           <span class="chip">No Maida</span>
           <span class="chip">No Palm Oil</span>
           <span class="chip">Pure Unsalted Butter</span>
@@ -55,11 +55,10 @@
 
         <div class="cta-row">
           <a class="btn btn-primary" href="products.html">Shop Cookies</a>
-          <a class="btn btn-ghost" href="https://wa.me/919766964845" target="_blank" rel="noopener">WhatsApp Us</a>
+          <a class="btn btn-ghost" href="https://wa.me/919766964845" target="_blank">WhatsApp Us</a>
         </div>
       </div>
 
-      <!-- HERO IMAGE -->
       <div class="hero-image">
         <img src="images/vandana-hero.png" alt="Handmade Happiness from Vandana’s Kitchen"/>
       </div>
@@ -74,54 +73,53 @@
   </section>
 
   <!-- REVIEWS -->
-  <section class="reviews" aria-label="Customer reviews">
+  <section class="reviews">
     <div class="wrap">
       <h2>Customer Love</h2>
       <p class="sub">Real feedback from people who tried Kairavi’s Oven Magic</p>
 
       <div class="carousel">
-        <button class="nav-btn nav-prev" aria-label="Previous">‹</button>
+        <button class="nav-btn nav-prev">‹</button>
 
         <div class="track" id="reviewTrack">
           <article class="slide">
-            <img src="images/reviews/rahul.jpg" alt="Rahul review screenshot"/>
+            <div class="review-image">
+              <img src="images/reviews/rahul.jpg" alt="Rahul review screenshot"/>
+            </div>
             <div class="review-body">
               <div class="stars">★★★★★</div>
               <div class="reviewer">Rahul — Pune</div>
-              <p class="quote">
-                “Healthy meets heavenly! Tried ragi, wheat, and gulkand nankhatai —
-                pure harmony in every bite. Deliciously different, naturally nourishing.”
-              </p>
+              <p>“Healthy meets heavenly! Tried ragi, wheat, and gulkand nankhatai —
+              pure harmony in every bite. Deliciously different, naturally nourishing.”</p>
             </div>
           </article>
 
           <article class="slide">
-            <img src="images/reviews/vishal.jpg" alt="Vishal review screenshot"/>
+            <div class="review-image">
+              <img src="images/reviews/vishal.jpg" alt="Vishal review screenshot"/>
+            </div>
             <div class="review-body">
               <div class="stars">★★★★★</div>
               <div class="reviewer">Vishal — Pune</div>
-              <p class="quote">
-                🍪✨ Cookie Bliss Unboxed! ✨🍪 Received my Gulkand & Coconut cookies from
-                Kairavi’s Oven Magic — absolutely loved them! No maida, no palm oil,
-                neat packaging, fresh aroma, authentic taste — pure happiness in every bite! 💚
-              </p>
+              <p>“🍪✨ Cookie Bliss Unboxed! ✨🍪 Got my Gulkand & Coconut cookies from Kairavi’s Oven Magic —
+              neat packaging, fresh aroma, no maida or palm oil — just pure, homemade taste!”</p>
             </div>
           </article>
 
           <article class="slide">
-            <img src="images/reviews/sanyukta.jpg" alt="Sanyukta review screenshot"/>
+            <div class="review-image">
+              <img src="images/reviews/sanyukta.jpg" alt="Sanyukta review screenshot"/>
+            </div>
             <div class="review-body">
               <div class="stars">★★★★★</div>
               <div class="reviewer">Sanyukta — Pune</div>
-              <p class="quote">
-                “Absolutely loved the nankhatai! 😊 Tried two varieties — Gulkand & Ragi —
-                both soft, light, and perfectly balanced. Melt-in-mouth goodness, no oily feel.”
-              </p>
+              <p>“Absolutely loved the nankhatai! Tried two varieties — Gulkand & Ragi —
+              soft, light, perfectly balanced, and melt-in-mouth delicious!”</p>
             </div>
           </article>
         </div>
 
-        <button class="nav-btn nav-next" aria-label="Next">›</button>
+        <button class="nav-btn nav-next">›</button>
       </div>
     </div>
   </section>
@@ -143,12 +141,10 @@
     </div>
   </footer>
 
-  <!-- WHATSAPP FLOAT -->
   <a class="whatsapp-float" href="https://wa.me/919766964845" target="_blank">
     <img src="images/whatsapp.png" alt="WhatsApp"/>
   </a>
 
-  <!-- CAROUSEL SCRIPT -->
   <script>
     const track = document.getElementById('reviewTrack');
     const prev  = document.querySelector('.nav-prev');
@@ -165,7 +161,7 @@
     prev.addEventListener('click', ()=> track.scrollBy({left: -stepWidth(), behavior:'smooth'}));
     next.addEventListener('click', ()=> track.scrollBy({left:  stepWidth(), behavior:'smooth'}));
 
-    // Pointer drag + pause autoplay
+    // drag + autoplay
     let down=false, startX=0, startScroll=0, pid=0;
     track.addEventListener('pointerdown', e=>{
       down=true; pid=e.pointerId; startX=e.clientX; startScroll=track.scrollLeft; track.setPointerCapture(pid);
@@ -178,7 +174,6 @@
     track.addEventListener('pointerup', up);
     track.addEventListener('pointercancel', up);
 
-    // Autoplay every 5 seconds
     let autoId;
     function autoplayTick(){
       const max = track.scrollWidth - track.clientWidth;
@@ -192,7 +187,6 @@
     }
     function stopAutoplay(){ if(autoId) clearInterval(autoId); }
 
-    // Pause on hover/touch/tab hidden
     ['mouseenter','focusin','touchstart'].forEach(ev => track.addEventListener(ev, stopAutoplay));
     ['mouseleave','focusout','touchend'].forEach(ev => track.addEventListener(ev, startAutoplay));
     document.addEventListener('visibilitychange', ()=> document.hidden ? stopAutoplay() : startAutoplay());
