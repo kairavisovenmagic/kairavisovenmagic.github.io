@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Your Cart | Kairavi’s Oven Magic</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="images/logo.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="index.html"><img src="images/logo.png" alt=""> <strong>Kairavi’s Oven Magic</strong></a>
+      <nav class="menu">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="contact.html">Contact</a>
+        <a href="cart.html">Cart <span class="badge" id="cartCount">0</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap cart-wrap">
+      <h2 class="page-head">Your Cart</h2>
+      <div id="cartContainer"></div>
+      <div class="summary" id="cartSummary" style="display:none">
+        <div class="total" id="totalText">Total: ₹0</div>
+        <a id="waButton" class="btn btn-primary" target="_blank">Order on WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap footer-grid">
+      <div class="small">© 2025 Kairavi’s Oven Magic — Kairavi Food Products</div>
+      <div class="small" style="text-align:right">Email: <a href="mailto:kairavisovenmagic@gmail.com">kairavisovenmagic@gmail.com</a></div>
+    </div>
+  </footer>
+
+  <a class="whatsapp-float" href="https://wa.me/917020351710" target="_blank" aria-label="Chat on WhatsApp">
+    <img src="images/whatsapp.png" alt="WhatsApp">
+  </a>
+
+  <script>
+    const CART_KEY = 'kom_cart';
+    const WHATSAPP = 'https://wa.me/917020351710?text=';
+
+    const container = document.getElementById('cartContainer');
+    const summary   = document.getElementById('cartSummary');
+    const totalText = document.getElementById('totalText');
+    const waButton  = document.getElementById('waButton');
+
+    function getCart(){ return JSON.parse(localStorage.getItem(CART_KEY)||'[]'); }
+    function saveCart(c){ localStorage.setItem(CART_KEY, JSON.stringify(c)); }
+    function updateCartCount(){
+      const el=document.getElementById('cartCount');
+      if(!el) return;
+      el.textContent = getCart().reduce((s,i)=>s+i.qty,0);
+    }
+
+    function render(){
+      const cart = getCart();
+      if(cart.length===0){
+        container.innerHTML = '<div class="empty">Your cart is empty. <a href="products.html">Add some cookies →</a></div>';
+        summary.style.display = 'none';
+        updateCartCount();
+        return;
+      }
+      let html = '<table class="cart-table"><thead><tr><th>Item</th><th>Weight</th><th>Price</th><th>Qty</th><th>Subtotal</th><th></th></tr></thead><tbody>';
+      let total = 0;
+      cart.forEach((it,idx)=>{
+        const sub = it.price * it.qty; total += sub;
+        html += `<tr class="cart-row" data-idx="${idx}">
+          <td>${it.name}</td>
+          <td>${it.weight}</td>
+          <td>₹${it.price}</td>
+          <td>
+            <div class="qty-sm">
+              <button class="minus">−</button>
+              <span class="q">${it.qty}</span>
+              <button class="plus">+</button>
+            </div>
+          </td>
+          <td class="sub">₹${sub}</td>
+          <td><span class="remove-link">Remove</span></td>
+        </tr>`;
+      });
+      html += '</tbody></table>';
+      container.innerHTML = html;
+
+      totalText.textContent = `Total: ₹${total}`;
+      summary.style.display = 'flex';
+      updateCartCount();
+
+      // Build WhatsApp message
+      const lines = cart.map(i=>`• ${i.name} ${i.weight} x ${i.qty} = ₹${i.price*i.qty}`);
+      lines.push(`Total: ₹${total}`);
+      const msg = encodeURIComponent(`Hi Kairavi’s Oven Magic! I'd like to order:\n${lines.join('\n')}\n\nName:\nArea & PIN:\nPreferred delivery date:`);
+      waButton.href = WHATSAPP + msg;
+
+      // attach row handlers
+      document.querySelectorAll('.cart-row').forEach(row=>{
+        const idx = parseInt(row.dataset.idx,10);
+        row.querySelector('.minus').onclick = ()=>{ changeQty(idx,-1) };
+        row.querySelector('.plus').onclick  = ()=>{ changeQty(idx, 1) };
+        row.querySelector('.remove-link').onclick = ()=>{ removeItem(idx) };
+      });
+    }
+
+    function changeQty(idx,delta){
+      const cart = getCart();
+      cart[idx].qty += delta;
+      if(cart[idx].qty < 1) cart[idx].qty = 1;
+      saveCart(cart); render();
+    }
+    function removeItem(idx){
+      const cart = getCart(); cart.splice(idx,1); saveCart(cart); render();
+    }
+
+    render();
+  </script>
+</body>
+</html>
