@@ -14,7 +14,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Poppins,sans-serif;color:var(--brown);background:var(--cream);line-height:1.6;padding-top:var(--bar-h);}
 
-/* Free bar */
+/* Top bar */
 .freebar{position:fixed;top:0;left:0;right:0;height:var(--bar-h);background:#1f1f1f;color:#fff;display:flex;justify-content:center;align-items:center;font-weight:700;z-index:99;gap:6px}
 .freebar a{color:#9cf;text-decoration:none}
 
@@ -46,30 +46,55 @@ body{font-family:Poppins,sans-serif;color:var(--brown);background:var(--cream);l
 .our-story-img{width:100%;max-width:750px;border-radius:18px;box-shadow:var(--shadow)}
 
 /* Reviews */
-.reviews{padding:64px 0;background:var(--reviews-bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.reviews{padding:70px 0;background:var(--reviews-bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
 .reviews h2{text-align:center;font-size:1.8rem;margin-bottom:6px}
-.sub{text-align:center;color:var(--muted);margin-bottom:24px}
+.sub{text-align:center;color:var(--muted);margin-bottom:28px}
 
 .carousel{position:relative;overflow:hidden;}
-.track{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;}
+.track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;}
 .track::-webkit-scrollbar{display:none;}
-.slide{flex:0 0 auto;background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);scroll-snap-align:start;min-height:520px;}
-.slide img{width:100%;height:240px;object-fit:cover;display:block;}
-.review-body{padding:16px 18px 20px;display:grid;gap:8px;}
-.stars{color:#f2b01e;font-size:1.1rem;letter-spacing:2px;}
-.reviewer{font-weight:700;color:var(--brown);}
-.quote{color:#4e4e4e;line-height:1.6;font-size:.95rem;}
-.nav-btn{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;border:2px solid var(--brown);background:#fff;color:var(--brown);display:grid;place-items:center;cursor:pointer;z-index:10;box-shadow:var(--shadow)}
-.nav-btn:hover{background:#fff5ef}
-.nav-prev{left:6px}
-.nav-next{right:6px}
 
-@media (min-width:901px){.slide{min-width:calc(50% - 10px)}}
+.slide{
+  flex:0 0 auto;
+  width:calc(50% - 10px);
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  scroll-snap-align:center;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+}
+.review-image img{
+  width:100%;
+  height:auto;
+  max-height:220px;
+  object-fit:cover;
+  display:block;
+}
+.review-body{
+  padding:18px 20px 24px;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+}
+.stars{color:#f2b01e;font-size:1.1rem;letter-spacing:2px;}
+.reviewer{font-weight:700;color:var(--brown);margin-bottom:4px;}
+.review-body p{color:#4e4e4e;line-height:1.6;font-size:.95rem;}
+
+/* Arrows */
+.nav-btn{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:2px solid var(--brown);background:#fff;color:var(--brown);display:grid;place-items:center;cursor:pointer;z-index:10;box-shadow:var(--shadow)}
+.nav-btn:hover{background:#fff5ef}
+.nav-prev{left:8px}
+.nav-next{right:8px}
+
 @media (max-width:900px){
   .hero-inner{grid-template-columns:1fr}
   .hero-image{justify-self:center;margin-top:10px}
-  .slide{min-width:90vw;min-height:560px}
-  .slide img{height:200px}
+  .slide{width:90vw}
 }
 
 /* Footer */
@@ -79,11 +104,8 @@ footer a{color:#ffb347}
 .footer-row2{text-align:center;margin-top:8px}
 .fssai{display:inline-flex;align-items:center;gap:10px;background:#2a2a2a;padding:6px 14px;border-radius:8px;}
 .fssai img{width:38px}
+@media(max-width:560px){.footer-grid{grid-template-columns:1fr;text-align:center}}
 
 /* WhatsApp */
 .whatsapp-float{position:fixed;right:18px;bottom:18px;width:58px;height:58px;background:#25D366;border-radius:50%;display:grid;place-items:center;box-shadow:0 8px 18px rgba(0,0,0,.2);z-index:80}
 .whatsapp-float img{width:28px;height:28px}
-
-@media(max-width:560px){
-  .footer-grid{grid-template-columns:1fr;text-align:center}
-}
