@@ -1,4 +1,4 @@
-/* IMAGES NEEDED:
+/* REQUIRED IMAGES:
 images/logo.png
 images/vandana-hero.png
 images/our-story.jpg
@@ -142,9 +142,11 @@ body{
 /* widths */
 @media (min-width:901px){ .slide{ min-width: calc(50% - 10px); } } /* 2 per view */
 @media (max-width:900px){
-  .slide{ min-width: 88vw; }           /* 1 full card per swipe on phones */
+  .hero-inner{grid-template-columns:1fr}             /* stack hero */
+  .hero-image{justify-self:center;margin-top:10px}
+  .slide{ min-width: 88vw; }                         /* 1 card per swipe */
   .slide img{ height:160px; }
-  .carousel{ padding: 0 6px; }         /* avoid tiny edge cutoffs */
+  .carousel{ padding: 0 6px; }                       /* avoid edge cutoffs */
 }
 
 /* Footer */
@@ -165,10 +167,6 @@ footer a{color:#ffb347}
 .freebar{white-space:normal;padding:6px 10px;line-height:1.25}
 @media(max-width:480px){:root{--bar-h:48px}}
 
-@media(max-width:900px){
-  .hero-inner{grid-template-columns:1fr}
-  .hero-image{justify-self:center;margin-top:10px}
-}
 @media(max-width:560px){
   .footer-grid{grid-template-columns:1fr;text-align:center;gap:8px}
   .fssai img{width:34px}
