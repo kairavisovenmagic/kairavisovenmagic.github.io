@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>My Account | Kairavi’s Oven Magic</title>
+  <link rel="icon" href="images/logo.png"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .account-hero{background:linear-gradient(180deg, rgba(59,43,34,.85), rgba(59,43,34,.7)),url('images/login-bg.jpg') center/cover no-repeat;color:#fff;padding:48px 0}
+    .account-hero h1{font-size:1.8rem}
+    .account-wrap{padding:30px 0}
+    .panel{background:#fff;border-radius:16px;box-shadow:0 10px 20px rgba(0,0,0,.06);padding:18px;border:1px solid rgba(0,0,0,.05)}
+    .grid-2{display:grid;grid-template-columns:1.1fr 1.6fr;gap:18px}
+    .panel h2{font-size:1.1rem;margin-bottom:10px}
+    .frow{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+    .frow input, .frow textarea{border:1px solid #e6dcd5;border-radius:10px;padding:10px 12px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+    .status{margin-top:8px;font-size:.92rem}
+    .status.good{color:#2e7d32}.status.bad{color:#c62828}
+    .table{width:100%;border-collapse:collapse}
+    .table th,.table td{padding:10px;border-bottom:1px solid #eee;text-align:left;font-size:.95rem}
+    .pill{display:inline-block;padding:.15rem .5rem;border-radius:999px;background:#faf7f3;border:1px solid #e6dcd5}
+    @media (max-width:920px){.grid-2{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <div class="freebar">Welcome to your account • <a href="products.html">Shop now →</a></div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="index.html"><img src="images/logo.png" alt=""><strong>Kairavi’s Oven Magic</strong></a>
+      <nav class="menu">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="contact.html">Contact</a>
+        <a href="cart.html">Cart</a>
+        <a id="loginLink" href="login.html">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="account-hero">
+    <div class="wrap">
+      <h1>My Account</h1>
+      <p>Manage your details and view your orders.</p>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <section class="account-wrap">
+    <div class="wrap grid-2">
+      <!-- Profile -->
+      <div class="panel">
+        <h2>Profile</h2>
+        <div class="frow"><label>Email</label><input id="email" type="email" disabled></div>
+        <div class="frow"><label>Name</label><input id="name" type="text" placeholder="Your name"></div>
+        <div class="frow"><label>Phone</label><input id="phone" type="tel" placeholder="+91 9xxxxxxxxx"></div>
+        <div class="frow"><label>Address</label><textarea id="address" rows="3" placeholder="Flat, Street, Area, City, Pincode"></textarea></div>
+        <div class="actions">
+          <button class="btn btn-primary" id="saveBtn">Save</button>
+          <a class="btn btn-ghost" href="cart.html">Go to Cart</a>
+          <button class="btn btn-ghost" id="logoutBtn">Log Out</button>
+        </div>
+        <div id="pStatus" class="status"></div>
+      </div>
+
+      <!-- Orders -->
+      <div class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+          <h2>My Orders</h2>
+          <span id="orderCount" class="pill">0 orders</span>
+        </div>
+        <div style="overflow:auto">
+          <table class="table" id="ordersTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody><!-- filled by JS --></tbody>
+          </table>
+        </div>
+        <div class="status" id="oStatus"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap footer-grid">
+      <div class="small">© 2025 Kairavi’s Oven Magic — Kairavi Food Products</div>
+      <div class="small" style="text-align:right">Email: <a href="mailto:kairavisovenmagic@gmail.com">kairavisovenmagic@gmail.com</a></div>
+    </div>
+  </footer>
+
+  <!-- Firebase + page logic -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
+    import { getFirestore, doc, getDoc, setDoc, collection, query, where, orderBy, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
+      authDomain: "kairavis-oven-magic.firebaseapp.com",
+      projectId: "kairavis-oven-magic",
+      storageBucket: "kairavis-oven-magic.firebasestorage.app",
+      messagingSenderId: "270897232759",
+      appId: "1:270897232759:web:36ee0edc8b222046febf72"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    const loginLink = document.getElementById('loginLink');
+    const emailEl = document.getElementById('email');
+    const nameEl = document.getElementById('name');
+    const phoneEl = document.getElementById('phone');
+    const addrEl = document.getElementById('address');
+    const saveBtn = document.getElementById('saveBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const pStatus = document.getElementById('pStatus');
+    const oStatus = document.getElementById('oStatus');
+    const ordersTbody = document.querySelector('#ordersTable tbody');
+    const orderCount = document.getElementById('orderCount');
+
+    function toastOK(el,msg){ el.textContent=msg; el.className='status good'; }
+    function toastERR(el,msg){ el.textContent=msg; el.className='status bad'; }
+
+    onAuthStateChanged(auth, async (user)=>{
+      if (!user){
+        // Not signed in → go to login
+        window.location.href = 'login.html';
+        return;
+      }
+      // Switch header label
+      if (loginLink){ loginLink.textContent = 'My Account'; loginLink.href='my-account.html'; loginLink.title=user.email; }
+
+      // Load profile
+      emailEl.value = user.email || '';
+      const uref = doc(db,'users',user.uid);
+      const usnap = await getDoc(uref);
+      if (usnap.exists()){
+        const u = usnap.data();
+        nameEl.value = u.name || '';
+        phoneEl.value = u.phone || '';
+        addrEl.value = u.address || '';
+      }
+      // Save profile
+      saveBtn.onclick = async ()=>{
+        try{
+          await setDoc(uref, {email:user.email, name:nameEl.value, phone:phoneEl.value, address:addrEl.value}, {merge:true});
+          toastOK(pStatus,'Saved!');
+        }catch(e){ toastERR(pStatus,e.message); }
+      };
+      // Logout
+      logoutBtn.onclick = ()=>signOut(auth).then(()=>location.href='login.html');
+
+      // Load orders for this user
+      try{
+        const q1 = query(collection(db,'orders'), where('userId','==', user.uid), orderBy('createdAt','desc'));
+        const qs = await getDocs(q1);
+        ordersTbody.innerHTML='';
+        let count=0;
+        qs.forEach(docSnap=>{
+          const o = docSnap.data();
+          const tr = document.createElement('tr');
+          const when = o.createdAt?.toDate ? o.createdAt.toDate() : (o.createdAt || new Date());
+          const itemsTxt = (o.items||[]).map(it=>`${it.name} x${it.qty}`).join(', ');
+          tr.innerHTML = `
+            <td>${new Date(when).toLocaleString()}</td>
+            <td>${itemsTxt || '-'}</td>
+            <td>₹${o.total || 0}</td>
+            <td><span class="pill">${o.status || 'Placed'}</span></td>`;
+          ordersTbody.appendChild(tr);
+          count++;
+        });
+        orderCount.textContent = `${count} ${count===1?'order':'orders'}`;
+        if(count===0) oStatus.textContent = 'No orders yet.';
+      }catch(e){ toastERR(oStatus,e.message); }
+
+    });
+  </script>
+</body>
+</html>
