@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Admin | Kairavi’s Oven Magic</title>
+  <link rel="icon" href="images/logo.png"/>
+  <link rel="stylesheet" href="style.css"/>
+
+  <!-- Firebase compat -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <div class="freebar">Admin Dashboard</div>
+
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="index.html">
+        <img src="images/logo.png" alt="Kairavi’s Oven Magic logo"/>
+        <strong>Kairavi’s Oven Magic</strong>
+      </a>
+      <nav class="menu">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="#" id="btnLogout">Sign out</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap">
+      <h2>Customers</h2>
+      <p class="sub">Live list from Firestore → <code>users</code> collection</p>
+
+      <div class="card" style="padding:14px">
+        <div style="overflow:auto">
+          <table class="cart-table" id="tblUsers">
+            <thead>
+              <tr>
+                <th>Name</th><th>Phone</th><th>Email</th><th>Address</th>
+                <th>Created</th><th>Last Login</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p id="status" class="sub" style="margin-top:8px"></p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // ----- Firebase init -----
+    const firebaseConfig = {
+      apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
+      authDomain: "kairavis-oven-magic.firebaseapp.com",
+      projectId: "kairavis-oven-magic",
+      storageBucket: "kairavis-oven-magic.firebasestorage.app",
+      messagingSenderId: "270897232759",
+      appId: "1:270897232759:web:36ee0edc8b222046febf72"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db   = firebase.firestore();
+
+    const ADMIN_EMAILS = ["kairavisovenmagic@gmail.com"]; // add more admin emails if needed
+    const $ = sel => document.querySelector(sel);
+    const fmt = ts => ts?.toDate ? ts.toDate().toLocaleString() : "";
+
+    // require login + admin
+    auth.onAuthStateChanged(async user=>{
+      if(!user){ location.href="login.html"; return; }
+      if(!ADMIN_EMAILS.includes(user.email)){
+        alert("Admin access only."); location.href="index.html"; return;
+      }
+      $("#status").textContent = `Signed in as ${user.email}`;
+      loadUsers();
+    });
+
+    // sign out
+    $("#btnLogout").onclick = async (e)=>{ e.preventDefault(); await auth.signOut(); location.href="login.html"; };
+
+    function loadUsers(){
+      $("#status").textContent = "Loading…";
+      db.collection("users").orderBy("createdAt", "desc").onSnapshot(snap=>{
+        const tbody = $("#tblUsers tbody");
+        tbody.innerHTML = "";
+        snap.forEach(doc=>{
+          const u = doc.data();
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${u.name||""}</td>
+            <td>${u.phone||""}</td>
+            <td>${u.email||""}</td>
+            <td>${(u.address||"").replace(/\n/g,"<br>")}</td>
+            <td>${fmt(u.createdAt)}</td>
+            <td>${fmt(u.lastLoginAt)}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+        $("#status").textContent = `Total customers: ${snap.size}`;
+      }, err=>{
+        $("#status").textContent = err.message;
+      });
+    }
+  </script>
+</body>
+</html>
