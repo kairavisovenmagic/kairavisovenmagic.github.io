@@ -46,5 +46,95 @@
       dash.innerHTML='<h2>✅ Welcome Admin '+user.email+'</h2><p>Use admin-dashboard.html for full features (search/export).</p>';
     });
   </script>
+<!-- Firebase Auth: login/my-account switch + logout popup/redirect -->
+<script type="module">
+  // Firebase (CDN)
+  import { initializeApp }   from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
+  import { getAuth, onAuthStateChanged, signOut } 
+    from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
+
+  // --- CONFIG (yours) ---
+  const firebaseConfig = {
+    apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
+    authDomain: "kairavis-oven-magic.firebaseapp.com",
+    projectId: "kairavis-oven-magic",
+    storageBucket: "kairavis-oven-magic.firebasestorage.app",
+    messagingSenderId: "270897232759",
+    appId: "1:270897232759:web:36ee0edc8b222046febf72"
+  };
+
+  // Init
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // Elements
+  const loginLink  = document.getElementById('loginLink');
+  const logoutLink = document.getElementById('logoutLink');
+
+  // Tiny toast
+  function toast(msg){
+    let t = document.querySelector('.toast');
+    if(!t){
+      t = document.createElement('div');
+      t.className = 'toast';
+      t.style.position='fixed';
+      t.style.left='50%';
+      t.style.bottom='16px';
+      t.style.transform='translateX(-50%)';
+      t.style.background='#222';
+      t.style.color='#fff';
+      t.style.padding='10px 14px';
+      t.style.borderRadius='10px';
+      t.style.fontSize='0.95rem';
+      t.style.opacity='0';
+      t.style.transition='opacity .25s';
+      t.style.zIndex='9999';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.opacity = '1';
+    setTimeout(()=>{ t.style.opacity='0'; }, 1400);
+  }
+
+  // Show/hide login / logout and switch label to "My Account"
+  onAuthStateChanged(auth, (user) => {
+    if(user){
+      // User logged in
+      if(loginLink){
+        loginLink.textContent = 'My Account';
+        loginLink.href = 'my-account.html';
+        loginLink.style.display = '';
+      }
+      if(logoutLink) logoutLink.style.display = '';
+    }else{
+      // Logged out
+      if(loginLink){
+        loginLink.textContent = 'Login';
+        loginLink.href = 'login.html';
+        loginLink.style.display = '';
+      }
+      if(logoutLink) logoutLink.style.display = 'none';
+    }
+  });
+
+  // Logout with confirm → toast → redirect home
+  if(logoutLink){
+    logoutLink.addEventListener('click', async (e)=>{
+      e.preventDefault();
+      if(!confirm('Log out from Kairavi’s Oven Magic?')) return;
+      try{
+        await signOut(auth);
+        toast('Logged out successfully');
+        setTimeout(()=>{ window.location.href = 'index.html'; }, 900);
+      }catch(err){
+        alert('Logout failed: ' + (err?.message || err));
+      }
+    });
+  }
+</script>
+
+<!-- (Optional) base toast node if your CSS already styles .toast -->
+<div class="toast" style="display:block;opacity:0;pointer-events:none"></div>
+
 </body>
 </html>
