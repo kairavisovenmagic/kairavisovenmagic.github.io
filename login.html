@@ -3,53 +3,148 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Login / Sign Up | Kairavi’s Oven Magic</title>
+  <title>Login | Kairavi’s Oven Magic</title>
   <link rel="icon" href="images/logo.png"/>
   <link rel="stylesheet" href="style.css"/>
   <style>
-    body{background:url('images/login-bg.jpg')center/cover no-repeat;font-family:Poppins,sans-serif;color:#333;}
-    .login-box{max-width:380px;margin:90px auto;background:rgba(255,255,255,.94);border-radius:18px;padding:26px 24px;box-shadow:0 6px 16px rgba(0,0,0,.15);}
-    h2{text-align:center;margin-bottom:14px;color:#3b2b22}
-    input{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc;border-radius:10px}
-    .actions{display:flex;gap:10px;margin-top:10px}
-    button{flex:1;border:none;border-radius:10px;padding:10px;font-weight:600;cursor:pointer}
-    .login{background:#ff7043;color:#fff}
-    .signup{background:#fff;border:2px solid #ff7043;color:#ff7043}
-    .status{margin-top:10px;text-align:center;font-size:.9rem}
+    .auth-hero{
+      min-height:calc(100vh - 120px);
+      display:grid;place-items:center;
+      background:linear-gradient(180deg,#fff7ef, #ffe9d8);
+    }
+    .auth-card{
+      width:min(480px,92%);
+      background:#fff;border-radius:16px;box-shadow:0 10px 24px rgba(0,0,0,.08);
+      padding:18px 18px 20px;
+    }
+    .auth-card h1{font-size:1.35rem;margin-bottom:6px}
+    .auth-tabs{display:flex;gap:8px;margin:8px 0 14px}
+    .auth-tabs button{flex:1;border:1px solid #e6dcd5;background:#faf7f3;border-radius:10px;padding:10px;font-weight:700;cursor:pointer}
+    .auth-tabs button.active{background:#ff7043;color:#fff;border-color:#ff7043}
+    .auth-form{display:grid;gap:10px;margin-top:6px}
+    .auth-form input{
+      padding:12px;border:1px solid #e6dcd5;border-radius:10px;font-size:1rem;background:#fff
+    }
+    .auth-form .btn-primary{width:100%;margin-top:4px}
+    .mini{text-align:center;color:#7a5b47;font-size:.9rem;margin-top:10px}
   </style>
 </head>
 <body>
-  <div class="login-box">
-    <h2>Welcome Back 🍪</h2>
-    <input id="email" type="email" placeholder="Email"/>
-    <input id="password" type="password" placeholder="Password"/>
-    <div class="actions">
-      <button class="login" id="loginBtn">Login</button>
-      <button class="signup" id="signupBtn">Sign Up</button>
-    </div>
-    <div id="status" class="status"></div>
+
+  <div class="freebar">
+    Welcome back! Sign in to track your orders.
+    <a href="index.html">← Home</a>
   </div>
 
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="index.html"><img src="images/logo.png" alt="logo"><strong>Kairavi’s Oven Magic</strong></a>
+      <nav class="menu">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="contact.html">Contact</a>
+        <a href="cart.html">Cart</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="auth-hero">
+    <div class="auth-card">
+      <h1>Login / Sign Up</h1>
+      <div class="auth-tabs">
+        <button id="tabSignIn" class="active">Sign In</button>
+        <button id="tabSignUp">Sign Up</button>
+      </div>
+
+      <!-- Sign In -->
+      <div id="paneSignIn">
+        <div class="auth-form">
+          <input id="inEmail" type="email" placeholder="Email" autocomplete="email" required>
+          <input id="inPass" type="password" placeholder="Password" autocomplete="current-password" required>
+          <button id="btnSignIn" class="btn btn-primary">Sign In</button>
+        </div>
+      </div>
+
+      <!-- Sign Up -->
+      <div id="paneSignUp" style="display:none">
+        <div class="auth-form">
+          <input id="upEmail" type="email" placeholder="Email" autocomplete="email" required>
+          <input id="upPass" type="password" placeholder="Password (min 6 chars)" autocomplete="new-password" required>
+          <button id="btnSignUp" class="btn btn-primary">Create Account</button>
+        </div>
+        <div class="mini">By creating an account, you agree to receive order updates on WhatsApp/email.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap footer-grid">
+      <div class="small">© 2025 Kairavi’s Oven Magic — Kairavi Food Products</div>
+      <div class="small" style="text-align:right">Email: <a href="mailto:kairavisovenmagic@gmail.com">kairavisovenmagic@gmail.com</a></div>
+    </div>
+  </footer>
+
+  <!-- Toast node -->
+  <div class="toast" style="display:block;opacity:0;pointer-events:none"></div>
+
+  <!-- Firebase + auth actions -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
-    import { getFirestore, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } 
+      from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
 
-    const firebaseConfig={apiKey:"AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",authDomain:"kairavis-oven-magic.firebaseapp.com",projectId:"kairavis-oven-magic",storageBucket:"kairavis-oven-magic.firebasestorage.app",messagingSenderId:"270897232759",appId:"1:270897232759:web:36ee0edc8b222046febf72"};
-    const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app);
-    const email=document.getElementById('email'), pass=document.getElementById('password'), msg=document.getElementById('status');
+    const app = initializeApp({
+      apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
+      authDomain: "kairavis-oven-magic.firebaseapp.com",
+      projectId: "kairavis-oven-magic",
+      storageBucket: "kairavis-oven-magic.firebasestorage.app",
+      messagingSenderId: "270897232759",
+      appId: "1:270897232759:web:36ee0edc8b222046febf72"
+    });
+    const auth = getAuth(app);
 
-    document.getElementById('loginBtn').onclick=async()=>{
-      try{await signInWithEmailAndPassword(auth,email.value,pass.value);msg.textContent="✅ Login successful";setTimeout(()=>location.href='my-account.html',700);}
-      catch(e){msg.textContent=e.message;}
-    };
-    document.getElementById('signupBtn').onclick=async()=>{
+    // tabs
+    const tabIn  = document.getElementById('tabSignIn');
+    const tabUp  = document.getElementById('tabSignUp');
+    const paneIn = document.getElementById('paneSignIn');
+    const paneUp = document.getElementById('paneSignUp');
+
+    tabIn.onclick = ()=>{ tabIn.classList.add('active'); tabUp.classList.remove('active'); paneIn.style.display=''; paneUp.style.display='none'; };
+    tabUp.onclick = ()=>{ tabUp.classList.add('active'); tabIn.classList.remove('active'); paneUp.style.display=''; paneIn.style.display='none'; };
+
+    // toast
+    function toast(msg){
+      const t=document.querySelector('.toast');
+      t.textContent=msg;
+      t.style.opacity='1';
+      setTimeout(()=>{ t.style.opacity='0'; }, 1400);
+    }
+
+    // Sign In
+    document.getElementById('btnSignIn').addEventListener('click', async ()=>{
+      const email = document.getElementById('inEmail').value.trim();
+      const pass  = document.getElementById('inPass').value;
       try{
-        const {user}=await createUserWithEmailAndPassword(auth,email.value,pass.value);
-        await setDoc(doc(db,'users',user.uid),{email:user.email,role:'user',createdAt:serverTimestamp()});
-        msg.textContent="🎉 Account created!";setTimeout(()=>location.href='my-account.html',900);
-      }catch(e){msg.textContent=e.message;}
-    };
+        await signInWithEmailAndPassword(auth, email, pass);
+        toast('Signed in successfully ✅');
+        setTimeout(()=>{ window.location.href='index.html'; }, 900);
+      }catch(err){
+        alert('Sign in failed: ' + (err?.message || err));
+      }
+    });
+
+    // Sign Up
+    document.getElementById('btnSignUp').addEventListener('click', async ()=>{
+      const email = document.getElementById('upEmail').value.trim();
+      const pass  = document.getElementById('upPass').value;
+      try{
+        await createUserWithEmailAndPassword(auth, email, pass);
+        toast('Account created 🎉 Signed in!');
+        setTimeout(()=>{ window.location.href='index.html'; }, 900);
+      }catch(err){
+        alert('Sign up failed: ' + (err?.message || err));
+      }
+    });
   </script>
 </body>
 </html>
