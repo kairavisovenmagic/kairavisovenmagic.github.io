@@ -43,6 +43,7 @@
         <a href="products.html">Products</a>
         <a href="contact.html">Contact</a>
         <a href="cart.html">Cart</a>
+        <a id="loginLink" href="login.html">Login</a>
       </nav>
     </div>
   </header>
@@ -188,14 +189,47 @@
     const track=document.getElementById('reviewTrack');
     const prev=document.querySelector('.nav-prev');
     const next=document.querySelector('.nav-next');
-    function step(){const s=track.querySelector('.slide');if(!s) return 320;const r=s.getBoundingClientRect();return r.width+16;}
+    function step(){const s=track.querySelector('.slide');if(!s)return 320;const r=s.getBoundingClientRect();return r.width+16;}
     prev.onclick=()=>track.scrollBy({left:-step(),behavior:'smooth'});
-    next.onclick=()=>track.scrollBy({left: step(),behavior:'smooth'});
+    next.onclick=()=>track.scrollBy({left:step(),behavior:'smooth'});
     let down=false,startX=0,start=0,pid=0;
     track.addEventListener('pointerdown',e=>{down=true;pid=e.pointerId;startX=e.clientX;start=track.scrollLeft;track.setPointerCapture(pid)});
     track.addEventListener('pointermove',e=>{if(!down)return;track.scrollLeft=start-(e.clientX-startX)});
     ['pointerup','pointercancel','mouseleave'].forEach(evt=>track.addEventListener(evt,()=>down=false));
     setInterval(()=>track.scrollBy({left:step(),behavior:'smooth'}),5000);
+  </script>
+
+  <!-- ✅ Firebase Login Auto-Switch -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
+      authDomain: "kairavis-oven-magic.firebaseapp.com",
+      projectId: "kairavis-oven-magic",
+      storageBucket: "kairavis-oven-magic.firebasestorage.app",
+      messagingSenderId: "270897232759",
+      appId: "1:270897232759:web:36ee0edc8b222046febf72"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const link = document.getElementById('loginLink');
+
+    onAuthStateChanged(auth, (user) => {
+      if (link) {
+        if (user) {
+          link.textContent = 'My Account';
+          link.href = 'login.html';
+          link.title = user.email;
+        } else {
+          link.textContent = 'Login';
+          link.href = 'login.html';
+          link.removeAttribute('title');
+        }
+      }
+    });
   </script>
 
 </body>
