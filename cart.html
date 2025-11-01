@@ -6,13 +6,66 @@
   <title>Cart | Kairavi’s Oven Magic</title>
   <link rel="icon" href="images/logo.png"/>
   <link rel="stylesheet" href="style.css"/>
+
+  <style>
+    /* --- Cart page enhancements (small scoped styles) --- */
+    .cart-wrap {display:grid;grid-template-columns:2fr 1fr;gap:22px}
+    .cart-card, .summary-card {
+      background:#fff;border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,.06);
+      padding:16px;
+    }
+    .cart-head {display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .cart-head h2{font-size:1.3rem}
+    .empty {
+      text-align:center;color:#7a5b47;padding:26px 14px;border:1px dashed #e7ddd6;border-radius:12px;
+      background:#fffdf9
+    }
+
+    /* table -> responsive cards on mobile */
+    .cart-table{width:100%;border-collapse:collapse}
+    .cart-table th,.cart-table td{padding:10px;border-bottom:1px solid #eee;text-align:left}
+    .cart-table th{font-size:.9rem;color:#7a5b47;text-transform:uppercase;letter-spacing:.02em}
+    .cart-item-thumb{display:flex;gap:10px;align-items:center}
+    .cart-item-thumb img{width:52px;height:52px;object-fit:cover;border-radius:8px}
+    .cart-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .summary-card{position:sticky;top:82px;height:max-content}
+    .summary-row{display:flex;justify-content:space-between;margin:8px 0}
+    .summary-row.total{font-weight:800;font-size:1.05rem}
+    .free-meter{background:#faf7f3;border:1px solid #e6dcd5;border-radius:10px;padding:8px 10px;margin-top:10px}
+    .free-meter small{display:block;color:#7a5b47}
+    .free-bar{height:7px;background:#f0e7df;border-radius:999px;overflow:hidden;margin-top:6px}
+    .free-bar > i{display:block;height:100%;width:0;background:#25d366;border-radius:999px}
+
+    .cust-form{margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+    .cust-form input, .cust-form textarea, .cust-form select{
+      width:100%;padding:10px;border:1px solid #e6dcd5;border-radius:10px;background:#fff;font-size:.95rem
+    }
+    .cust-form textarea{min-height:80px;resize:vertical}
+
+    .mini-note{color:#7a5b47;font-size:.88rem;margin-top:6px}
+
+    @media (max-width: 980px){
+      .cart-wrap{grid-template-columns:1fr}
+      .summary-card{position:relative;top:auto}
+    }
+    @media (max-width: 680px){
+      .cart-table thead{display:none}
+      .cart-table tr{display:block;border:1px solid #eee;border-radius:12px;padding:10px;margin-bottom:10px}
+      .cart-table td{display:flex;justify-content:space-between;border:none;padding:6px 4px}
+      .cart-table td::before{content:attr(data-label);font-weight:600;color:#7a5b47}
+      .cart-item-thumb{justify-content:flex-start}
+    }
+  </style>
 </head>
 <body>
 
-  <div class="freebar">FREE delivery over ₹999 • Pune city
+  <!-- FREE DELIVERY BAR -->
+  <div class="freebar">
+    FREE delivery over ₹999 • Pune city
     <a href="products.html">Shop more →</a>
   </div>
 
+  <!-- HEADER -->
   <header class="site-header">
     <div class="wrap nav">
       <a class="brand" href="index.html"><img src="images/logo.png" alt="logo"><strong>Kairavi’s Oven Magic</strong></a>
@@ -20,93 +73,280 @@
         <a href="index.html">Home</a>
         <a href="products.html">Products</a>
         <a href="contact.html">Contact</a>
-        <a href="cart.html">Cart</a>
+        <a href="cart.html" aria-current="page">Cart</a>
+        <a id="loginLink" href="login.html">Login</a>
       </nav>
     </div>
   </header>
 
+  <!-- CART -->
   <section class="section">
     <div class="wrap">
-      <h2>Your Cart</h2>
-      <p class="sub">Review items and place the order on WhatsApp.</p>
+      <div class="cart-wrap">
 
-      <table class="cart-table" id="cartTable">
-        <thead>
-          <tr><th>Product</th><th>Weight</th><th>Qty</th><th>Price</th><th>Total</th><th></th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+        <!-- Left: items -->
+        <div class="cart-card">
+          <div class="cart-head">
+            <h2>Your Cart</h2>
+            <button class="btn" id="clearCart" style="background:#eee;color:#333">Clear Cart</button>
+          </div>
 
-      <div class="cart-summary">
-        <div id="cartNote" class="sub"></div>
-        <div>Total: ₹<span id="grandTotal">0</span></div>
-      </div>
+          <table class="cart-table" id="cartTable">
+            <thead>
+              <tr>
+                <th style="width:42%">Item</th>
+                <th>Weight</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
 
-      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
-        <a class="btn btn-ghost" href="products.html">Continue Shopping</a>
-        <a class="btn btn-primary" id="waCheckout" href="#" target="_blank">Order on WhatsApp</a>
-        <button class="btn" id="clearCart" style="background:#eee;color:#333">Clear Cart</button>
+          <div id="emptyState" class="empty" style="display:none">
+            Your cart is empty. <br/>Discover your favourites on the <a href="products.html" style="text-decoration:underline">Products</a> page.
+          </div>
+
+          <div class="cart-actions">
+            <a class="btn btn-ghost" href="products.html">Continue Shopping</a>
+          </div>
+        </div>
+
+        <!-- Right: summary -->
+        <aside class="summary-card">
+          <h3 style="margin-bottom:8px">Order Summary</h3>
+          <div class="summary-row"><span>Items</span><span id="itemsCount">0</span></div>
+          <div class="summary-row"><span>Subtotal</span><span>₹<span id="subtotal">0</span></span></div>
+          <div class="summary-row"><span>Delivery (Pune)</span><span id="deliveryText">Calculated</span></div>
+          <div class="free-meter">
+            <small id="freeNote">Add more to reach ₹999 for free delivery</small>
+            <div class="free-bar"><i id="freeBar"></i></div>
+          </div>
+          <div class="summary-row total" style="margin-top:8px"><span>Total</span><span>₹<span id="grandTotal">0</span></span></div>
+
+          <div class="mini-note">Pay on delivery (cash/UPI). We’ll confirm your slot on WhatsApp.</div>
+
+          <!-- Customer details (appended to WhatsApp text) -->
+          <div class="cust-form">
+            <input id="custName" placeholder="Your Name *" required />
+            <textarea id="custAddress" placeholder="Address (with area) *" required></textarea>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <input id="custPincode" placeholder="Pincode *" inputmode="numeric" />
+              <select id="custPayment">
+                <option>Cash</option>
+                <option>UPI</option>
+                <option>Card</option>
+              </select>
+            </div>
+            <input id="custPhone" placeholder="Phone (optional)" inputmode="tel" />
+          </div>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+            <a class="btn btn-primary" id="waCheckout" href="#" target="_blank" rel="noopener">Order on WhatsApp</a>
+          </div>
+        </aside>
+
       </div>
     </div>
   </section>
 
+  <!-- FOOTER -->
   <footer>
     <div class="wrap footer-grid">
       <div class="small">© 2025 Kairavi’s Oven Magic — Kairavi Food Products</div>
-      <div class="small" style="text-align:right">Email: <a href="mailto:kairavisovenmagic@gmail.com">kairavisovenmagic@gmail.com</a></div>
+      <div class="small" style="text-align:right">
+        Email: <a href="mailto:kairavisovenmagic@gmail.com">kairavisovenmagic@gmail.com</a>
+      </div>
     </div>
   </footer>
 
+  <!-- WhatsApp Floating -->
   <a class="whatsapp-float" href="https://wa.me/919766964845" target="_blank" aria-label="WhatsApp">
-    <img src="images/whatsapp.png" alt="WhatsApp"/>
+    <img src="images/whatsapp.png" alt="WhatsApp">
   </a>
 
+  <!-- Cart Logic -->
   <script>
     const CART_KEY='kom_cart';
     const getCart=()=>JSON.parse(localStorage.getItem(CART_KEY)||'[]');
     const setCart=c=>localStorage.setItem(CART_KEY,JSON.stringify(c));
 
     const tbody=document.querySelector('#cartTable tbody');
-    const totalEl=document.getElementById('grandTotal');
+    const subtotalEl=document.getElementById('subtotal');
+    const grandEl=document.getElementById('grandTotal');
+    const itemsCountEl=document.getElementById('itemsCount');
     const waBtn=document.getElementById('waCheckout');
     const clearBtn=document.getElementById('clearCart');
-    const note=document.getElementById('cartNote');
+    const freeNote=document.getElementById('freeNote');
+    const freeBar=document.getElementById('freeBar');
+    const emptyState=document.getElementById('emptyState');
+    const deliveryText=document.getElementById('deliveryText');
+
+    // Customer fields
+    const nameEl=document.getElementById('custName');
+    const addrEl=document.getElementById('custAddress');
+    const pinEl=document.getElementById('custPincode');
+    const payEl=document.getElementById('custPayment');
+    const phoneEl=document.getElementById('custPhone');
+
+    const FREE_LIMIT = 999;
+    const DELIVERY_FLAT = 49; // change if needed
+
+    function formatINR(n){ return (n||0).toLocaleString('en-IN'); }
+
+    function buildRow(row,i,cart){
+      const tr=document.createElement('tr');
+      const line=row.price*row.qty;
+
+      tr.innerHTML=`
+        <td data-label="Item">
+          <div class="cart-item-thumb">
+            <img src="${guessImage(row.name)}" alt="${row.name}">
+            <div><strong>${row.name}</strong><div class="mini-note">${row.weight}</div></div>
+          </div>
+        </td>
+        <td data-label="Weight">${row.weight}</td>
+        <td data-label="Qty">
+          <div class="qty-control">
+            <button class="minus" aria-label="Decrease">−</button>
+            <span class="count">${row.qty}</span>
+            <button class="plus" aria-label="Increase">+</button>
+          </div>
+        </td>
+        <td data-label="Price">₹${formatINR(row.price)}</td>
+        <td data-label="Total">₹${formatINR(line)}</td>
+        <td data-label="">
+          <button class="remove" title="Remove" style="border:none;background:transparent;cursor:pointer">🗑️</button>
+        </td>
+      `;
+
+      tr.querySelector('.minus').onclick=()=>{if(row.qty>1){row.qty--;setCart(cart);render()}};
+      tr.querySelector('.plus').onclick =()=>{if(row.qty<99){row.qty++;setCart(cart);render()}};
+      tr.querySelector('.remove').onclick=()=>{cart.splice(i,1);setCart(cart);render()};
+      return tr;
+    }
+
+    // Best-effort thumbnail guess by name; fallback image if not found
+    function guessImage(name){
+      const key = (name||'').toLowerCase();
+      const map = {
+        'gulkand':'images/gulkand.jpg',
+        'wheat':'images/wheat.jpg',
+        'ragi':'images/ragi.jpg',
+        'oats':'images/oats.jpg',
+        'maize':'images/maize.jpg',
+        'jowar':'images/jowar.jpg',
+        'upvas':'images/upvas.jpg',
+        'chocolate':'images/chocolate.jpg',
+        'ajwain sticks':'images/ajwain-sticks.jpg',
+        'ajwain cookies':'images/ajwain-cookies.jpg',
+        'jeera':'images/jeera.jpg',
+        'marble':'images/marble.jpg'
+      };
+      for(const k in map){ if(key.includes(k)) return map[k]; }
+      return 'images/wheat.jpg';
+    }
 
     function render(){
       const cart=getCart();
       tbody.innerHTML='';
-      let grand=0;
-      cart.forEach((row,i)=>{
-        const sum=row.price*row.qty; grand+=sum;
-        const tr=document.createElement('tr');
-        tr.innerHTML=`
-          <td>${row.name}</td>
-          <td>${row.weight}</td>
-          <td>
-            <div class="qty-control">
-              <button class="minus">−</button>
-              <span class="count">${row.qty}</span>
-              <button class="plus">+</button>
-            </div>
-          </td>
-          <td>₹${row.price}</td>
-          <td>₹${sum}</td>
-          <td><button class="remove" title="Remove">🗑️</button></td>
-        `;
-        tr.querySelector('.minus').onclick=()=>{if(row.qty>1){row.qty--;setCart(cart);render()}};
-        tr.querySelector('.plus').onclick =()=>{if(row.qty<99){row.qty++;setCart(cart);render()}};
-        tr.querySelector('.remove').onclick=()=>{cart.splice(i,1);setCart(cart);render()};
-        tbody.appendChild(tr);
-      });
-      totalEl.textContent=grand;
-      note.textContent = grand>=999? '🎉 You qualify for FREE delivery in Pune!':'Add more to reach ₹999 for free delivery in Pune.';
-      const text=encodeURIComponent(cart.map(r=>`${r.name} (${r.weight}) x ${r.qty} = ₹${r.qty*r.price}`).join('%0A')+`%0A%0ATotal: ₹${grand}%0AName:%0AAddress:%0APayment mode:`);
+      let subtotal=0, items=0;
 
-      waBtn.href=`https://wa.me/919766964845?text=${text}`;
+      cart.forEach((row,i)=>{
+        items += row.qty;
+        subtotal += row.price*row.qty;
+        tbody.appendChild(buildRow(row,i,cart));
+      });
+
+      itemsCountEl.textContent = items;
+      subtotalEl.textContent = formatINR(subtotal);
+
+      // Delivery calc + free meter
+      let delivery = subtotal >= FREE_LIMIT ? 0 : DELIVERY_FLAT;
+      deliveryText.textContent = delivery === 0 ? 'FREE' : `₹${formatINR(delivery)}`;
+
+      const grand = subtotal + delivery;
+      grandEl.textContent = formatINR(grand);
+
+      // Free bar
+      const pct = Math.min(100, Math.max(0, Math.round((subtotal/FREE_LIMIT)*100)));
+      freeBar.style.width = pct + '%';
+      freeNote.textContent = subtotal >= FREE_LIMIT
+        ? '🎉 You qualify for FREE delivery in Pune!'
+        : `Add ₹${formatINR(FREE_LIMIT - subtotal)} more for free delivery`;
+
+      // Empty state
+      const isEmpty = cart.length === 0;
+      document.getElementById('cartTable').style.display = isEmpty ? 'none' : '';
+      emptyState.style.display = isEmpty ? '' : 'none';
+
+      // Build WhatsApp message
+      const lines = cart.map(r=>`${r.name} (${r.weight}) x ${r.qty} = ₹${formatINR(r.qty*r.price)}`).join('%0A');
+      const details = [
+        `Total: ₹${formatINR(grand)} (Subtotal ₹${formatINR(subtotal)}${delivery?`, Delivery ₹${formatINR(delivery)}`:` – Free Delivery`})`,
+        '',
+        `Name: ${encodeURIComponent(nameEl.value || '')}`,
+        `Address: ${encodeURIComponent(addrEl.value || '')}`,
+        `Pincode: ${encodeURIComponent(pinEl.value || '')}`,
+        `Payment: ${encodeURIComponent(payEl.value || 'Cash')}`,
+        `Phone: ${encodeURIComponent(phoneEl.value || '')}`
+      ].join('%0A');
+
+      const text = encodeURIComponent(lines) + '%0A%0A' + details;
+      waBtn.href = `https://wa.me/919766964845?text=${text}`;
+      waBtn.target = '_blank';
+      waBtn.rel = 'noopener';
+
+      // Disable button if no required details
+      const missing = (nameEl.value.trim()==='' || addrEl.value.trim()==='' || pinEl.value.trim()==='');
+      waBtn.classList.toggle('btn-ghost', missing);
+      waBtn.classList.toggle('btn-primary', !missing);
+      waBtn.style.pointerEvents = missing || isEmpty ? 'none' : 'auto';
+      waBtn.style.opacity = missing || isEmpty ? .6 : 1;
+      waBtn.textContent = missing || isEmpty ? 'Add items & fill details' : 'Order on WhatsApp';
     }
 
-    clearBtn.onclick=()=>{if(confirm('Clear cart?')){setCart([]);render()}};
-    render();
+    // React to customer input
+    ['custName','custAddress','custPincode','custPayment','custPhone'].forEach(id=>{
+      const el = document.getElementById(id);
+      el.addEventListener('input', render);
+      el.addEventListener('change', render);
+    });
+
+    document.addEventListener('DOMContentLoaded', render);
+    clearBtn.onclick=()=>{ if(confirm('Clear cart?')){ setCart([]); render(); } };
+  </script>
+
+  <!-- Firebase: auto-switch Login → My Account -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
+
+    const app = initializeApp({
+      apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
+      authDomain: "kairavis-oven-magic.firebaseapp.com",
+      projectId: "kairavis-oven-magic",
+      storageBucket: "kairavis-oven-magic.firebasestorage.app",
+      messagingSenderId: "270897232759",
+      appId: "1:270897232759:web:36ee0edc8b222046febf72"
+    });
+    const auth = getAuth(app);
+    const loginLink = document.getElementById('loginLink');
+
+    onAuthStateChanged(auth, user=>{
+      if(!loginLink) return;
+      if(user){
+        loginLink.textContent = 'My Account';
+        loginLink.href = 'my-account.html';
+        loginLink.title = user.email || 'My Account';
+      }else{
+        loginLink.textContent = 'Login';
+        loginLink.href = 'login.html';
+        loginLink.removeAttribute('title');
+      }
+    });
   </script>
 </body>
 </html>
