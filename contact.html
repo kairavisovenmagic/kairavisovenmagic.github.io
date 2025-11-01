@@ -4,167 +4,237 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Contact | Kairavi’s Oven Magic</title>
+  <meta name="description" content="Contact Kairavi’s Oven Magic for cookie & nankhatai orders. WhatsApp, call or email. Freshly baked, pure butter, no maida, no palm oil."/>
   <link rel="icon" href="images/logo.png"/>
   <link rel="stylesheet" href="style.css"/>
-  <meta name="description" content="Contact Kairavi’s Oven Magic for fresh homemade cookies and nankhatai."/>
 </head>
 <body>
 
-  <div class="freebar">FREE delivery over ₹999 • Pune city
+  <!-- FREE DELIVERY BAR -->
+  <div class="freebar">
+    FREE delivery over ₹999 • Pune city
     <a href="products.html">Shop now →</a>
   </div>
 
+  <!-- HEADER -->
   <header class="site-header">
     <div class="wrap nav">
-      <a class="brand" href="index.html"><img src="images/logo.png" alt="logo"><strong>Kairavi’s Oven Magic</strong></a>
+      <a class="brand" href="index.html">
+        <img src="images/logo.png" alt="Kairavi’s Oven Magic logo"/>
+        <strong>Kairavi’s Oven Magic</strong>
+      </a>
       <nav class="menu">
         <a href="index.html">Home</a>
-        <a href="products.html" aria-current="page">Products</a>
-        <a href="contact.html">Contact</a>
-        <a href="cart.html">Cart <span class="badge" id="cartCount">0</span></a>
-        <!-- Auth controls -->
+        <a href="products.html">Products</a>
+        <a href="contact.html" aria-current="page">Contact</a>
+        <a href="cart.html">Cart</a>
         <a id="loginLink" href="login.html">Login</a>
         <a id="logoutLink" href="#" style="display:none">Logout</a>
       </nav>
     </div>
   </header>
 
-  <section class="section">
+  <!-- MINI HERO -->
+  <section class="section" style="padding-top:28px;padding-bottom:18px">
     <div class="wrap">
-      <h2>Contact Us</h2>
-      <p class="sub">We’d love to hear from you. For fastest response, ping us on WhatsApp.</p>
+      <h2>Contact & Orders</h2>
+      <p class="sub">We bake small batches daily. Message us for today’s availability or place an order directly.</p>
+    </div>
+  </section>
 
-      <div class="contact-cards">
-        <div class="contact-card">
-          <div class="emoji">💬</div>
-          <h3>WhatsApp</h3>
-          <p>Questions or orders? Say hi!</p>
-          <a class="btn btn-primary" href="https://wa.me/919766964845" target="_blank">Chat on WhatsApp</a>
-        </div>
+  <!-- CONTACT CARDS -->
+  <section class="section" style="padding-top:0">
+    <div class="wrap contact-cards">
+      <div class="contact-card">
+        <div class="emoji">💬</div>
+        <h3>WhatsApp</h3>
+        <p>Fastest for orders, flavours, delivery slots.</p>
+        <a class="btn btn-primary" href="https://wa.me/919766964845?text=Hi%2C%20I%20want%20to%20order%20cookies" target="_blank" rel="noopener">Chat on WhatsApp</a>
+      </div>
 
-        <div class="contact-card">
-          <div class="emoji">✉️</div>
-          <h3>Email</h3>
-          <p>kairavisovenmagic@gmail.com</p>
-          <a class="btn btn-ghost" href="mailto:kairavisovenmagic@gmail.com">Send Email</a>
-        </div>
+      <div class="contact-card">
+        <div class="emoji">📞</div>
+        <h3>Call Us</h3>
+        <p>Prefer talking? We’re happy to help.</p>
+        <a class="btn btn-ghost" href="tel:+919766964845">+91 9766964845</a>
+      </div>
 
-        <div class="contact-card">
-          <div class="emoji">📍</div>
-          <h3>Pune, India</h3>
-          <p>Pick-up available on request (location shared after order confirmation).</p>
-          <a class="btn btn-ghost" href="https://maps.google.com" target="_blank">Open Maps</a>
-        </div>
+      <div class="contact-card">
+        <div class="emoji">📧</div>
+        <h3>Email</h3>
+        <p>Bulk / corporate or custom gift boxes.</p>
+        <a class="btn btn-ghost" href="mailto:kairavisovenmagic@gmail.com">kairavisovenmagic@gmail.com</a>
       </div>
     </div>
   </section>
 
+  <!-- ORDER / ENQUIRY FORM -->
+  <section class="section" aria-label="Order form">
+    <div class="wrap">
+      <h3 style="margin-bottom:8px">Quick Order / Enquiry</h3>
+      <p class="sub" style="margin-bottom:12px">Fill the details and send via WhatsApp or Email.</p>
+
+      <form id="contactForm" class="card" style="padding:18px">
+        <div class="grid" style="grid-template-columns:repeat(2,1fr);gap:12px">
+          <label>
+            <span class="sub">Full Name</span>
+            <input id="name" type="text" required placeholder="Your name" style="width:100%;padding:10px;border:1px solid #e6dcd5;border-radius:10px;background:#fff"/>
+          </label>
+          <label>
+            <span class="sub">Phone</span>
+            <input id="phone" type="tel" required placeholder="10-digit mobile" style="width:100%;padding:10px;border:1px solid #e6dcd5;border-radius:10px;background:#fff"/>
+          </label>
+        </div>
+
+        <label style="display:block;margin-top:12px">
+          <span class="sub">Address (for delivery)</span>
+          <textarea id="address" rows="3" placeholder="Flat/Street, Area, City" style="width:100%;padding:10px;border:1px solid #e6dcd5;border-radius:10px;background:#fff"></textarea>
+        </label>
+
+        <label style="display:block;margin-top:12px">
+          <span class="sub">Order / Message</span>
+          <textarea id="message" rows="4" placeholder="e.g., 2× Gulkand 250g, 1× Wheat 250g. Preferred delivery time." style="width:100%;padding:10px;border:1px solid #e6dcd5;border-radius:10px;background:#fff"></textarea>
+        </label>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+          <button type="button" class="btn btn-primary" id="sendWA">Send via WhatsApp</button>
+          <button type="button" class="btn btn-ghost" id="sendEmail">Send via Email</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- MAP / SERVICE AREA & HOURS -->
+  <section class="section" style="padding-top:0">
+    <div class="wrap grid" style="grid-template-columns:repeat(2,1fr);gap:18px">
+      <div class="card" style="padding:18px">
+        <h3>Service Area & Timings</h3>
+        <ul class="sub" style="margin-top:8px;line-height:1.8">
+          <li>Pune city delivery • FREE over ₹999</li>
+          <li>Fresh batches: Mon–Sat</li>
+          <li>Order window: 8:30 AM – 7:30 PM</li>
+          <li>Pickup available (Kharadi area)</li>
+        </ul>
+      </div>
+
+      <div class="card" style="overflow:hidden">
+        <!-- Simple embedded map (optional) -->
+        <iframe
+          title="Kharadi, Pune"
+          width="100%" height="260" style="border:0"
+          loading="lazy" allowfullscreen
+          referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3783.681280075235!2d73.949!3d18.561!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2c3%3A0x0!2sKharadi%2C%20Pune!5e0!3m2!1sen!2sin!4v1700000000000">
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
   <footer>
     <div class="wrap footer-grid">
       <div class="small">© 2025 Kairavi’s Oven Magic — Kairavi Food Products</div>
       <div class="small" style="text-align:right">
-        Email: <a href="mailto:kairavisovenmagic@gmail.com">kairavisovenmagic@gmail.com</a><br/>
-        WhatsApp: <a href="https://wa.me/919766964845" target="_blank">+91 9766964845</a>
+        Email: <a href="mailto:kairavisovenmagic@gmail.com">kairavisovenmagic@gmail.com</a>
       </div>
-    </div>
-    <div class="wrap footer-row2">
-      <div class="fssai"><img src="images/fssai.png" alt="FSSAI"/><span>FSSAI No. 21525083010479</span></div>
     </div>
   </footer>
 
-  <a class="whatsapp-float" href="https://wa.me/919766964845" target="_blank" aria-label="WhatsApp">
+  <!-- WhatsApp Float -->
+  <a class="whatsapp-float" href="https://wa.me/919766964845" target="_blank" aria-label="Chat on WhatsApp">
     <img src="images/whatsapp.png" alt="WhatsApp"/>
   </a>
-<!-- Firebase Auth: login/my-account switch + logout popup/redirect -->
-<script type="module">
-  // Firebase (CDN)
-  import { initializeApp }   from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
-  import { getAuth, onAuthStateChanged, signOut } 
-    from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
 
-  // --- CONFIG (yours) ---
-  const firebaseConfig = {
-    apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
-    authDomain: "kairavis-oven-magic.firebaseapp.com",
-    projectId: "kairavis-oven-magic",
-    storageBucket: "kairavis-oven-magic.firebasestorage.app",
-    messagingSenderId: "270897232759",
-    appId: "1:270897232759:web:36ee0edc8b222046febf72"
-  };
-
-  // Init
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  // Elements
-  const loginLink  = document.getElementById('loginLink');
-  const logoutLink = document.getElementById('logoutLink');
-
-  // Tiny toast
-  function toast(msg){
-    let t = document.querySelector('.toast');
-    if(!t){
-      t = document.createElement('div');
-      t.className = 'toast';
-      t.style.position='fixed';
-      t.style.left='50%';
-      t.style.bottom='16px';
-      t.style.transform='translateX(-50%)';
-      t.style.background='#222';
-      t.style.color='#fff';
-      t.style.padding='10px 14px';
-      t.style.borderRadius='10px';
-      t.style.fontSize='0.95rem';
-      t.style.opacity='0';
-      t.style.transition='opacity .25s';
-      t.style.zIndex='9999';
-      document.body.appendChild(t);
+  <!-- Form → WhatsApp/Email -->
+  <script>
+    function fmt(v){return (v||'').trim();}
+    function buildMessage(){
+      const n=fmt(document.getElementById('name').value);
+      const p=fmt(document.getElementById('phone').value);
+      const a=fmt(document.getElementById('address').value);
+      const m=fmt(document.getElementById('message').value);
+      const lines = [
+        'New enquiry/order:',
+        n?`Name: ${n}`:'',
+        p?`Phone: ${p}`:'',
+        a?`Address: ${a}`:'',
+        m?`Message: ${m}`:''
+      ].filter(Boolean);
+      return lines.join('\n');
     }
-    t.textContent = msg;
-    t.style.opacity = '1';
-    setTimeout(()=>{ t.style.opacity='0'; }, 1400);
-  }
+    document.getElementById('sendWA').addEventListener('click',()=>{
+      const text = encodeURIComponent(buildMessage());
+      window.open(`https://wa.me/919766964845?text=${text}`,'_blank');
+    });
+    document.getElementById('sendEmail').addEventListener('click',()=>{
+      const subject = encodeURIComponent('New Order / Enquiry - Kairavi’s Oven Magic');
+      const body = encodeURIComponent(buildMessage());
+      window.location.href=`mailto:kairavisovenmagic@gmail.com?subject=${subject}&body=${body}`;
+    });
+  </script>
 
-  // Show/hide login / logout and switch label to "My Account"
-  onAuthStateChanged(auth, (user) => {
-    if(user){
-      // User logged in
-      if(loginLink){
-        loginLink.textContent = 'My Account';
-        loginLink.href = 'my-account.html';
-        loginLink.style.display = '';
+  <!-- ✅ Unified Firebase header script (Login ↔ My Account/Admin + Logout popup) -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut }
+      from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
+      authDomain: "kairavis-oven-magic.firebaseapp.com",
+      projectId: "kairavis-oven-magic",
+      storageBucket: "kairavis-oven-magic.firebasestorage.app",
+      messagingSenderId: "270897232759",
+      appId: "1:270897232759:web:36ee0edc8b222046febf72"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const ADMIN_EMAILS = ['kairavisovenmagic@gmail.com'];
+    const loginLink  = document.getElementById('loginLink');
+    const logoutLink = document.getElementById('logoutLink');
+
+    function toastMsg(msg){
+      let t=document.querySelector('.toast');
+      if(!t){ t=document.createElement('div'); t.className='toast';
+        Object.assign(t.style,{position:'fixed',left:'50%',bottom:'20px',transform:'translateX(-50%)',
+          background:'#333',color:'#fff',padding:'10px 18px',borderRadius:'10px',opacity:'0',transition:'opacity .25s',zIndex:'9999'});
+        document.body.appendChild(t);
       }
-      if(logoutLink) logoutLink.style.display = '';
-    }else{
-      // Logged out
-      if(loginLink){
-        loginLink.textContent = 'Login';
-        loginLink.href = 'login.html';
-        loginLink.style.display = '';
-      }
-      if(logoutLink) logoutLink.style.display = 'none';
+      t.textContent=msg; t.style.opacity='1'; setTimeout(()=>t.style.opacity='0',1200);
     }
-  });
 
-  // Logout with confirm → toast → redirect home
-  if(logoutLink){
-    logoutLink.addEventListener('click', async (e)=>{
-      e.preventDefault();
-      if(!confirm('Log out from Kairavi’s Oven Magic?')) return;
-      try{
-        await signOut(auth);
-        toast('Logged out successfully');
-        setTimeout(()=>{ window.location.href = 'index.html'; }, 900);
-      }catch(err){
-        alert('Logout failed: ' + (err?.message || err));
+    onAuthStateChanged(auth, user=>{
+      if(!loginLink) return;
+      if(user){
+        const email=(user.email||'').toLowerCase();
+        const isAdmin=ADMIN_EMAILS.includes(email);
+        loginLink.textContent = isAdmin ? 'Admin' : 'My Account';
+        loginLink.href       = isAdmin ? 'admin.html' : 'my-account.html';
+        loginLink.title      = user.email;
+        if(logoutLink) logoutLink.style.display='';
+      }else{
+        loginLink.textContent='Login';
+        loginLink.href='login.html';
+        loginLink.removeAttribute('title');
+        if(logoutLink) logoutLink.style.display='none';
       }
     });
-  }
-</script>
 
-<!-- (Optional) base toast node if your CSS already styles .toast -->
-<div class="toast" style="display:block;opacity:0;pointer-events:none"></div>
+    if(logoutLink){
+      logoutLink.addEventListener('click', async (e)=>{
+        e.preventDefault();
+        if(!confirm('Log out from Kairavi’s Oven Magic?')) return;
+        try{
+          await signOut(auth);
+          toastMsg('Logged out successfully!');
+          setTimeout(()=>{ window.location.href='index.html'; }, 900);
+        }catch(err){ alert('Logout failed: ' + (err?.message||err)); }
+      });
+    }
+  </script>
 
-
+  <!-- tiny toast placeholder -->
+  <div class="toast" style="display:none"></div>
 </body>
 </html>
