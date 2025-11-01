@@ -241,55 +241,90 @@
   <!-- Toast stub -->
   <div class="toast" style="display:none"></div>
 
-  <!-- ====== AUTH SWITCH + LOGOUT POPUP (same helper used on other pages) ====== -->
-  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
-    import { getAuth, onAuthStateChanged, signOut } 
-      from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
+  <!-- ✅ Firebase Auth: Login ↔ My Account ↔ Admin Switch + Logout Popup -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
+  import { getAuth, onAuthStateChanged, signOut } 
+    from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
-      authDomain: "kairavis-oven-magic.firebaseapp.com",
-      projectId: "kairavis-oven-magic",
-      storageBucket: "kairavis-oven-magic.firebasestorage.app",
-      messagingSenderId: "270897232759",
-      appId: "1:270897232759:web:36ee0edc8b222046febf72"
-    };
+  // --- CONFIG (yours) ---
+  const firebaseConfig = {
+    apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
+    authDomain: "kairavis-oven-magic.firebaseapp.com",
+    projectId: "kairavis-oven-magic",
+    storageBucket: "kairavis-oven-magic.firebasestorage.app",
+    messagingSenderId: "270897232759",
+    appId: "1:270897232759:web:36ee0edc8b222046febf72"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const loginLink  = document.getElementById('loginLink');
-    const logoutLink = document.getElementById('logoutLink');
+  // --- Init Firebase ---
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-    function toastMsg(m){
-      let t=document.querySelector('.toast'); 
-      if(!t){ t=document.createElement('div'); t.className='toast'; document.body.appendChild(t); }
-      t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1100);
+  // --- Admin whitelist (add your admin emails here) ---
+  const ADMIN_EMAILS = ['kairavisovenmagic@gmail.com'];
+
+  // --- Elements ---
+  const loginLink  = document.getElementById('loginLink');
+  const logoutLink = document.getElementById('logoutLink');
+
+  // --- Toast helper ---
+  function toastMsg(msg) {
+    let t = document.querySelector('.toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.className = 'toast';
+      t.style.position = 'fixed';
+      t.style.left = '50%';
+      t.style.bottom = '20px';
+      t.style.transform = 'translateX(-50%)';
+      t.style.background = '#333';
+      t.style.color = '#fff';
+      t.style.padding = '10px 18px';
+      t.style.borderRadius = '10px';
+      t.style.opacity = '0';
+      t.style.transition = 'opacity .25s';
+      t.style.zIndex = '9999';
+      document.body.appendChild(t);
     }
+    t.textContent = msg;
+    t.style.opacity = '1';
+    setTimeout(() => { t.style.opacity = '0'; }, 1200);
+  }
 
-    onAuthStateChanged(auth, (user)=>{
-      if(user){
-        if(loginLink){ loginLink.textContent='My Account'; loginLink.href='my-account.html'; loginLink.style.display=''; }
-        if(logoutLink) logoutLink.style.display='';
-      }else{
-        if(loginLink){ loginLink.textContent='Login'; loginLink.href='login.html'; loginLink.style.display=''; }
-        if(logoutLink) logoutLink.style.display='none';
+  // --- Update header links depending on user role ---
+  onAuthStateChanged(auth, (user) => {
+    if (!loginLink) return;
+    if (user) {
+      const email = (user.email || '').toLowerCase();
+      const isAdmin = ADMIN_EMAILS.includes(email);
+      loginLink.textContent = isAdmin ? 'Admin' : 'My Account';
+      loginLink.href = isAdmin ? 'admin.html' : 'my-account.html';
+      loginLink.title = user.email;
+      if (logoutLink) logoutLink.style.display = '';
+    } else {
+      loginLink.textContent = 'Login';
+      loginLink.href = 'login.html';
+      loginLink.removeAttribute('title');
+      if (logoutLink) logoutLink.style.display = 'none';
+    }
+  });
+
+  // --- Logout behavior ---
+  if (logoutLink) {
+    logoutLink.addEventListener('click', async (e) => {
+      e.preventDefault();
+      if (!confirm('Log out from Kairavi’s Oven Magic?')) return;
+      try {
+        await signOut(auth);
+        toastMsg('Logged out successfully!');
+        setTimeout(() => { window.location.href = 'index.html'; }, 900);
+      } catch (err) {
+        alert('Logout failed: ' + (err?.message || err));
       }
     });
+  }
+</script>
 
-    if(logoutLink){
-      logoutLink.addEventListener('click', async (e)=>{
-        e.preventDefault();
-        if(!confirm('Log out from Kairavi’s Oven Magic?')) return;
-        try{
-          await signOut(auth);
-          toastMsg('Logged out successfully');
-          setTimeout(()=>location.href='index.html', 900);
-        }catch(err){
-          alert('Logout failed: ' + (err?.message || err));
-        }
-      });
-    }
-  </script>
 </body>
 </html>
