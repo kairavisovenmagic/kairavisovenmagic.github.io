@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Kairavi’s Oven Magic — Homemade Cookies & Nankhatai</title>
 
-  <!-- ✅ SEO -->
-  <meta name="description" content="Homemade cookies & nankhatai made with pure unsalted butter. No maida, no palm oil. Freshly baked in Pune with love from Vandana’s Kitchen."/>
-  <meta name="keywords" content="Kairavi’s Oven Magic, Vandana’s Kitchen, homemade cookies, nankhatai, atta cookies, butter cookies, ragi cookies, gulkand cookies, wheat cookies, healthy cookies Pune, maida free cookies, palm oil free cookies, pure butter cookies, homemade nankhatai, Indian cookies brand, homemade snacks, fresh bakery Pune">
+  <!-- SEO -->
+  <meta name="description" content="Homemade cookies & nankhatai made with pure unsalted butter. No maida, no palm oil. Freshly baked in Pune with love from Vandana’s Kitchen.">
+  <meta name="keywords" content="Kairavi’s Oven Magic, Vandana’s Kitchen, homemade cookies, nankhatai, atta cookies, butter cookies, ragi cookies, gulkand cookies, wheat cookies, healthy cookies Pune, maida free cookies, palm oil free cookies, pure butter cookies, homemade bakery Pune">
   <meta name="author" content="Kairavi’s Oven Magic">
 
   <link rel="icon" href="images/logo.png"/>
   <link rel="stylesheet" href="style.css"/>
 
-  <!-- ✅ Google Analytics (GA4) -->
+  <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-54P9DJJCQ4"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -22,7 +22,6 @@
     gtag('config', 'G-54P9DJJCQ4');
   </script>
 </head>
-
 <body>
 
   <!-- FREE DELIVERY BAR -->
@@ -39,7 +38,7 @@
         <strong>Kairavi’s Oven Magic</strong>
       </a>
       <nav class="menu">
-        <a href="index.html">Home</a>
+        <a href="index.html" aria-current="page">Home</a>
         <a href="products.html">Products</a>
         <a href="contact.html">Contact</a>
         <a href="cart.html">Cart</a>
@@ -100,13 +99,13 @@
         <div class="step">
           <div class="emoji">🚚</div>
           <h3>Delivery</h3>
-          <p>Packed with care and delivered in Pune — fresh, warm, and full of happiness!</p>
+          <p>Packed with care and delivered in Pune.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- OUR STORY IMAGE ONLY -->
+  <!-- OUR STORY (IMAGE ONLY) -->
   <section class="story-section">
     <div class="wrap">
       <img src="images/our-story.jpg" alt="Our Story — From Home to Heart" style="border-radius:16px;box-shadow:0 3px 10px rgba(0,0,0,0.1);"/>
@@ -132,32 +131,32 @@
             </div>
           </article>
 
-          <article class="slide">
-            <img src="images/reviews/rahul.jpg" alt="Rahul's review"/>
-            <div class="review-body">
-              <div class="stars">★★★★★</div>
-              <div class="reviewer">Rahul — Pune</div>
-              <p>“Healthy meets heavenly! Tried ragi, wheat, and gulkand nankhatai — pure harmony in every bite. Deliciously different, naturally nourishing.”</p>
-            </div>
-          </article>
+            <article class="slide">
+              <img src="images/reviews/rahul.jpg" alt="Rahul's review"/>
+              <div class="review-body">
+                <div class="stars">★★★★★</div>
+                <div class="reviewer">Rahul — Pune</div>
+                <p>“Healthy meets heavenly! Tried ragi, wheat, and gulkand nankhatai — pure harmony in every bite. Deliciously different, naturally nourishing.”</p>
+              </div>
+            </article>
 
-          <article class="slide">
-            <img src="images/reviews/vishal.jpg" alt="Vishal's review"/>
-            <div class="review-body">
-              <div class="stars">★★★★★</div>
-              <div class="reviewer">Vishal — Pune</div>
-              <p>“Cookie Bliss Unboxed! Packaging premium, delivery quick, freshness perfect. Guilt-free indulgence — now I order only from Kairavi’s Oven Magic!”</p>
-            </div>
-          </article>
+            <article class="slide">
+              <img src="images/reviews/vishal.jpg" alt="Vishal's review"/>
+              <div class="review-body">
+                <div class="stars">★★★★★</div>
+                <div class="reviewer">Vishal — Pune</div>
+                <p>“Cookie Bliss Unboxed! Packaging premium, delivery quick, freshness perfect. Guilt-free indulgence — now I order only from Kairavi’s Oven Magic!”</p>
+              </div>
+            </article>
 
-          <article class="slide">
-            <img src="images/reviews/sanyukta.jpg" alt="Sanyukta's review"/>
-            <div class="review-body">
-              <div class="stars">★★★★★</div>
-              <div class="reviewer">Sanyukta — Pune</div>
-              <p>“Absolutely loved the nankhatai! Light, soft and perfectly balanced. The Ragi one is such a great idea — healthy and tasty for kids!”</p>
-            </div>
-          </article>
+            <article class="slide">
+              <img src="images/reviews/sanyukta.jpg" alt="Sanyukta's review"/>
+              <div class="review-body">
+                <div class="stars">★★★★★</div>
+                <div class="reviewer">Sanyukta — Pune</div>
+                <p>“Absolutely loved the nankhatai! Light, soft and perfectly balanced. The Ragi one is such a great idea — healthy and tasty for kids!”</p>
+              </div>
+            </article>
         </div>
 
         <button class="nav-btn nav-next" aria-label="Next">›</button>
@@ -184,53 +183,54 @@
     <img src="images/whatsapp.png" alt="WhatsApp"/>
   </a>
 
-  <!-- Carousel JS -->
+  <!-- Reviews carousel JS (arrows + drag + autoplay) -->
   <script>
     const track=document.getElementById('reviewTrack');
     const prev=document.querySelector('.nav-prev');
     const next=document.querySelector('.nav-next');
-    function step(){const s=track.querySelector('.slide');if(!s)return 320;const r=s.getBoundingClientRect();return r.width+16;}
+
+    function step(){const s=track.querySelector('.slide');if(!s) return 320;const r=s.getBoundingClientRect();return r.width+16;}
     prev.onclick=()=>track.scrollBy({left:-step(),behavior:'smooth'});
-    next.onclick=()=>track.scrollBy({left:step(),behavior:'smooth'});
+    next.onclick=()=>track.scrollBy({left: step(),behavior:'smooth'});
+
+    // Drag / swipe
     let down=false,startX=0,start=0,pid=0;
     track.addEventListener('pointerdown',e=>{down=true;pid=e.pointerId;startX=e.clientX;start=track.scrollLeft;track.setPointerCapture(pid)});
-    track.addEventListener('pointermove',e=>{if(!down)return;track.scrollLeft=start-(e.clientX-startX)});
+    track.addEventListener('pointermove',e=>{if(!down) return;track.scrollLeft=start-(e.clientX-startX)});
     ['pointerup','pointercancel','mouseleave'].forEach(evt=>track.addEventListener(evt,()=>down=false));
+
+    // Autoplay
     setInterval(()=>track.scrollBy({left:step(),behavior:'smooth'}),5000);
   </script>
 
-  <!-- ✅ Firebase Login Auto-Switch -->
+  <!-- Firebase: auto-switch Login → My Account -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
     import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
 
-    const firebaseConfig = {
+    const app = initializeApp({
       apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
       authDomain: "kairavis-oven-magic.firebaseapp.com",
       projectId: "kairavis-oven-magic",
       storageBucket: "kairavis-oven-magic.firebasestorage.app",
       messagingSenderId: "270897232759",
       appId: "1:270897232759:web:36ee0edc8b222046febf72"
-    };
-
-    const app = initializeApp(firebaseConfig);
+    });
     const auth = getAuth(app);
-    const link = document.getElementById('loginLink');
+    const loginLink = document.getElementById('loginLink');
 
-    onAuthStateChanged(auth, (user) => {
-      if (link) {
-        if (user) {
-          link.textContent = 'My Account';
-          link.href = 'login.html';
-          link.title = user.email;
-        } else {
-          link.textContent = 'Login';
-          link.href = 'login.html';
-          link.removeAttribute('title');
-        }
+    onAuthStateChanged(auth, user=>{
+      if(!loginLink) return;
+      if(user){
+        loginLink.textContent = 'My Account';
+        loginLink.href = 'my-account.html';
+        loginLink.title = user.email || 'My Account';
+      }else{
+        loginLink.textContent = 'Login';
+        loginLink.href = 'login.html';
+        loginLink.removeAttribute('title');
       }
     });
   </script>
-
 </body>
 </html>
