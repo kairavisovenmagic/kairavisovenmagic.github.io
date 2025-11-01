@@ -23,28 +23,90 @@
   <section class="section"><div class="wrap" id="dashboard"></div></section>
 
   <!-- Firebase Admin Logic (same as provided before) -->
-  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
-    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
-    import { getFirestore, getDocs, collection, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
+  <!-- ✅ Firebase Auth: Login ↔ My Account ↔ Admin Switch + Logout Popup -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
+  import { getAuth, onAuthStateChanged, signOut } 
+    from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
 
-    const app = initializeApp({
-      apiKey:"AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
-      authDomain:"kairavis-oven-magic.firebaseapp.com",
-      projectId:"kairavis-oven-magic",
-      storageBucket:"kairavis-oven-magic.firebasestorage.app",
-      messagingSenderId:"270897232759",
-      appId:"1:270897232759:web:36ee0edc8b222046febf72"
-    });
-    const auth=getAuth(app);const db=getFirestore(app);
+  // --- CONFIG (yours) ---
+  const firebaseConfig = {
+    apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
+    authDomain: "kairavis-oven-magic.firebaseapp.com",
+    projectId: "kairavis-oven-magic",
+    storageBucket: "kairavis-oven-magic.firebasestorage.app",
+    messagingSenderId: "270897232759",
+    appId: "1:270897232759:web:36ee0edc8b222046febf72"
+  };
 
-    const dash=document.getElementById('dashboard');
-    onAuthStateChanged(auth,async user=>{
-      if(!user){location.href='login.html';return;}
-      const meSnap=await getDoc(doc(db,'users',user.uid));
-      if(!meSnap.exists()||meSnap.data().role!=='admin'){alert('Admin access only');location.href='index.html';return;}
-      dash.innerHTML='<h2>✅ Welcome Admin '+user.email+'</h2><p>Use admin-dashboard.html for full features (search/export).</p>';
+  // --- Init Firebase ---
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // --- Admin whitelist (add your admin emails here) ---
+  const ADMIN_EMAILS = ['kairavisovenmagic@gmail.com'];
+
+  // --- Elements ---
+  const loginLink  = document.getElementById('loginLink');
+  const logoutLink = document.getElementById('logoutLink');
+
+  // --- Toast helper ---
+  function toastMsg(msg) {
+    let t = document.querySelector('.toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.className = 'toast';
+      t.style.position = 'fixed';
+      t.style.left = '50%';
+      t.style.bottom = '20px';
+      t.style.transform = 'translateX(-50%)';
+      t.style.background = '#333';
+      t.style.color = '#fff';
+      t.style.padding = '10px 18px';
+      t.style.borderRadius = '10px';
+      t.style.opacity = '0';
+      t.style.transition = 'opacity .25s';
+      t.style.zIndex = '9999';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.opacity = '1';
+    setTimeout(() => { t.style.opacity = '0'; }, 1200);
+  }
+
+  // --- Update header links depending on user role ---
+  onAuthStateChanged(auth, (user) => {
+    if (!loginLink) return;
+    if (user) {
+      const email = (user.email || '').toLowerCase();
+      const isAdmin = ADMIN_EMAILS.includes(email);
+      loginLink.textContent = isAdmin ? 'Admin' : 'My Account';
+      loginLink.href = isAdmin ? 'admin.html' : 'my-account.html';
+      loginLink.title = user.email;
+      if (logoutLink) logoutLink.style.display = '';
+    } else {
+      loginLink.textContent = 'Login';
+      loginLink.href = 'login.html';
+      loginLink.removeAttribute('title');
+      if (logoutLink) logoutLink.style.display = 'none';
+    }
+  });
+
+  // --- Logout behavior ---
+  if (logoutLink) {
+    logoutLink.addEventListener('click', async (e) => {
+      e.preventDefault();
+      if (!confirm('Log out from Kairavi’s Oven Magic?')) return;
+      try {
+        await signOut(auth);
+        toastMsg('Logged out successfully!');
+        setTimeout(() => { window.location.href = 'index.html'; }, 900);
+      } catch (err) {
+        alert('Logout failed: ' + (err?.message || err));
+      }
     });
-  </script>
+  }
+</script>
+
 </body>
 </html>
