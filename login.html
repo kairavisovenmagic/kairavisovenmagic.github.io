@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Login | Kairavi’s Oven Magic</title>
+  <link rel="icon" href="images/logo.png"/>
+  <link rel="stylesheet" href="style.css"/>
+
+  <!-- Firebase (compat for simple usage) -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <div class="freebar">FREE delivery over ₹1599 • Pune city <a href="products.html">Shop now →</a></div>
+
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="index.html">
+        <img src="images/logo.png" alt="Kairavi’s Oven Magic logo"/>
+        <strong>Kairavi’s Oven Magic</strong>
+      </a>
+      <nav class="menu">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="contact.html">Contact</a>
+        <a href="cart.html">Cart</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap" style="max-width:560px">
+      <h2 style="text-align:center;margin-bottom:.5rem">Welcome back</h2>
+      <p class="sub" style="text-align:center;margin-bottom:1.25rem">Sign in to order faster. New here? Create an account in seconds.</p>
+
+      <div class="card" style="padding:20px">
+        <div style="display:flex;gap:10px;margin-bottom:14px;justify-content:center">
+          <button id="btnSignInTab" class="btn btn-primary">Sign In</button>
+          <button id="btnSignUpTab" class="btn btn-ghost">Create Account</button>
+        </div>
+
+        <!-- Sign In -->
+        <form id="signInForm" style="display:block">
+          <label>Email</label>
+          <input type="email" id="inEmail" required class="input"/>
+          <label>Password</label>
+          <input type="password" id="inPass" required class="input"/>
+          <div style="display:flex;gap:10px;margin-top:14px">
+            <button type="submit" class="btn btn-primary" style="flex:1">Sign In</button>
+            <button id="btnReset" class="btn btn-ghost" type="button">Forgot?</button>
+          </div>
+        </form>
+
+        <!-- Sign Up -->
+        <form id="signUpForm" style="display:none">
+          <div class="grid-2">
+            <div>
+              <label>Full name</label>
+              <input type="text" id="upName" class="input" required/>
+            </div>
+            <div>
+              <label>Phone</label>
+              <input type="tel" id="upPhone" class="input" required/>
+            </div>
+          </div>
+          <label>Address</label>
+          <textarea id="upAddr" rows="2" class="input" required></textarea>
+
+          <div class="grid-2">
+            <div>
+              <label>Email</label>
+              <input type="email" id="upEmail" class="input" required/>
+            </div>
+            <div>
+              <label>Password</label>
+              <input type="password" id="upPass" class="input" required/>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="margin-top:14px;width:100%">Create Account</button>
+        </form>
+
+        <p id="authMsg" class="sub" style="margin-top:12px"></p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // ---------- Firebase init ----------
+    const firebaseConfig = {
+      apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
+      authDomain: "kairavis-oven-magic.firebaseapp.com",
+      projectId: "kairavis-oven-magic",
+      storageBucket: "kairavis-oven-magic.firebasestorage.app",
+      messagingSenderId: "270897232759",
+      appId: "1:270897232759:web:36ee0edc8b222046febf72"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // ---------- UI helpers ----------
+    const $ = sel => document.querySelector(sel);
+    const msg = (t,color="#7a5b47") => { const el=$("#authMsg"); el.textContent=t; el.style.color=color };
+
+    // Tabs
+    const signInForm = $("#signInForm");
+    const signUpForm = $("#signUpForm");
+    $("#btnSignInTab").onclick = () => { signInForm.style.display="block"; signUpForm.style.display="none" };
+    $("#btnSignUpTab").onclick = () => { signInForm.style.display="none"; signUpForm.style.display="block" };
+
+    // ---------- Sign in ----------
+    signInForm.addEventListener("submit", async (e)=>{
+      e.preventDefault();
+      msg("Signing in…");
+      try{
+        const email = $("#inEmail").value.trim();
+        const pass  = $("#inPass").value;
+        const { user } = await auth.signInWithEmailAndPassword(email, pass);
+
+        // update lastLogin
+        await db.collection("users").doc(user.uid).set({ lastLoginAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge:true });
+
+        // admin route?
+        const ADMIN_EMAILS = ["kairavisovenmagic@gmail.com"]; // add more if needed
+        if (ADMIN_EMAILS.includes(user.email)) {
+          location.href = "admin.html";
+        } else {
+          location.href = "products.html";
+        }
+      }catch(err){
+        msg(err.message, "#c0392b");
+      }
+    });
+
+    // Reset password
+    $("#btnReset").onclick = async () => {
+      const email = $("#inEmail").value.trim();
+      if(!email){ msg("Enter your email above, then tap Forgot?", "#c0392b"); return;}
+      try{
+        await auth.sendPasswordResetEmail(email);
+        msg("Reset link sent to your email.");
+      }catch(err){ msg(err.message, "#c0392b"); }
+    };
+
+    // ---------- Sign up ----------
+    signUpForm.addEventListener("submit", async (e)=>{
+      e.preventDefault();
+      msg("Creating your account…");
+      try{
+        const name  = $("#upName").value.trim();
+        const phone = $("#upPhone").value.trim();
+        const addr  = $("#upAddr").value.trim();
+        const email = $("#upEmail").value.trim();
+        const pass  = $("#upPass").value;
+
+        const { user } = await auth.createUserWithEmailAndPassword(email, pass);
+
+        // Create user profile in Firestore
+        await db.collection("users").doc(user.uid).set({
+          uid: user.uid,
+          email, name, phone, address: addr,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          lastLoginAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        msg("Account created. Redirecting…", "#2e7d32");
+        setTimeout(()=>location.href="products.html", 600);
+      }catch(err){
+        msg(err.message, "#c0392b");
+      }
+    });
+  </script>
+</body>
+</html>
