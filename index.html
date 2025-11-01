@@ -10,18 +10,13 @@
 </head>
 <body>
 
-  <!-- FREE BAR -->
-  <div class="freebar">
-    FREE delivery over ₹999 • Pune city <a href="products.html">Shop now →</a>
+  <div class="freebar">FREE delivery over ₹999 • Pune city
+    <a href="products.html">Shop now →</a>
   </div>
 
-  <!-- HEADER -->
   <header class="site-header">
     <div class="wrap nav">
-      <a class="brand" href="index.html">
-        <img src="images/logo.png" alt="Kairavi’s Oven Magic logo"/>
-        <strong>Kairavi’s Oven Magic</strong>
-      </a>
+      <a class="brand" href="index.html"><img src="images/logo.png" alt="Kairavi’s Oven Magic logo"/><strong>Kairavi’s Oven Magic</strong></a>
       <nav class="menu">
         <a href="index.html">Home</a>
         <a href="products.html">Products</a>
@@ -59,6 +54,7 @@
       </div>
 
       <div class="hero-image">
+        <!-- use your PNG hero -->
         <img src="images/vandana-hero.png" alt="Handmade Happiness from Vandana’s Kitchen"/>
       </div>
     </div>
@@ -89,31 +85,10 @@
     </div>
   </section>
 
-  <!-- OUR STORY -->
-  <section class="story-rich">
-    <div class="wrap story-grid">
-      <div class="story-card">
-        <div class="story-kicker">🍪 Our Story — From Home to Heart</div>
-        <h2 class="story-title">Why can’t cookies taste like home?</h2>
-
-        <p>Everywhere we looked, the market was filled with cookies made from refined flour, loaded with preservatives, and missing that pure, homemade touch. We wanted something better — something we could proudly serve to our family, friends, and especially our little ones.</p>
-
-        <p>So, we rolled up our sleeves and began baking in our own kitchen — using <strong>100% whole wheat (atta)</strong>, <strong>pure butter</strong>, and <strong>zero preservatives</strong>. What started as an experiment soon became a passion. We tried, tested, and tasted countless batches, sharing them with our neighbours and family.</p>
-
-        <blockquote class="story-quote">“The result? Smiles all around.”</blockquote>
-
-        <p>Everyone loved the soft texture, the rich aroma, and that unmistakable homemade happiness in every bite.</p>
-
-        <p>That’s when we decided — if our family loves it, why not share it with everyone? And that’s how <strong>Vandana’s Kitchen</strong> was born — bringing you fresh, homemade Nankhatai and cookies, made with care, love, and ingredients you can trust.</p>
-
-        <div class="story-foot">
-          Because every bite should remind you of home. <span class="heart">💛</span>
-        </div>
-      </div>
-
-      <div class="story-image">
-        <img src="images/story-girl.png" alt="Girl holding cookies and Nankhatai"/>
-      </div>
+  <!-- STORY IMAGE -->
+  <section class="story-section">
+    <div class="wrap">
+      <img src="images/our-story.jpg" alt="Our Story — From Home to Heart"/>
     </div>
   </section>
 
@@ -125,6 +100,7 @@
 
       <div class="carousel">
         <button class="nav-btn nav-prev" aria-label="Previous">‹</button>
+
         <div class="track" id="reviewTrack">
           <article class="slide">
             <img src="images/reviews/rahul.jpg" alt="Rahul's review"/>
@@ -134,6 +110,7 @@
               <p>“Healthy meets heavenly! Tried ragi, wheat, and gulkand nankhatai — pure harmony in every bite. Naturally nourishing.”</p>
             </div>
           </article>
+
           <article class="slide">
             <img src="images/reviews/vishal.jpg" alt="Vishal's review"/>
             <div class="review-body">
@@ -142,6 +119,7 @@
               <p>“No maida, no palm oil — guilt-free indulgence. Quality is superb! I’ll be ordering only from Kairavi’s now.”</p>
             </div>
           </article>
+
           <article class="slide">
             <img src="images/reviews/sanyukta.jpg" alt="Sanyukta's review"/>
             <div class="review-body">
@@ -151,6 +129,7 @@
             </div>
           </article>
         </div>
+
         <button class="nav-btn nav-next" aria-label="Next">›</button>
       </div>
     </div>
@@ -170,23 +149,28 @@
     </div>
   </footer>
 
-  <!-- FLOATING WHATSAPP -->
+  <!-- Floating WhatsApp -->
   <a class="whatsapp-float" href="https://wa.me/919766964845" target="_blank" aria-label="WhatsApp">
     <img src="images/whatsapp.png" alt="WhatsApp"/>
   </a>
 
-  <!-- REVIEWS SLIDER JS -->
+  <!-- Reviews carousel JS (arrows + drag + autoplay) -->
   <script>
     const track=document.getElementById('reviewTrack');
     const prev=document.querySelector('.nav-prev');
     const next=document.querySelector('.nav-next');
-    function step(){const s=track.querySelector('.slide');if(!s)return 320;return s.getBoundingClientRect().width+16;}
+
+    function step(){const s=track.querySelector('.slide');if(!s) return 320;const r=s.getBoundingClientRect();return r.width+16;}
     prev.onclick=()=>track.scrollBy({left:-step(),behavior:'smooth'});
     next.onclick=()=>track.scrollBy({left: step(),behavior:'smooth'});
+
+    // Drag / swipe
     let down=false,startX=0,start=0,pid=0;
     track.addEventListener('pointerdown',e=>{down=true;pid=e.pointerId;startX=e.clientX;start=track.scrollLeft;track.setPointerCapture(pid)});
-    track.addEventListener('pointermove',e=>{if(!down)return;track.scrollLeft=start-(e.clientX-startX)});
+    track.addEventListener('pointermove',e=>{if(!down) return;track.scrollLeft=start-(e.clientX-startX)});
     ['pointerup','pointercancel','mouseleave'].forEach(evt=>track.addEventListener(evt,()=>down=false));
+
+    // Autoplay
     setInterval(()=>track.scrollBy({left:step(),behavior:'smooth'}),5000);
   </script>
 </body>
