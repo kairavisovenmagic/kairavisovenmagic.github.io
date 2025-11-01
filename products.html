@@ -29,7 +29,9 @@
         <a href="products.html" aria-current="page">Products</a>
         <a href="contact.html">Contact</a>
         <a href="cart.html">Cart <span class="badge" id="cartCount">0</span></a>
+        <!-- Auth controls -->
         <a id="loginLink" href="login.html">Login</a>
+        <a id="logoutLink" href="#" style="display:none">Logout</a>
       </nav>
     </div>
   </header>
@@ -79,10 +81,7 @@
   <!-- SECTION: PRODUCTS GRID -->
   <section class="section section-products">
     <div class="wrap">
-      <div class="grid pro-grid" id="productsGrid">
-        <!-- All your product cards remain unchanged -->
-        <!-- (Paste all cards exactly as in your version above) -->
-      </div>
+      <div class="grid pro-grid" id="productsGrid"></div>
     </div>
   </section>
 
@@ -101,12 +100,28 @@
     <img src="images/whatsapp.png" alt="WhatsApp">
   </a>
 
-  <!-- Qty + Cart + Filter logic -->
+  <!-- ====== PRODUCTS + CART + FILTERS ====== -->
   <script>
-    const CART_KEY = 'kom_cart';
+    // ---- PRODUCT DATA (edit images/prices/tags here) ----
+    const PRODUCTS = [
+      {name:"Gulkand Nankhatai", weight:"250 g", price:250, img:"images/gulkand.jpg", tags:"gulkand rose", best:true},
+      {name:"Wheat Nankhatai",  weight:"250 g", price:200, img:"images/wheat.jpg",   tags:"wheat atta", best:true},
+      {name:"Ragi Nankhatai",   weight:"250 g", price:250, img:"images/ragi.jpg",    tags:"ragi finger millet"},
+      {name:"Oats Nankhatai",   weight:"250 g", price:250, img:"images/oats.jpg",    tags:"oats"},
+      {name:"Maize (Corn) Nankhatai", weight:"250 g", price:250, img:"images/maize.jpg",  tags:"maize corn"},
+      {name:"Jowar Nankhatai",  weight:"250 g", price:250, img:"images/jowar.jpg",   tags:"jowar sorghum"},
+      {name:"Upvas Nankhatai",  weight:"250 g", price:250, img:"images/upvas.jpg",   tags:"upvas fasting sabudana rajgira"},
+      {name:"Chocolate Nankhatai", weight:"250 g", price:250, img:"images/chocolate.jpg", tags:"chocolate choco", best:true},
+      {name:"Ajwain Sticks",    weight:"250 g", price:250, img:"images/ajwain-sticks.jpg", tags:"ajwain sticks"},
+      {name:"Ajwain Cookies",   weight:"250 g", price:200, img:"images/ajwain-cookies.jpg", tags:"ajwain cookies"},
+      {name:"Jeera Cookies",    weight:"250 g", price:250, img:"images/jeera.jpg", tags:"jeera cumin"},
+      {name:"Mini Marble Cookies", weight:"250 g", price:200, img:"images/marble.jpg", tags:"marble vanilla chocolate"}
+    ];
 
-    function getCart(){ return JSON.parse(localStorage.getItem(CART_KEY)||'[]'); }
-    function saveCart(c){ localStorage.setItem(CART_KEY, JSON.stringify(c)); updateCartCount(); toast('Added to cart'); }
+    // ---- CART STORAGE ----
+    const CART_KEY = 'kom_cart';
+    const getCart = () => JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+    const saveCart = (c) => { localStorage.setItem(CART_KEY, JSON.stringify(c)); updateCartCount(); toast('Added to cart'); };
     function updateCartCount(){
       const el = document.getElementById('cartCount');
       if(!el) return;
@@ -120,40 +135,73 @@
       setTimeout(()=>t.classList.remove('show'),1100);
     }
 
-    // Initialize product cards
-    document.querySelectorAll('.card').forEach(card => {
-      const name = card.dataset.product;
-      const weight = card.dataset.weight;
-      const basePrice = parseInt(card.dataset.price || card.querySelector('.price').dataset.price, 10);
+    // ---- RENDER PRODUCTS INTO GRID ----
+    const grid = document.getElementById('productsGrid');
 
-      const priceEl = card.querySelector('.price');
-      const minus = card.querySelector('.minus');
-      const plus = card.querySelector('.plus');
-      const remove = card.querySelector('.remove');
-      const countEl = card.querySelector('.count');
-      const addBtn = card.querySelector('.addbtn');
+    function cardHTML(p) {
+      const id = btoa(p.name).replace(/=/g,''); // simple id
+      return `
+        <article class="card pro-card ${p.best?'best':''}" 
+                 data-product="${p.name}" data-weight="${p.weight}" 
+                 data-price="${p.price}" data-tags="${p.tags}">
+          ${p.best ? '<div class="ribbon">Bestseller</div>' : ''}
+          <figure class="thumb">
+            <img loading="lazy" src="${p.img}" alt="${p.name}">
+          </figure>
+          <div class="card-body">
+            <h3>${p.name}</h3>
+            <div class="meta">
+              <span>${p.weight}</span>
+              <span class="price" data-price="${p.price}">₹${p.price}</span>
+            </div>
+            <div class="row-actions">
+              <div class="qty-control" aria-label="Quantity control">
+                <button class="minus" data-id="${id}">−</button>
+                <span class="count" id="c-${id}">1</span>
+                <button class="plus" data-id="${id}">+</button>
+                <button class="remove" data-id="${id}" title="Reset"><i class="fa fa-trash"></i></button>
+              </div>
+              <a class="btn btn-primary addbtn" data-id="${id}" href="#" rel="noopener">Add to Cart</a>
+            </div>
+          </div>
+        </article>
+      `;
+    }
 
-      let qty = 1;
-      function update(){ priceEl.textContent = `₹${basePrice * qty}`; countEl.textContent = qty; }
-      minus.addEventListener('click', () => { if (qty > 1) { qty--; update(); } });
-      plus .addEventListener('click', () => { if (qty < 10){ qty++; update(); } });
-      remove.addEventListener('click', () => { qty = 1; update(); });
+    function renderGrid(list = PRODUCTS){
+      grid.innerHTML = list.map(cardHTML).join('');
+      // attach handlers for each card
+      list.forEach(p=>{
+        const id = btoa(p.name).replace(/=/g,'');
+        const priceEl = grid.querySelector(`article[data-product="${p.name}"] .price`);
+        const countEl = document.getElementById(`c-${id}`);
+        const minus = grid.querySelector(`.minus[data-id="${id}"]`);
+        const plus  = grid.querySelector(`.plus[data-id="${id}"]`);
+        const reset = grid.querySelector(`.remove[data-id="${id}"]`);
+        const add   = grid.querySelector(`.addbtn[data-id="${id}"]`);
+        let qty = 1;
+        const update = () => { priceEl.textContent = `₹${p.price * qty}`; countEl.textContent = qty; };
 
-      addBtn.addEventListener('click', e=>{
-        e.preventDefault();
-        const cart=getCart();
-        const key=`${name}|${weight}|${basePrice}`;
-        const found=cart.find(i=>i.key===key);
-        if(found){ found.qty += qty; } else { cart.push({ key, name, weight, price: basePrice, qty }); }
-        saveCart(cart);
+        minus.addEventListener('click', ()=>{ if(qty>1){ qty--; update(); }});
+        plus .addEventListener('click', ()=>{ if(qty<10){ qty++; update(); }});
+        reset.addEventListener('click', ()=>{ qty=1; update(); });
+        add  .addEventListener('click', (e)=>{
+          e.preventDefault();
+          const cart = getCart();
+          const key = `${p.name}|${p.weight}|${p.price}`;
+          const found = cart.find(i=>i.key===key);
+          if(found){ found.qty += qty; } else { cart.push({ key, name:p.name, weight:p.weight, price:p.price, qty }); }
+          saveCart(cart);
+        });
+
+        update();
       });
 
-      update();
-    });
+      updateCartCount();
+      applyFilters(); // start with correct count
+    }
 
-    updateCartCount();
-
-    // ------ Filters ------
+    // ---- FILTERS ----
     const q = document.getElementById('q');
     const priceMax = document.getElementById('priceMax');
     const onlyBest = document.getElementById('onlyBest');
@@ -162,13 +210,13 @@
 
     function applyFilters(){
       const term = q.value.trim().toLowerCase();
-      const max = priceMax.value ? parseInt(priceMax.value,10) : Infinity;
+      const max  = priceMax.value ? parseInt(priceMax.value,10) : Infinity;
       const best = onlyBest.checked;
 
       let visible = 0;
-      document.querySelectorAll('.card').forEach(card=>{
-        const name = card.dataset.product.toLowerCase();
-        const tags = (card.dataset.tags||'').toLowerCase();
+      grid.querySelectorAll('.card').forEach(card=>{
+        const name  = card.dataset.product.toLowerCase();
+        const tags  = (card.dataset.tags||'').toLowerCase();
         const price = parseInt(card.dataset.price,10);
         const isBest = card.classList.contains('best');
 
@@ -176,141 +224,72 @@
         const priceMatch = price <= max;
         const bestMatch  = !best || isBest;
 
-        const show = (textMatch && priceMatch && bestMatch);
+        const show = textMatch && priceMatch && bestMatch;
         card.style.display = show ? '' : 'none';
         if(show) visible++;
       });
-      if(resultCount) resultCount.textContent = `Showing ${visible} item${visible===1?'':'s'}`;
+      resultCount.textContent = `Showing ${visible} item${visible===1?'':'s'}`;
     }
-    [q, priceMax, onlyBest].forEach(el=> el.addEventListener('input', applyFilters));
-    clearFilters.addEventListener('click', ()=>{
-      q.value=''; priceMax.value=''; onlyBest.checked=false; applyFilters();
-    });
-    applyFilters();
+
+    [q, priceMax, onlyBest].forEach(el => el.addEventListener('input', applyFilters));
+    clearFilters.addEventListener('click', ()=>{ q.value=''; priceMax.value=''; onlyBest.checked=false; applyFilters(); });
+
+    // initial render
+    renderGrid();
   </script>
 
+  <!-- Toast stub -->
   <div class="toast" style="display:none"></div>
 
-  <!-- Firebase: auto-switch Login → My Account -->
+  <!-- ====== AUTH SWITCH + LOGOUT POPUP (same helper used on other pages) ====== -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
-    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
+    import { getAuth, onAuthStateChanged, signOut } 
+      from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
 
-    const app = initializeApp({
+    const firebaseConfig = {
       apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
       authDomain: "kairavis-oven-magic.firebaseapp.com",
       projectId: "kairavis-oven-magic",
       storageBucket: "kairavis-oven-magic.firebasestorage.app",
       messagingSenderId: "270897232759",
       appId: "1:270897232759:web:36ee0edc8b222046febf72"
-    });
+    };
+
+    const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const loginLink = document.getElementById('loginLink');
+    const loginLink  = document.getElementById('loginLink');
+    const logoutLink = document.getElementById('logoutLink');
 
-    onAuthStateChanged(auth, user=>{
-      if(!loginLink) return;
+    function toastMsg(m){
+      let t=document.querySelector('.toast'); 
+      if(!t){ t=document.createElement('div'); t.className='toast'; document.body.appendChild(t); }
+      t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1100);
+    }
+
+    onAuthStateChanged(auth, (user)=>{
       if(user){
-        loginLink.textContent = 'My Account';
-        loginLink.href = 'my-account.html';
-        loginLink.title = user.email || 'My Account';
+        if(loginLink){ loginLink.textContent='My Account'; loginLink.href='my-account.html'; loginLink.style.display=''; }
+        if(logoutLink) logoutLink.style.display='';
       }else{
-        loginLink.textContent = 'Login';
-        loginLink.href = 'login.html';
-        loginLink.removeAttribute('title');
+        if(loginLink){ loginLink.textContent='Login'; loginLink.href='login.html'; loginLink.style.display=''; }
+        if(logoutLink) logoutLink.style.display='none';
       }
     });
+
+    if(logoutLink){
+      logoutLink.addEventListener('click', async (e)=>{
+        e.preventDefault();
+        if(!confirm('Log out from Kairavi’s Oven Magic?')) return;
+        try{
+          await signOut(auth);
+          toastMsg('Logged out successfully');
+          setTimeout(()=>location.href='index.html', 900);
+        }catch(err){
+          alert('Logout failed: ' + (err?.message || err));
+        }
+      });
+    }
   </script>
-<!-- Firebase Auth: login/my-account switch + logout popup/redirect -->
-<script type="module">
-  // Firebase (CDN)
-  import { initializeApp }   from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
-  import { getAuth, onAuthStateChanged, signOut } 
-    from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
-
-  // --- CONFIG (yours) ---
-  const firebaseConfig = {
-    apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
-    authDomain: "kairavis-oven-magic.firebaseapp.com",
-    projectId: "kairavis-oven-magic",
-    storageBucket: "kairavis-oven-magic.firebasestorage.app",
-    messagingSenderId: "270897232759",
-    appId: "1:270897232759:web:36ee0edc8b222046febf72"
-  };
-
-  // Init
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  // Elements
-  const loginLink  = document.getElementById('loginLink');
-  const logoutLink = document.getElementById('logoutLink');
-
-  // Tiny toast
-  function toast(msg){
-    let t = document.querySelector('.toast');
-    if(!t){
-      t = document.createElement('div');
-      t.className = 'toast';
-      t.style.position='fixed';
-      t.style.left='50%';
-      t.style.bottom='16px';
-      t.style.transform='translateX(-50%)';
-      t.style.background='#222';
-      t.style.color='#fff';
-      t.style.padding='10px 14px';
-      t.style.borderRadius='10px';
-      t.style.fontSize='0.95rem';
-      t.style.opacity='0';
-      t.style.transition='opacity .25s';
-      t.style.zIndex='9999';
-      document.body.appendChild(t);
-    }
-    t.textContent = msg;
-    t.style.opacity = '1';
-    setTimeout(()=>{ t.style.opacity='0'; }, 1400);
-  }
-
-  // Show/hide login / logout and switch label to "My Account"
-  onAuthStateChanged(auth, (user) => {
-    if(user){
-      // User logged in
-      if(loginLink){
-        loginLink.textContent = 'My Account';
-        loginLink.href = 'my-account.html';
-        loginLink.style.display = '';
-      }
-      if(logoutLink) logoutLink.style.display = '';
-    }else{
-      // Logged out
-      if(loginLink){
-        loginLink.textContent = 'Login';
-        loginLink.href = 'login.html';
-        loginLink.style.display = '';
-      }
-      if(logoutLink) logoutLink.style.display = 'none';
-    }
-  });
-
-  // Logout with confirm → toast → redirect home
-  if(logoutLink){
-    logoutLink.addEventListener('click', async (e)=>{
-      e.preventDefault();
-      if(!confirm('Log out from Kairavi’s Oven Magic?')) return;
-      try{
-        await signOut(auth);
-        toast('Logged out successfully');
-        setTimeout(()=>{ window.location.href = 'index.html'; }, 900);
-      }catch(err){
-        alert('Logout failed: ' + (err?.message || err));
-      }
-    });
-  }
-</script>
-
-<!-- (Optional) base toast node if your CSS already styles .toast -->
-<div class="toast" style="display:block;opacity:0;pointer-events:none"></div>
-
-
-
 </body>
 </html>
