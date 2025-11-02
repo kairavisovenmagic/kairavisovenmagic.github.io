@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>My Account — Kairavi’s Oven Magic</title>
   <link rel="icon" href="images/logo.png"/>
-  <link rel="stylesheet" href="style.css?v=8"/>
+  <link rel="stylesheet" href="style.css?v=16"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     :root{
@@ -50,6 +50,7 @@
       width:54px; height:54px;
       border-radius:50%;
       border:1px solid #f3e0d6;
+      object-fit:cover;
     }
 
     .muted{ color:var(--muted); }
@@ -109,6 +110,13 @@
       z-index:9999;
     }
     .toast.show{ opacity:1; }
+
+    /* Status chip for orders */
+    .st{display:inline-block;padding:4px 10px;border-radius:999px;font-size:.82rem}
+    .NEW{background:#eef2ff}
+    .CONFIRMED{background:#e9fce9}
+    .SHIPPED{background:#eaf7ff}
+    .CLOSED{background:#f4f4f5}
   </style>
 </head>
 <body>
@@ -135,7 +143,7 @@
       <div class="card">
         <h2>Profile</h2>
         <div class="profile-info">
-          <img src="images/logo.png" alt="">
+          <img id="accAvatar" src="images/logo.png" alt="Avatar">
           <div>
             <div id="accEmail" style="font-weight:700">—</div>
             <div class="muted" id="accUid" style="font-size:12px">—</div>
@@ -157,11 +165,11 @@
         </div>
       </div>
 
-      <!-- Activity -->
+      <!-- Recent Orders (replaces static 'Recent Activity') -->
       <div class="card">
-        <h2>Recent Activity</h2>
+        <h2>Recent Orders</h2>
         <div id="activity" class="list">
-          <div class="muted">No recent activity yet.</div>
+          <div class="muted">Loading your recent orders…</div>
         </div>
       </div>
 
@@ -187,21 +195,32 @@
 
   <div class="toast" id="toast"></div>
 
+  <!-- Auth header + guard -->
   <script type="module">
-    import { attachHeaderAuth, requireAuth, auth } from "./auth.js?v=8";
-    import { onAuthStateChanged, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
-
+    import { attachHeaderAuth, requireAuth } from "./auth.js?v=16";
     attachHeaderAuth();
     await requireAuth();
+  </script>
+
+  <!-- Profile + Recent Orders (Firestore) -->
+  <script type="module">
+    import { auth, db } from "./auth.js?v=16";
+    import { onAuthStateChanged, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+    import { collection, query, where, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 
     const $ = (id)=>document.getElementById(id);
     const showToast = (m)=>{ const t=$('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1100); };
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (!user) return;
+
+      // Profile header
       $('accEmail').textContent = user.email || '';
-      $('accUid').textContent = user.uid;
+      $('accUid').textContent = user.uid || '';
       $('emailVer').textContent = user.emailVerified ? 'Yes' : 'No';
+      if (user.photoURL) $('accAvatar').src = user.photoURL;
+
+      // Offer verify email
       if(!user.emailVerified){
         const note = document.createElement('div');
         note.innerHTML = `<div class="muted" style="margin-top:10px">Your email is not verified. <button class="btn btn-primary" id="btnVerify">Verify now</button></div>`;
@@ -211,14 +230,81 @@
           showToast('Verification email sent');
         };
       }
+
+      // --- Firestore: fetch ALL orders for stats, then render top 5 for recent ---
+      const email = (user.email || '').toLowerCase();
+      if (!email) {
+        $('activity').innerHTML = `<div class="muted">No email on account.</div>`;
+        return;
+      }
+
+      try {
+        // Equality on customer.email + orderBy createdAt desc (may require composite index once)
+        const qRef = query(
+          collection(db, 'orders'),
+          where('customer.email', '==', email),
+          orderBy('createdAt', 'desc')
+        );
+
+        const snap = await getDocs(qRef);
+
+        let totalOrders = 0;
+        let pending = 0; // treat NEW or CONFIRMED as pending
+        let spent = 0;
+        const rows = [];
+
+        snap.forEach((doc) => {
+          const o = doc.data();
+          totalOrders += 1;
+          const st = (o.status || 'NEW').toUpperCase();
+          if (st === 'NEW' || st === 'CONFIRMED') pending += 1;
+          spent += (o.amounts?.total || 0);
+
+          // Capture first 5 only for "Recent Orders"
+          if (rows.length < 5) {
+            const dt = o.createdAt?.toDate ? o.createdAt.toDate() : new Date();
+            const when = dt.toLocaleString();
+            const itemsTxt = (o.items || []).map(i => `${i.name} × ${i.qty}`).join(', ');
+            const totalRs = (o.amounts?.total || 0).toLocaleString('en-IN');
+
+            rows.push(`
+              <div class="list-item">
+                <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+                  <div>
+                    <div><strong>${o.orderId || doc.id}</strong> • <span class="muted">${when}</span></div>
+                    <div class="muted" style="margin-top:4px">${itemsTxt || '-'}</div>
+                  </div>
+                  <div style="text-align:right">
+                    <div><strong>₹${totalRs}</strong></div>
+                    <div class="st ${st}" style="margin-top:4px">${st}</div>
+                  </div>
+                </div>
+              </div>
+            `);
+          }
+        });
+
+        // Update stats
+        $('kOrders').textContent = totalOrders;
+        $('kPending').textContent = pending;
+        $('kSpent').textContent = '₹' + spent.toLocaleString('en-IN');
+
+        // Render recent or empty state
+        $('activity').innerHTML = rows.length
+          ? rows.join('')
+          : `<div class="muted">No orders yet. Start with our <a href="products.html" style="text-decoration:underline">bestsellers</a>!</div>`;
+
+      } catch (e) {
+        console.error('Failed to load orders:', e);
+        $('activity').innerHTML = `<div class="muted">Could not load your orders right now. Please try again later.</div>`;
+      }
     });
 
-    $('btnLogout').onclick = async ()=>{
-      await signOut(auth);
-      location.href = 'index.html';
-    };
+    // Actions
+    $('btnLogout').onclick = async ()=>{ await signOut(auth); location.href = 'index.html'; };
     $('btnCopyId').onclick = ()=>{
       const id = $('accUid').textContent.trim();
+      if(!id) return;
       navigator.clipboard.writeText(id);
       showToast('User ID copied');
     };
