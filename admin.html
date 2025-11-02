@@ -5,215 +5,404 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Admin — Kairavi’s Oven Magic</title>
   <link rel="icon" href="images/logo.png"/>
-  <link rel="stylesheet" href="style.css?v=14"/>
-
+  <link rel="stylesheet" href="style.css?v=16"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    /* Admin polish */
-    .admin-wrap{max-width:1100px;margin:24px auto;padding:0 16px}
-    .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:12px 0 18px}
-    .stat{background:#fff;border:1px solid #ffe3d4;border-radius:14px;padding:14px}
-    .stat .label{font-size:.8rem;color:#7a5b47}
-    .stat .value{font-weight:800;font-size:1.2rem}
-
-    .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0 14px}
-    .toolbar input,.toolbar select{
-      padding:9px 10px;border:1px solid #e6dcd5;border-radius:10px;background:#fff
+    :root{
+      --bg:#FFF7F0; --ink:#1f2328; --muted:#6b7280;
+      --brand:#f15a24; --brand-900:#cc4b1e;
+      --card:#fff; --stroke:#f0e6df; --shadow:0 8px 30px rgba(0,0,0,.08); --radius:16px;
     }
-    .table-wrap{overflow:auto;border:1px solid #ffe3d4;border-radius:12px}
+    body{ background:var(--bg); color:var(--ink); }
+    .page{ max-width:1100px; margin:28px auto 60px; padding:0 18px; }
+    .title{ font-size:34px; margin:0 0 18px; font-weight:800; }
+
+    .kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:16px}
+    .kpi .box{background:#fff;border:1px solid #ffe3d4;border-radius:var(--radius);box-shadow:var(--shadow);padding:14px}
+    .kpi .label{color:var(--muted);font-size:13px}
+    .kpi .val{font-size:22px;font-weight:800;margin-top:4px}
+
+    .tools{display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+    .input, .select, .btn{border:1px solid #eadace;border-radius:10px;padding:10px 12px;background:#fff}
+    .btn{cursor:pointer}
+    .btn-primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+    .btn-ghost{background:#fff}
+
+    .table{background:#fff;border:1px solid #ffe3d4;border-radius:var(--radius);box-shadow:var(--shadow)}
     table{width:100%;border-collapse:collapse}
-    thead{background:#fff8f2}
-    th,td{padding:10px 12px;text-align:left;border-bottom:1px solid #f3e9e1;vertical-align:top}
-    .status-pill{display:inline-block;padding:4px 8px;border-radius:999px;font-size:.8rem}
-    .NEW{background:#eef2ff}.CONFIRMED{background:#e9fce9}.SHIPPED{background:#eaf7ff}.CLOSED{background:#f4f4f5}
-    .muted{color:#7a5b47}
-    .actions .btn{margin-right:6px}
+    th,td{padding:12px;border-top:1px solid #f1e6df;vertical-align:top}
+    th{background:#fff7f1;text-align:left;font-size:13px;color:#6b4f3e}
+    tr:first-child th{border-top:none}
+    .st{display:inline-block;padding:4px 10px;border-radius:999px;font-size:.82rem}
+    .NEW{background:#eef2ff}
+    .CONFIRMED{background:#e9fce9}
+    .SHIPPED{background:#eaf7ff}
+    .CLOSED{background:#f4f4f5}
+
+    /* Modal */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:flex-start;justify-content:center;padding:30px;z-index:1000}
+    .modal.open{display:flex}
+    .sheet{width:min(880px,100%);background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:auto;max-height:90vh}
+    .sheet-head{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid #f1e6df}
+    .sheet-body{padding:16px}
+    .close-x{border:none;background:transparent;font-size:20px;cursor:pointer}
+
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .card{border:1px solid #f1e6df;border-radius:12px;padding:12px;background:#fff}
+    .muted{color:var(--muted)}
+    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    .right{text-align:right}
+    .nowrap{white-space:nowrap}
   </style>
 </head>
 <body>
-
-  <!-- HEADER -->
   <header class="site-header">
     <div class="wrap nav">
-      <a class="brand" href="index.html">
-        <img src="images/logo.png" alt="logo"/><strong>Kairavi’s Oven Magic</strong>
-      </a>
+      <a class="brand" href="index.html"><img src="images/logo.png" alt="logo"/><strong>Kairavi’s Oven Magic</strong></a>
       <nav class="menu">
         <a href="index.html">Home</a>
         <a href="products.html">Products</a>
-        <a href="cart.html">Cart</a>
         <a id="loginLink" href="login.html">Login</a>
         <a id="logoutLink" href="#" style="display:none">Logout</a>
       </nav>
     </div>
   </header>
 
-  <main class="admin-wrap">
-    <h1>Admin Dashboard</h1>
+  <main class="page">
+    <h1 class="title">Admin Dashboard</h1>
 
-    <!-- Top stats -->
-    <div class="stat-grid">
-      <div class="stat"><div class="label">Total orders</div><div id="stTotal" class="value">—</div></div>
-      <div class="stat"><div class="label">NEW</div><div id="stNew" class="value">—</div></div>
-      <div class="stat"><div class="label">CONFIRMED</div><div id="stConf" class="value">—</div></div>
-      <div class="stat"><div class="label">Revenue (₹)</div><div id="stRev" class="value">—</div></div>
+    <!-- KPIs -->
+    <div class="kpi">
+      <div class="box"><div class="label">Total orders</div><div class="val" id="kTotal">0</div></div>
+      <div class="box"><div class="label">NEW</div><div class="val" id="kNew">0</div></div>
+      <div class="box"><div class="label">CONFIRMED</div><div class="val" id="kConf">0</div></div>
+      <div class="box"><div class="label">Revenue (₹)</div><div class="val" id="kRevenue">0</div></div>
     </div>
 
-    <!-- Controls -->
-    <div class="toolbar">
-      <input id="q" type="search" placeholder="Search name / phone / orderId"/>
-      <select id="statusFilter">
+    <!-- Tools -->
+    <div class="tools">
+      <input class="input" id="q" placeholder="Search name / phone / email / order id">
+      <select class="select" id="statusSel">
         <option value="">All statuses</option>
         <option>NEW</option>
         <option>CONFIRMED</option>
         <option>SHIPPED</option>
         <option>CLOSED</option>
       </select>
-      <button id="btnReloadFs" class="btn btn-primary">Refresh</button>
-      <span id="fsCount" class="muted">—</span>
+      <button class="btn btn-primary" id="btnRefresh"><i class="fa fa-rotate-right"></i> Refresh</button>
+      <span class="muted" id="orderCount">0 orders</span>
     </div>
 
-    <!-- Orders table -->
-    <section class="card" id="ordersFs">
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Created</th>
-              <th>Order / Customer</th>
-              <th>Items</th>
-              <th>Total</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="fsBody"></tbody>
-        </table>
-      </div>
-    </section>
+    <!-- Orders -->
+    <div class="table">
+      <table id="ordersTable" aria-label="Orders">
+        <thead>
+          <tr>
+            <th style="width:180px">Created</th>
+            <th>Order / Customer</th>
+            <th>Items</th>
+            <th class="nowrap">Total</th>
+            <th>Status</th>
+            <th style="width:220px">Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
   </main>
 
-  <!-- Toast base -->
-  <div class="toast" style="display:block;opacity:0;pointer-events:none"></div>
+  <!-- Details Modal -->
+  <div class="modal" id="modal">
+    <div class="sheet">
+      <div class="sheet-head">
+        <div><strong id="mOrderId">Order</strong> <span class="muted">•</span> <span id="mWhen" class="muted"></span></div>
+        <button class="close-x" id="mClose" aria-label="Close">✕</button>
+      </div>
+      <div class="sheet-body">
+        <div class="grid" style="margin-bottom:12px">
+          <div class="card">
+            <div class="muted" style="margin-bottom:6px">Customer</div>
+            <div><strong id="mName">-</strong></div>
+            <div id="mPhone" class="mono muted">-</div>
+            <div id="mEmail" class="mono muted">-</div>
+          </div>
+          <div class="card">
+            <div class="muted" style="margin-bottom:6px">Delivery</div>
+            <div id="mAddress">-</div>
+            <div class="muted">Pincode: <span id="mPin">-</span></div>
+            <div class="muted">Payment: <strong id="mPay">-</strong></div>
+          </div>
+        </div>
 
-  <!-- Header auth controls -->
+        <div class="card" style="margin-bottom:12px">
+          <div class="muted" style="margin-bottom:6px">Items</div>
+          <table style="width:100%;border-collapse:collapse">
+            <thead>
+              <tr><th align="left">Item</th><th class="right">Qty</th><th class="right">Price</th><th class="right">Line</th></tr>
+            </thead>
+            <tbody id="mItems"></tbody>
+            <tfoot>
+              <tr><td colspan="3" class="right muted">Subtotal</td><td class="right" id="mSub">₹0</td></tr>
+              <tr><td colspan="3" class="right muted">Delivery</td><td class="right" id="mDel">₹0</td></tr>
+              <tr><td colspan="3" class="right"><strong>Total</strong></td><td class="right" id="mTot"><strong>₹0</strong></td></tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" id="mPrint"><i class="fa fa-print"></i> Print Invoice</button>
+          <button class="btn" id="mConfirm">Confirm</button>
+          <button class="btn" id="mShip">Ship</button>
+          <button class="btn" id="mCloseOrder">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" style="position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 14px;border-radius:10px;opacity:0;transition:.2s;z-index:9999"></div>
+
+  <!-- Auth + Firestore -->
   <script type="module">
-    import { attachHeaderAuth, requireAdmin } from './auth.js?v=14';
+    import { attachHeaderAuth, requireAdmin, auth, db } from "./auth.js?v=16";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+    import { collection, query, orderBy, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
     attachHeaderAuth();
-    await requireAdmin(); // redirect non-admins
-  </script>
+    await requireAdmin();
 
-  <!-- Firestore: list + filter + update status -->
-  <script type="module">
-    import { auth, db } from './auth.js?v=14';
-    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
-    import { collection, getDocs, orderBy, query, updateDoc, doc } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
+    const $ = (id)=>document.getElementById(id);
+    const T = (n)=> (n||0).toLocaleString('en-IN');
 
-    const tbody   = document.getElementById('fsBody');
-    const countEl = document.getElementById('fsCount');
-    const qEl     = document.getElementById('q');
-    const sfEl    = document.getElementById('statusFilter');
+    const tbody = document.querySelector('#ordersTable tbody');
+    const statusSel = $('statusSel'), qbox = $('q'), btnRefresh = $('btnRefresh');
+    const kTotal=$('kTotal'), kNew=$('kNew'), kConf=$('kConf'), kRevenue=$('kRevenue'), orderCount=$('orderCount');
 
-    const stTotal = document.getElementById('stTotal');
-    const stNew   = document.getElementById('stNew');
-    const stConf  = document.getElementById('stConf');
-    const stRev   = document.getElementById('stRev');
+    const toast = (m)=>{ const t=$('toast'); t.textContent=m; t.style.opacity=1; setTimeout(()=>t.style.opacity=0,1000); };
 
-    let ORDERS = []; // cache for filtering
+    let ORDERS = [];
 
-    function fmt(n){ return (n||0).toLocaleString('en-IN'); }
+    async function load(){
+      tbody.innerHTML = `<tr><td colspan="6" class="muted">Loading…</td></tr>`;
+      const snap = await getDocs(query(collection(db,'orders'), orderBy('createdAt','desc')));
+      ORDERS = snap.docs.map(d => ({id:d.id, ...d.data()}));
 
-    function renderRows(list){
-      const rows = list.map(({id,o,createdTxt})=>{
+      render();
+    }
+
+    function render(){
+      // KPIs
+      let total=ORDERS.length, nNew=0, nConf=0, revenue=0;
+      ORDERS.forEach(o=>{
+        if((o.status||'NEW')==='NEW') nNew++;
+        if((o.status||'NEW')==='CONFIRMED') nConf++;
+        revenue += (o.amounts?.total||0);
+      });
+      kTotal.textContent = total;
+      kNew.textContent = nNew;
+      kConf.textContent = nConf;
+      kRevenue.textContent = T(revenue);
+
+      // filter
+      const term = qbox.value.trim().toLowerCase();
+      const s = statusSel.value;
+      const rows = ORDERS.filter(o=>{
+        const hit = [
+          o.orderId, o.customer?.name, o.customer?.phone, o.customer?.email
+        ].join(' ').toLowerCase().includes(term);
+        const okS = !s || (o.status||'NEW')===s;
+        return hit && okS;
+      });
+
+      orderCount.textContent = `${rows.length} order${rows.length===1?'':'s'}`;
+
+      tbody.innerHTML = rows.map(o=>{
+        const when = o.createdAt?.toDate ? o.createdAt.toDate().toLocaleString() : '-';
         const itemsTxt = (o.items||[]).map(i=>`${i.name} × ${i.qty}`).join(', ');
-        const total    = o.amounts?.total ?? 0;
-        const st       = (o.status||'NEW').toUpperCase();
-
+        const st = (o.status||'NEW').toUpperCase();
         return `
           <tr>
-            <td>${createdTxt}</td>
+            <td class="mono">${when}</td>
             <td>
-              <strong>${o.orderId || id}</strong><br>
-              ${o.customer?.name || ''} • <span class="muted">${o.customer?.phone || ''}</span><br>
-              <small class="muted">${o.customer?.email || ''}</small>
+              <div><strong>${o.orderId||o.id}</strong></div>
+              <div class="muted">${o.customer?.name||'-'} • ${o.customer?.phone||''}</div>
             </td>
             <td>${itemsTxt}</td>
-            <td>₹${fmt(total)}</td>
-            <td><span class="status-pill ${st}" data-status="${id}">${st}</span></td>
-            <td class="actions">
-              <button class="btn" data-action="CONFIRMED" data-id="${id}">Confirm</button>
-              <button class="btn" data-action="SHIPPED"   data-id="${id}">Ship</button>
-              <button class="btn" data-action="CLOSED"    data-id="${id}">Close</button>
+            <td class="nowrap">₹${T(o.amounts?.total||0)}</td>
+            <td><span class="st ${st}">${st}</span></td>
+            <td>
+              <button class="btn btn-ghost" data-view="${o.id}"><i class="fa fa-eye"></i> View</button>
+              <button class="btn" data-act="CONFIRMED" data-id="${o.id}">Confirm</button>
+              <button class="btn" data-act="SHIPPED" data-id="${o.id}">Ship</button>
+              <button class="btn" data-act="CLOSED" data-id="${o.id}">Close</button>
             </td>
           </tr>
         `;
-      });
+      }).join('') || `<tr><td colspan="6" class="muted">No orders</td></tr>`;
 
-      tbody.innerHTML = rows.join('') || '<tr><td colspan="6" style="padding:10px">No orders.</td></tr>';
+      // bind actions
+      tbody.querySelectorAll('[data-act]').forEach(b=> b.addEventListener('click', async ()=>{
+        const id = b.getAttribute('data-id'), act=b.getAttribute('data-act');
+        await setStatus(id, act);
+      }));
 
-      // wire actions
-      tbody.querySelectorAll('button[data-id]').forEach(btn=>{
-        btn.onclick = async ()=>{
-          const id = btn.dataset.id, status = btn.dataset.action;
-          await updateDoc(doc(db,'orders',id), { status });
-          const pill = tbody.querySelector(`[data-status="${id}"]`);
-          if (pill) { pill.textContent = status; pill.className = `status-pill ${status}`; }
-          // refresh stats without reloading
-          const idx = ORDERS.findIndex(x=>x.id===id);
-          if (idx>-1) ORDERS[idx].o.status = status;
-          updateStats(ORDERS);
-        };
-      });
+      tbody.querySelectorAll('[data-view]').forEach(b=> b.addEventListener('click', ()=>{
+        const id = b.getAttribute('data-view');
+        const ord = ORDERS.find(x=>x.id===id);
+        if(ord) openModal(ord);
+      }));
     }
 
-    function updateStats(list){
-      stTotal.textContent = fmt(list.length);
-      stNew.textContent   = fmt(list.filter(x=>(x.o.status||'NEW')==='NEW').length);
-      stConf.textContent  = fmt(list.filter(x=>x.o.status==='CONFIRMED').length);
-      const revenue       = list.reduce((s,x)=> s + (x.o.amounts?.total||0), 0);
-      stRev.textContent   = fmt(revenue);
-      countEl.textContent = `${list.length} order${list.length===1?'':'s'}`;
+    async function setStatus(id, status){
+      const ref = doc(db,'orders',id);
+      await updateDoc(ref,{status});
+      toast(`Marked ${status}`);
+      await load();
     }
 
-    function applyFilters(){
-      const term = (qEl.value||'').toLowerCase().trim();
-      const st   = sfEl.value;
-      const filtered = ORDERS.filter(({o,id})=>{
-        const hay = [
-          id, o.orderId, o.customer?.name, o.customer?.phone, o.customer?.email
-        ].join(' ').toLowerCase();
-        const matchTerm = !term || hay.includes(term);
-        const matchSt   = !st || (o.status||'NEW')===st;
-        return matchTerm && matchSt;
-      });
-      renderRows(filtered);
-      updateStats(filtered);
+    // Modal logic
+    const modal = $('modal'), mClose=$('mClose');
+    const mOrderId=$('mOrderId'), mWhen=$('mWhen'), mName=$('mName'), mPhone=$('mPhone'), mEmail=$('mEmail'),
+          mAddress=$('mAddress'), mPin=$('mPin'), mPay=$('mPay'), mItems=$('mItems'),
+          mSub=$('mSub'), mDel=$('mDel'), mTot=$('mTot'),
+          mPrint=$('mPrint'), mConfirm=$('mConfirm'), mShip=$('mShip'), mCloseOrder=$('mCloseOrder');
+
+    let CURRENT = null;
+
+    function openModal(o){
+      CURRENT = o;
+      const dt = o.createdAt?.toDate ? o.createdAt.toDate() : new Date();
+      mOrderId.textContent = o.orderId || o.id;
+      mWhen.textContent = dt.toLocaleString();
+      mName.textContent = o.customer?.name || '-';
+      mPhone.textContent = o.customer?.phone || '-';
+      mEmail.textContent = o.customer?.email || '-';
+      mAddress.textContent = (o.customer?.address || '-');
+      mPin.textContent = o.customer?.pincode || '-';
+      mPay.textContent = o.customer?.payment || '-';
+
+      mItems.innerHTML = (o.items||[]).map(i=>{
+        const line = (i.qty * i.price) || 0;
+        return `<tr>
+          <td>${i.name}${i.weight?` <span class="muted">(${i.weight})</span>`:''}</td>
+          <td class="right">${T(i.qty||0)}</td>
+          <td class="right">₹${T(i.price||0)}</td>
+          <td class="right">₹${T(line)}</td>
+        </tr>`;
+      }).join('');
+
+      mSub.textContent = '₹' + T(o.amounts?.subtotal||0);
+      mDel.textContent = '₹' + T(o.amounts?.delivery||0);
+      mTot.textContent = '₹' + T(o.amounts?.total||0);
+
+      modal.classList.add('open');
+    }
+    function closeModal(){ modal.classList.remove('open'); CURRENT=null; }
+
+    mClose.onclick = closeModal;
+    modal.addEventListener('click', (e)=>{ if(e.target===modal) closeModal(); });
+
+    mConfirm.onclick = async ()=>{ if(CURRENT){ await setStatus(CURRENT.id,'CONFIRMED'); closeModal(); } };
+    mShip.onclick    = async ()=>{ if(CURRENT){ await setStatus(CURRENT.id,'SHIPPED'); closeModal(); } };
+    mCloseOrder.onclick = async ()=>{ if(CURRENT){ await setStatus(CURRENT.id,'CLOSED'); closeModal(); } };
+
+    // Print invoice
+    mPrint.onclick = ()=>{ if(CURRENT) printInvoice(CURRENT); };
+
+    function printInvoice(o){
+      const dt = o.createdAt?.toDate ? o.createdAt.toDate() : new Date();
+      const itemsHTML = (o.items||[]).map(i=>{
+        const line = (i.qty*i.price)||0;
+        return `<tr>
+          <td>${i.name}${i.weight?` <span style="color:#6b7280">(${i.weight})</span>`:''}</td>
+          <td align="right">${T(i.qty||0)}</td>
+          <td align="right">₹${T(i.price||0)}</td>
+          <td align="right">₹${T(line)}</td>
+        </tr>`;
+      }).join('');
+
+      const html = `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Invoice ${o.orderId||o.id}</title>
+<style>
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; padding:24px; color:#111;}
+  .head{display:flex;justify-content:space-between;align-items:center}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand img{width:42px;height:42px;border-radius:50%}
+  h1{font-size:20px;margin:0}
+  .muted{color:#6b7280}
+  table{width:100%;border-collapse:collapse;margin-top:14px}
+  th,td{padding:8px;border-bottom:1px solid #eee}
+  th{text-align:left}
+  .right{text-align:right}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+  .box{border:1px solid #eee;border-radius:8px;padding:10px}
+  @media print{ .noprint{display:none} }
+</style>
+</head>
+<body>
+  <div class="head">
+    <div class="brand">
+      <img src="${location.origin + location.pathname.replace(/[^/]*$/,'')}images/logo.png" alt="logo">
+      <div>
+        <h1>Kairavi’s Oven Magic</h1>
+        <div class="muted">Homemade Cookies & Nankhatai</div>
+      </div>
+    </div>
+    <div style="text-align:right">
+      <div><strong>Invoice</strong></div>
+      <div># ${o.orderId||o.id}</div>
+      <div class="muted">${dt.toLocaleString()}</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="box">
+      <div class="muted">Bill To</div>
+      <div><strong>${o.customer?.name||'-'}</strong></div>
+      <div>${o.customer?.address||'-'}</div>
+      <div>Pincode: ${o.customer?.pincode||'-'}</div>
+      <div>Phone: ${o.customer?.phone||'-'}</div>
+      <div>Email: ${o.customer?.email||'-'}</div>
+    </div>
+    <div class="box">
+      <div class="muted">Payment</div>
+      <div>Method: <strong>${o.customer?.payment||'-'}</strong></div>
+      <div>Total: <strong>₹${T(o.amounts?.total||0)}</strong></div>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th>Item</th><th class="right">Qty</th><th class="right">Price</th><th class="right">Line</th></tr></thead>
+    <tbody>${itemsHTML}</tbody>
+    <tfoot>
+      <tr><td colspan="3" class="right">Subtotal</td><td class="right">₹${T(o.amounts?.subtotal||0)}</td></tr>
+      <tr><td colspan="3" class="right">Delivery</td><td class="right">₹${T(o.amounts?.delivery||0)}</td></tr>
+      <tr><td colspan="3" class="right"><strong>Total</strong></td><td class="right"><strong>₹${T(o.amounts?.total||0)}</strong></td></tr>
+    </tfoot>
+  </table>
+
+  <div class="muted" style="margin-top:14px">Thank you for ordering with Kairavi’s Oven Magic!</div>
+
+  <button class="noprint" onclick="window.print()" style="margin-top:16px;padding:10px 14px;border:1px solid #ddd;border-radius:8px;background:#fff">Print</button>
+</body>
+</html>`;
+
+      const w = window.open('', '_blank', 'noopener');
+      w.document.open();
+      w.document.write(html);
+      w.document.close();
+      // auto print on load
+      w.onload = ()=> w.print();
     }
 
-    async function loadOrders(){
-      tbody.innerHTML = '<tr><td colspan="6" style="padding:10px">Loading…</td></tr>';
-      const snap = await getDocs(query(collection(db,'orders'), orderBy('createdAt','desc')));
+    // bind UI
+    btnRefresh.onclick = load;
+    [qbox, statusSel].forEach(el => el.addEventListener('input', render));
 
-      ORDERS = [];
-      snap.forEach(d=>{
-        const o = d.data();
-        const created = o.createdAt?.toDate ? o.createdAt.toDate() : new Date();
-        const createdTxt = created.toLocaleString();
-        ORDERS.push({ id:d.id, o, createdTxt });
-      });
-
-      renderRows(ORDERS);
-      updateStats(ORDERS);
-    }
-
-    document.getElementById('btnReloadFs').onclick = loadOrders;
-    qEl.addEventListener('input', applyFilters);
-    sfEl.addEventListener('change', applyFilters);
-
-    onAuthStateChanged(auth, async (u)=>{
-      // requireAdmin in header already guards, but keep safe
-      if (!u) return;
-      await loadOrders();
-    });
+    await load();
   </script>
 </body>
 </html>
