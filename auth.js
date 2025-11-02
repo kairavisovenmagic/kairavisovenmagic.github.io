@@ -9,22 +9,23 @@ import {
   signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
-// ---------- Your Firebase config ----------
+// ---------- Your Firebase config (project: kairavis-oven-magic-f13de) ----------
 export const firebaseConfig = {
   apiKey: "AIzaSyDjBryw_WVRpKirKh5baTKo2w6hO1sreLM",
   authDomain: "kairavis-oven-magic-f13de.firebaseapp.com",
   projectId: "kairavis-oven-magic-f13de",
-  storageBucket: "kairavis-oven-magic-f13de.appspot.com", // ← corrected
+  storageBucket: "kairavis-oven-magic-f13de.appspot.com", // correct bucket host
   messagingSenderId: "555671503591",
   appId: "1:555671503591:web:e255c02855187982111842",
-  measurementId: "G-EG345BBL41" // optional, fine to keep
+  measurementId: "G-EG345BBL41"
 };
+
 // ---------- Init ----------
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 setPersistence(auth, browserLocalPersistence);
 
-// ---------- Admin whitelist (edit if needed) ----------
+// ---------- Admin whitelist ----------
 export const ADMIN_EMAILS = ["kairavisovenmagic@gmail.com"];
 
 // ---------- Tiny toast ----------
@@ -113,7 +114,7 @@ export function requireAdmin() {
   });
 }
 
-// ---------- Google sign-in (popup → redirect fallback) ----------
+// ---------- Google sign-in (popup → redirect fallback for iOS/Safari) ----------
 export async function signInWithGoogleFlow() {
   const provider = new GoogleAuthProvider();
   try {
