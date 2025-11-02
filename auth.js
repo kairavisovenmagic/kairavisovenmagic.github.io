@@ -1,4 +1,4 @@
-// auth.js — Firebase Auth utilities for Kairavi’s Oven Magic (ES module)
+// auth.js — Firebase utilities for Kairavi’s Oven Magic (ES module)
 
 // ---------- Firebase imports ----------
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
@@ -8,6 +8,7 @@ import {
   GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult,
   signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 
 // ---------- Your Firebase config (project: kairavis-oven-magic-f13de) ----------
 export const firebaseConfig = {
@@ -20,10 +21,13 @@ export const firebaseConfig = {
   measurementId: "G-EG345BBL41"
 };
 
-// ---------- Init ----------
-export const app = initializeApp(firebaseConfig);
+// ---------- Init (Auth + Firestore) ----------
+export const app  = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 setPersistence(auth, browserLocalPersistence);
+
+// 👇 NEW: Firestore for reads/writes across the site
+export const db = getFirestore(app);
 
 // ---------- Admin whitelist ----------
 export const ADMIN_EMAILS = ["kairavisovenmagic@gmail.com"];
