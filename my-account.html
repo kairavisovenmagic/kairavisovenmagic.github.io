@@ -22,28 +22,27 @@
     </div>
   </header>
 
-  <main class="wrap" style="max-width:720px">
+  <main class="wrap" style="max-width:720px; margin-top:24px">
     <h1>My Account</h1>
-    <div id="profile">Loading…</div>
+    <div id="profile" class="card" style="padding:16px">Loading…</div>
   </main>
 
   <div class="toast" style="display:block;opacity:0;pointer-events:none"></div>
 
   <script type="module">
-    import { attachHeaderAuth, requireAuth } from "./auth.js";
+    import { attachHeaderAuth, requireAuth, auth } from "./auth.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
-    attachHeaderAuth();
 
+    attachHeaderAuth();
     await requireAuth(); // redirect to login if not signed in
 
-    onAuthStateChanged((await import("./auth.js")).auth, (user)=>{
+    onAuthStateChanged(auth, (user) => {
       const el = document.getElementById("profile");
       if (!user) return;
       el.innerHTML = `
-        <div class="card" style="padding:16px">
-          <p><strong>Email:</strong> ${user.email || ""}</p>
-          <p><strong>User ID:</strong> ${user.uid}</p>
-        </div>`;
+        <p><strong>Email:</strong> ${user.email || ""}</p>
+        <p><strong>User ID:</strong> ${user.uid}</p>
+      `;
     });
   </script>
 </body>
