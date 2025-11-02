@@ -6,8 +6,59 @@
   <title>Login — Kairavi’s Oven Magic</title>
   <link rel="icon" href="images/logo.png"/>
   <link rel="stylesheet" href="style.css"/>
+
+  <style>
+    /* --- Minimal, classy auth page styles --- */
+    :root{
+      --bg:#FFF7F0;           /* warm background */
+      --card:#ffffff;
+      --text:#2a2a2a;
+      --muted:#6c6c6c;
+      --brand:#f15a24;        /* your orange */
+      --brand-900:#cc4b1e;
+      --ring:rgba(241,90,36,.35);
+      --radius:16px;
+      --shadow:0 10px 25px rgba(0,0,0,.06);
+    }
+    body{ background:var(--bg); color:var(--text); }
+    .auth-wrap{ max-width:860px; margin:40px auto; padding:0 16px; }
+    .auth-title{ font-size:42px; line-height:1.15; margin:12px 0 8px; }
+    .auth-sub{ color:var(--muted); margin-bottom:20px; }
+    .auth-grid{ display:grid; grid-template-columns:1fr; gap:18px; }
+    @media (min-width:900px){ .auth-grid{ grid-template-columns: 1.1fr .9fr; gap:24px; } }
+    .auth-card{
+      background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+      padding:22px;
+    }
+    label{ display:block; font-size:14px; color:var(--muted); margin:10px 0 6px; }
+    input[type=email], input[type=password]{
+      width:100%; padding:12px 14px; border:1px solid #ddd; border-radius:12px; outline:none;
+      transition:border .15s, box-shadow .15s; background:#fff;
+    }
+    input:focus{ border-color:var(--brand); box-shadow:0 0 0 4px var(--ring); }
+    .btn{ display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      border:1px solid #ddd; padding:12px 16px; border-radius:12px; cursor:pointer; background:#fff; }
+    .btn:hover{ background:#fafafa; }
+    .btn-primary{ background:var(--brand); color:#fff; border:1px solid var(--brand); }
+    .btn-primary:hover{ background:var(--brand-900); border-color:var(--brand-900); }
+    .btn-block{ width:100%; }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; }
+    .center{ text-align:center; }
+    .divider{ color:var(--muted); margin:4px 0 10px; }
+    .google-btn{
+      border:1px solid #e7e7e7; background:#fff; font-weight:600;
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      padding:14px 18px; border-radius:12px;
+    }
+    .google-btn:hover{ background:#f7f7f7; }
+    .side-card{ background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px; }
+    .bullet{ margin:0; padding-left:18px; }
+    .bullet li{ margin:6px 0; color:#444; }
+    .smallmuted{ color:var(--muted); font-size:12px; margin-top:6px; }
+  </style>
 </head>
 <body>
+  <!-- Header -->
   <header class="site-header">
     <div class="wrap nav">
       <a class="brand" href="index.html">
@@ -22,46 +73,73 @@
     </div>
   </header>
 
-  <main class="wrap" style="max-width:520px">
-    <h1>Login / Sign Up</h1>
-    <p class="sub">Use email & password or continue with Google.</p>
+  <main class="auth-wrap">
+    <h1 class="auth-title">Login / Sign Up</h1>
+    <p class="auth-sub">Use email & password or continue with Google.</p>
 
-    <section class="card" style="padding:16px;margin-bottom:16px">
-      <label>Email</label>
-      <input id="email" type="email" placeholder="you@example.com" required/>
-      <label>Password</label>
-      <input id="password" type="password" placeholder="••••••••" required/>
-      <div style="display:flex; gap:8px; margin-top:12px">
-        <button id="btnSignIn" class="btn btn-primary">Sign In</button>
-        <button id="btnSignUp" class="btn">Create Account</button>
-      </div>
-    </section>
+    <div class="auth-grid">
+      <!-- LEFT: Form -->
+      <section class="auth-card" aria-label="Email password sign in">
+        <form onsubmit="return false;">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="you@example.com" autocomplete="username" required/>
 
-    <div style="text-align:center;margin:10px 0">— or —</div>
+          <label for="password">Password</label>
+          <input id="password" type="password" placeholder="••••••••" autocomplete="current-password" required/>
 
-    <button id="btnGoogle" class="btn btn-google" style="width:100%">
-      <img src="images/google.svg" alt="" style="height:18px;vertical-align:middle;margin-right:8px"/>
-      Continue with Google
-    </button>
+          <div class="row" style="margin-top:14px">
+            <button id="btnSignIn" class="btn btn-primary">Sign In</button>
+            <button id="btnSignUp" class="btn">Create Account</button>
+            <a id="btnReset" class="btn" href="#" title="Reset password">Forgot?</a>
+          </div>
+        </form>
+
+        <div class="center divider">— or —</div>
+
+        <button id="btnGoogle" class="google-btn btn-block" aria-label="Continue with Google">
+          <img src="images/google.svg" alt="" style="height:18px"/>
+          Continue with Google
+        </button>
+        <div class="smallmuted">If the Google popup is blocked, we’ll automatically use a full-page redirect.</div>
+      </section>
+
+      <!-- RIGHT: Trust/benefits -->
+      <aside class="side-card">
+        <h3 style="margin:0 0 8px">Why create an account?</h3>
+        <ul class="bullet">
+          <li>Faster re-orders & saved details</li>
+          <li>Exclusive festive offers & drops</li>
+          <li>Track orders & invoices easily</li>
+        </ul>
+        <p class="smallmuted">By continuing, you agree to our basic terms of use.</p>
+      </aside>
+    </div>
   </main>
 
   <div class="toast" style="display:block;opacity:0;pointer-events:none"></div>
 
   <script type="module">
-    import { attachHeaderAuth, toast,
-             signInWithGoogleFlow, emailPasswordSignIn, emailPasswordSignUp,
-             ADMIN_EMAILS, auth } from "./auth.js";
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+    import {
+      attachHeaderAuth, toast, ADMIN_EMAILS, auth,
+      signInWithGoogleFlow, completeGoogleRedirectIfNeeded,
+      emailPasswordSignIn, emailPasswordSignUp
+    } from "./auth.js";
+    import {
+      onAuthStateChanged, sendPasswordResetEmail
+    } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
     attachHeaderAuth();
 
-    // If already signed in, redirect away
+    // Finish Google redirect sessions if returning from Google
+    await completeGoogleRedirectIfNeeded();
+
+    // If already signed in, route away
     const params = new URLSearchParams(location.search);
-    const next = params.get("next") || "index.html";
+    const next = params.get("next") || "my-account.html";
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const isAdmin = ADMIN_EMAILS.includes((user.email||"").toLowerCase());
-        window.location.href = isAdmin ? "admin.html" : next || "my-account.html";
+        window.location.href = isAdmin ? "admin.html" : next;
       }
     });
 
@@ -73,8 +151,9 @@
       try {
         await emailPasswordSignIn(email, pass);
         toast("Welcome back!");
-        setTimeout(()=> window.location.href = next || "my-account.html", 600);
+        setTimeout(()=> window.location.href = next, 400);
       } catch (e) {
+        console.error(e);
         toast(e?.message || "Sign-in failed");
       }
     });
@@ -86,19 +165,35 @@
       try {
         await emailPasswordSignUp(email, pass);
         toast("Account created!");
-        setTimeout(()=> window.location.href = "my-account.html", 600);
+        setTimeout(()=> window.location.href = "my-account.html", 400);
       } catch (e) {
+        console.error(e);
         toast(e?.message || "Sign-up failed");
       }
     });
 
-    // Google Sign-In
+    // Password reset
+    document.getElementById("btnReset").addEventListener("click", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      if (!email) return toast("Enter your email above first");
+      try {
+        await sendPasswordResetEmail(auth, email);
+        toast("Reset link sent to your email");
+      } catch (e) {
+        console.error(e);
+        toast(e?.message || "Could not send reset email");
+      }
+    });
+
+    // Google Sign-In (popup → redirect fallback)
     document.getElementById("btnGoogle").addEventListener("click", async () => {
       try {
-        await signInWithGoogleFlow();
-        toast("Signed in with Google");
-        setTimeout(()=> window.location.href = next || "my-account.html", 600);
+        await signInWithGoogleFlow(); // popup or redirect
+        // If popup succeeded, we reach here and can redirect:
+        setTimeout(()=> window.location.href = next, 200);
       } catch (e) {
+        console.error(e);
         toast(e?.message || "Google sign-in failed");
       }
     });
