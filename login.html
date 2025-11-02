@@ -18,9 +18,7 @@
     .auth-sub{ color:var(--muted); margin-bottom:20px; }
     .auth-grid{ display:grid; grid-template-columns:1fr; gap:18px; }
     @media (min-width:900px){ .auth-grid{ grid-template-columns: 1.1fr .9fr; gap:24px; } }
-    .auth-card,.side-card{
-      background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px;
-    }
+    .auth-card,.side-card{ background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px; }
     label{ display:block; font-size:14px; color:var(--muted); margin:10px 0 6px; }
     input[type=email], input[type=password]{
       width:100%; padding:12px 14px; border:1px solid #ddd; border-radius:12px; outline:none;
@@ -104,12 +102,11 @@
   </main>
 
   <div id="authErrorBanner" style="display:none;position:fixed;left:0;right:0;top:0;padding:10px 16px;background:#ffeded;color:#8a1f1f;border-bottom:1px solid #e4bcbc;z-index:9999;text-align:center;font-weight:600">
-    Login script failed to load. Check that <code>auth.js</code> is beside this file and imported with <code>./auth.js</code>.
+    Login script failed to load. Check that <code>auth.js</code> is beside this file and imported with <code>./auth.js?v=3</code>.
   </div>
   <div class="toast" style="display:block;opacity:0;pointer-events:none"></div>
 
   <script type="module">
-    // Hardened boot: attach handlers after DOM ready, show banner if import fails
     const ready = (fn) => (document.readyState !== 'loading') ? fn() : document.addEventListener('DOMContentLoaded', fn);
 
     ready(async () => {
@@ -120,7 +117,9 @@
       };
 
       try {
-        const mod = await import('./auth.js');
+        // cache-busted import
+        const mod = await import('./auth.js?v=3');
+
         const {
           attachHeaderAuth, toast, ADMIN_EMAILS, auth,
           signInWithGoogleFlow, completeGoogleRedirectIfNeeded,
@@ -164,7 +163,7 @@
 
         document.getElementById('btnGoogle').addEventListener('click', async () => {
           try {
-            await signInWithGoogleFlow();         // popup or redirect fallback
+            await signInWithGoogleFlow(); // popup or redirect
             setTimeout(()=> location.href = next, 200);
           } catch (e) {
             console.error('Google sign-in error:', e);
@@ -174,8 +173,8 @@
           }
         });
       } catch (err) {
-        console.error('Failed to import ./auth.js', err);
-        showBanner('Login script failed to load. Ensure <code>auth.js</code> is beside this file and imported with <code>./auth.js</code>.');
+        console.error('Failed to import ./auth.js?v=3', err);
+        showBanner('Login script failed to load. Ensure <code>auth.js</code> is beside this file and imported with <code>./auth.js?v=3</code>.');
       }
     });
   </script>
