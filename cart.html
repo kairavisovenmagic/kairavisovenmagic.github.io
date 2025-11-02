@@ -5,15 +5,16 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Cart | Kairavi’s Oven Magic</title>
   <link rel="icon" href="images/logo.png"/>
-  <link rel="stylesheet" href="style.css"/>
-<!-- ✅ Google Analytics (GA4) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4W0YRB7QQ2"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-4W0YRB7QQ2');
-</script>
+  <link rel="stylesheet" href="style.css?v=13"/>
+
+  <!-- ✅ Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4W0YRB7QQ2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-4W0YRB7QQ2');
+  </script>
 
   <style>
     /* --- Cart page enhancements (small scoped styles) --- */
@@ -138,7 +139,7 @@
 
           <div class="mini-note">Pay on delivery (cash/UPI). We’ll confirm your slot on WhatsApp.</div>
 
-          <!-- Customer details (appended to WhatsApp text) -->
+          <!-- Customer details (used for Firestore + WhatsApp) -->
           <div class="cust-form">
             <input id="custName" placeholder="Your Name *" required />
             <textarea id="custAddress" placeholder="Address (with area) *" required></textarea>
@@ -151,10 +152,12 @@
               </select>
             </div>
             <input id="custPhone" placeholder="Phone (optional)" inputmode="tel" />
+            <input id="custEmail" placeholder="Email (optional)" inputmode="email" />
           </div>
 
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
             <a class="btn btn-primary" id="waCheckout" href="#" target="_blank" rel="noopener">Order on WhatsApp</a>
+            <button class="btn btn-primary" id="placeOrderBtn" type="button">Place Order</button>
           </div>
         </aside>
 
@@ -177,7 +180,7 @@
     <img src="images/whatsapp.png" alt="WhatsApp">
   </a>
 
-  <!-- Cart Logic -->
+  <!-- Cart Logic (render + WhatsApp link) -->
   <script>
     const CART_KEY='kom_cart';
     const getCart=()=>JSON.parse(localStorage.getItem(CART_KEY)||'[]');
@@ -200,6 +203,7 @@
     const pinEl=document.getElementById('custPincode');
     const payEl=document.getElementById('custPayment');
     const phoneEl=document.getElementById('custPhone');
+    const emailEl=document.getElementById('custEmail');
 
     const FREE_LIMIT = 999;
     const DELIVERY_FLAT = 49; // change if needed
@@ -301,7 +305,8 @@
         `Address: ${encodeURIComponent(addrEl.value || '')}`,
         `Pincode: ${encodeURIComponent(pinEl.value || '')}`,
         `Payment: ${encodeURIComponent(payEl.value || 'Cash')}`,
-        `Phone: ${encodeURIComponent(phoneEl.value || '')}`
+        `Phone: ${encodeURIComponent(phoneEl.value || '')}`,
+        `Email: ${encodeURIComponent(emailEl.value || '')}`
       ].join('%0A');
 
       const text = encodeURIComponent(lines) + '%0A%0A' + details;
@@ -309,17 +314,25 @@
       waBtn.target = '_blank';
       waBtn.rel = 'noopener';
 
-      // Disable button if no required details
+      // Disable buttons if missing details / empty cart
       const missing = (nameEl.value.trim()==='' || addrEl.value.trim()==='' || pinEl.value.trim()==='');
-      waBtn.classList.toggle('btn-ghost', missing);
-      waBtn.classList.toggle('btn-primary', !missing);
-      waBtn.style.pointerEvents = missing || isEmpty ? 'none' : 'auto';
-      waBtn.style.opacity = missing || isEmpty ? .6 : 1;
-      waBtn.textContent = missing || isEmpty ? 'Add items & fill details' : 'Order on WhatsApp';
+      const disabled = missing || isEmpty;
+
+      function setBtnState(el, ok){
+        el.classList.toggle('btn-ghost', !ok);
+        el.classList.toggle('btn-primary', ok);
+        el.style.pointerEvents = ok ? 'auto' : 'none';
+        el.style.opacity = ok ? 1 : .6;
+      }
+
+      setBtnState(waBtn, !disabled);
+      const placeBtn = document.getElementById('placeOrderBtn');
+      setBtnState(placeBtn, !disabled);
+      placeBtn.textContent = disabled ? 'Fill details to Place Order' : 'Place Order';
     }
 
     // React to customer input
-    ['custName','custAddress','custPincode','custPayment','custPhone'].forEach(id=>{
+    ['custName','custAddress','custPincode','custPayment','custPhone','custEmail'].forEach(id=>{
       const el = document.getElementById(id);
       el.addEventListener('input', render);
       el.addEventListener('change', render);
@@ -329,126 +342,65 @@
     clearBtn.onclick=()=>{ if(confirm('Clear cart?')){ setCart([]); render(); } };
   </script>
 
-  <!-- Firebase: auto-switch Login → My Account -->
+  <!-- Header auth link switch (Login ↔ My Account / Admin + Logout) -->
   <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
-    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
-
-    const app = initializeApp({
-      apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
-      authDomain: "kairavis-oven-magic.firebaseapp.com",
-      projectId: "kairavis-oven-magic",
-      storageBucket: "kairavis-oven-magic.firebasestorage.app",
-      messagingSenderId: "270897232759",
-      appId: "1:270897232759:web:36ee0edc8b222046febf72"
-    });
-    const auth = getAuth(app);
-    const loginLink = document.getElementById('loginLink');
-
-    onAuthStateChanged(auth, user=>{
-      if(!loginLink) return;
-      if(user){
-        loginLink.textContent = 'My Account';
-        loginLink.href = 'my-account.html';
-        loginLink.title = user.email || 'My Account';
-      }else{
-        loginLink.textContent = 'Login';
-        loginLink.href = 'login.html';
-        loginLink.removeAttribute('title');
-      }
-    });
+    import { attachHeaderAuth } from './auth.js?v=13';
+    attachHeaderAuth();
   </script>
-<!-- Firebase Auth: login/my-account switch + logout popup/redirect -->
-<script type="module">
-  // Firebase (CDN)
-  import { initializeApp }   from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
-  import { getAuth, onAuthStateChanged, signOut } 
-    from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
 
-  // --- CONFIG (yours) ---
-  const firebaseConfig = {
-    apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
-    authDomain: "kairavis-oven-magic.firebaseapp.com",
-    projectId: "kairavis-oven-magic",
-    storageBucket: "kairavis-oven-magic.firebasestorage.app",
-    messagingSenderId: "270897232759",
-    appId: "1:270897232759:web:36ee0edc8b222046febf72"
-  };
+  <!-- ✅ Firestore: Place Order -->
+  <script type="module">
+    import { db } from './auth.js?v=13';
+    import { collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
 
-  // Init
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+    function getCart(){ return JSON.parse(localStorage.getItem('kom_cart')||'[]'); }
 
-  // Elements
-  const loginLink  = document.getElementById('loginLink');
-  const logoutLink = document.getElementById('logoutLink');
+    async function placeOrder() {
+      const cart = getCart();
+      if (!cart.length) { alert('Cart is empty'); return; }
 
-  // Tiny toast
-  function toast(msg){
-    let t = document.querySelector('.toast');
-    if(!t){
-      t = document.createElement('div');
-      t.className = 'toast';
-      t.style.position='fixed';
-      t.style.left='50%';
-      t.style.bottom='16px';
-      t.style.transform='translateX(-50%)';
-      t.style.background='#222';
-      t.style.color='#fff';
-      t.style.padding='10px 14px';
-      t.style.borderRadius='10px';
-      t.style.fontSize='0.95rem';
-      t.style.opacity='0';
-      t.style.transition='opacity .25s';
-      t.style.zIndex='9999';
-      document.body.appendChild(t);
-    }
-    t.textContent = msg;
-    t.style.opacity = '1';
-    setTimeout(()=>{ t.style.opacity='0'; }, 1400);
-  }
+      const name    = document.getElementById('custName')?.value.trim() || '';
+      const address = document.getElementById('custAddress')?.value.trim() || '';
+      const pincode = document.getElementById('custPincode')?.value.trim() || '';
+      const payment = document.getElementById('custPayment')?.value || 'Cash';
+      const phone   = document.getElementById('custPhone')?.value.trim() || '';
+      const email   = document.getElementById('custEmail')?.value.trim() || '';
+      if (!name || !address || !pincode) { alert('Please fill name, address and pincode.'); return; }
 
-  // Show/hide login / logout and switch label to "My Account"
-  onAuthStateChanged(auth, (user) => {
-    if(user){
-      // User logged in
-      if(loginLink){
-        loginLink.textContent = 'My Account';
-        loginLink.href = 'my-account.html';
-        loginLink.style.display = '';
-      }
-      if(logoutLink) logoutLink.style.display = '';
-    }else{
-      // Logged out
-      if(loginLink){
-        loginLink.textContent = 'Login';
-        loginLink.href = 'login.html';
-        loginLink.style.display = '';
-      }
-      if(logoutLink) logoutLink.style.display = 'none';
-    }
-  });
+      // compute amounts similar to render()
+      const subtotal = cart.reduce((s,i)=> s + i.price*i.qty, 0);
+      const delivery = subtotal >= 999 ? 0 : 49;
+      const total    = subtotal + delivery;
 
-  // Logout with confirm → toast → redirect home
-  if(logoutLink){
-    logoutLink.addEventListener('click', async (e)=>{
-      e.preventDefault();
-      if(!confirm('Log out from Kairavi’s Oven Magic?')) return;
+      const items = cart.map(i => ({
+        name: i.name || (i.key ? i.key.split('|')[0] : ''),
+        weight: i.weight, price: i.price, qty: i.qty
+      }));
+
+      const order = {
+        orderId: 'KOM-' + Date.now(),
+        customer: { name, phone, email, address: `${address}, ${pincode}` },
+        items,
+        amounts: { subtotal, shipping: delivery, total },
+        payment,
+        status: 'NEW',
+        createdAt: serverTimestamp()
+      };
+
       try{
-        await signOut(auth);
-        toast('Logged out successfully');
-        setTimeout(()=>{ window.location.href = 'index.html'; }, 900);
-      }catch(err){
-        alert('Logout failed: ' + (err?.message || err));
+        await addDoc(collection(db, 'orders'), order);
+        alert('Order placed! We’ll contact you soon.');
+        localStorage.removeItem('kom_cart');
+        window.location.href = 'thankyou.html';
+      }catch(e){
+        alert('Could not place order: ' + (e?.message || e));
       }
-    });
-  }
-</script>
+    }
 
-<!-- (Optional) base toast node if your CSS already styles .toast -->
-<div class="toast" style="display:block;opacity:0;pointer-events:none"></div>
+    document.getElementById('placeOrderBtn').addEventListener('click', placeOrder);
+  </script>
 
-
-
+  <!-- (Optional) base toast node if your CSS already styles .toast -->
+  <div class="toast" style="display:block;opacity:0;pointer-events:none"></div>
 </body>
 </html>
