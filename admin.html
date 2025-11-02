@@ -39,7 +39,7 @@
   <div class="toast" style="display:block;opacity:0;pointer-events:none"></div>
 
   <script type="module">
-    import { attachHeaderAuth, requireAdmin } from "./auth.js";
+    import { attachHeaderAuth, requireAdmin } from "./auth.js?v=3";
     attachHeaderAuth();
     await requireAdmin(); // kicks non-admins to My Account
   </script>
