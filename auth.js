@@ -9,8 +9,7 @@ import {
   signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
-
-// ---------- Your Firebase config (edit only if you change project) ----------
+// ---------- Your Firebase config ----------
 export const firebaseConfig = {
   apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
   authDomain: "kairavis-oven-magic.firebaseapp.com",
@@ -20,20 +19,15 @@ export const firebaseConfig = {
   appId: "1:270897232759:web:36ee0edc8b222046febf72"
 };
 
-// ---------- Init (once) ----------
+// ---------- Init ----------
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-// Persist sessions across reloads/tabs (works well on GitHub Pages)
 setPersistence(auth, browserLocalPersistence);
 
+// ---------- Admin whitelist (edit if needed) ----------
+export const ADMIN_EMAILS = ["kairavisovenmagic@gmail.com"];
 
-// ---------- Admin whitelist (EDIT emails as needed) ----------
-export const ADMIN_EMAILS = [
-  "kairavisovenmagic@gmail.com"
-];
-
-
-// ---------- Tiny toast helper (no CSS dependency) ----------
+// ---------- Tiny toast ----------
 export function toast(msg) {
   let t = document.querySelector(".toast");
   if (!t) {
@@ -51,8 +45,7 @@ export function toast(msg) {
   setTimeout(() => { t.style.opacity = "0"; }, 1400);
 }
 
-
-// ---------- Header controls (Login/My Account/Admin + Logout) ----------
+// ---------- Header updater (Login/My Account/Admin + Logout) ----------
 export function attachHeaderAuth() {
   const loginLink  = document.getElementById("loginLink");
   const logoutLink = document.getElementById("logoutLink");
@@ -89,7 +82,6 @@ export function attachHeaderAuth() {
   }
 }
 
-
 // ---------- Route guards ----------
 export function requireAuth() {
   return new Promise((resolve) => {
@@ -121,15 +113,12 @@ export function requireAdmin() {
   });
 }
 
-
-// ---------- Google sign-in (popup with iOS/Safari redirect fallback) ----------
+// ---------- Google sign-in (popup → redirect fallback) ----------
 export async function signInWithGoogleFlow() {
   const provider = new GoogleAuthProvider();
   try {
-    // First try popup (works best on desktop/Chrome)
     return await signInWithPopup(auth, provider);
   } catch (e) {
-    // If popup is blocked/cancelled or browser forbids it, use redirect.
     const msg = (e?.message || "").toLowerCase();
     if (
       e?.code === "auth/popup-blocked" ||
@@ -138,31 +127,27 @@ export async function signInWithGoogleFlow() {
     ) {
       return signInWithRedirect(auth, provider);
     }
-    // Unknown error → bubble up so UI can show message
     throw e;
   }
 }
 
-// Call this on login.html load to finish Google redirect (returns userCred or null)
+// Finish Google redirect if returning from Google (returns userCred or null)
 export async function completeGoogleRedirectIfNeeded() {
   try {
-    return await getRedirectResult(auth); // null if not coming from redirect
+    return await getRedirectResult(auth);
   } catch (e) {
     console.warn("Google redirect completion error:", e);
     return null;
   }
 }
 
-
 // ---------- Email/password helpers ----------
 export async function emailPasswordSignIn(email, password) {
   return signInWithEmailAndPassword(auth, email, password);
 }
-
 export async function emailPasswordSignUp(email, password) {
   return createUserWithEmailAndPassword(auth, email, password);
 }
-
 export async function requestPasswordReset(email) {
   return sendPasswordResetEmail(auth, email);
 }
