@@ -1,16 +1,16 @@
-<script type="module">
-// auth.js (module)
+// auth.js — Firebase Auth utilities for Kairavi’s Oven Magic (ES module)
 
-// ---- Firebase v10 modules ----
+// ---------- Firebase imports ----------
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
 import {
   getAuth, setPersistence, browserLocalPersistence,
   onAuthStateChanged, signOut,
-  GoogleAuthProvider, signInWithPopup,
-  signInWithEmailAndPassword, createUserWithEmailAndPassword
+  GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult,
+  signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
-// ---- Your Firebase Config (as provided) ----
+
+// ---------- Your Firebase config (edit only if you change project) ----------
 export const firebaseConfig = {
   apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
   authDomain: "kairavis-oven-magic.firebaseapp.com",
@@ -20,17 +20,20 @@ export const firebaseConfig = {
   appId: "1:270897232759:web:36ee0edc8b222046febf72"
 };
 
-// ---- Initialize app/auth once ----
+// ---------- Init (once) ----------
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+// Persist sessions across reloads/tabs (works well on GitHub Pages)
 setPersistence(auth, browserLocalPersistence);
 
-// ---- Admin emails whitelist (edit as needed) ----
+
+// ---------- Admin whitelist (EDIT emails as needed) ----------
 export const ADMIN_EMAILS = [
   "kairavisovenmagic@gmail.com"
 ];
 
-// ---- Tiny toast ----
+
+// ---------- Tiny toast helper (no CSS dependency) ----------
 export function toast(msg) {
   let t = document.querySelector(".toast");
   if (!t) {
@@ -45,12 +48,13 @@ export function toast(msg) {
   }
   t.textContent = msg;
   t.style.opacity = "1";
-  setTimeout(()=> t.style.opacity = "0", 1400);
+  setTimeout(() => { t.style.opacity = "0"; }, 1400);
 }
 
-// ---- Header updater (Login/My Account/Admin + Logout) ----
+
+// ---------- Header controls (Login/My Account/Admin + Logout) ----------
 export function attachHeaderAuth() {
-  const loginLink = document.getElementById("loginLink");
+  const loginLink  = document.getElementById("loginLink");
   const logoutLink = document.getElementById("logoutLink");
   if (!loginLink) return;
 
@@ -59,8 +63,8 @@ export function attachHeaderAuth() {
       const email = (user.email || "").toLowerCase();
       const isAdmin = ADMIN_EMAILS.includes(email);
       loginLink.textContent = isAdmin ? "Admin" : "My Account";
-      loginLink.href = isAdmin ? "admin.html" : "my-account.html";
-      loginLink.title = user.email;
+      loginLink.href       = isAdmin ? "admin.html" : "my-account.html";
+      loginLink.title      = user.email || "";
       if (logoutLink) logoutLink.style.display = "";
     } else {
       loginLink.textContent = "Login";
@@ -77,7 +81,7 @@ export function attachHeaderAuth() {
       try {
         await signOut(auth);
         toast("Logged out!");
-        setTimeout(()=> window.location.href = "index.html", 600);
+        setTimeout(() => { window.location.href = "index.html"; }, 600);
       } catch (err) {
         alert("Logout failed: " + (err?.message || err));
       }
@@ -85,12 +89,14 @@ export function attachHeaderAuth() {
   }
 }
 
-// ---- Guards ----
+
+// ---------- Route guards ----------
 export function requireAuth() {
   return new Promise((resolve) => {
     onAuthStateChanged(auth, (user) => {
-      if (user) resolve(user);
-      else window.location.href = "login.html?next=" + encodeURIComponent(location.pathname);
+      if (user) return resolve(user);
+      const next = "login.html?next=" + encodeURIComponent(location.pathname);
+      window.location.href = next;
     });
   });
 }
@@ -99,14 +105,15 @@ export function requireAdmin() {
   return new Promise((resolve) => {
     onAuthStateChanged(auth, (user) => {
       if (!user) {
-        window.location.href = "login.html?next=" + encodeURIComponent(location.pathname);
+        const next = "login.html?next=" + encodeURIComponent(location.pathname);
+        window.location.href = next;
         return;
       }
       const email = (user.email || "").toLowerCase();
       const isAdmin = ADMIN_EMAILS.includes(email);
       if (!isAdmin) {
         toast("Admin only");
-        setTimeout(()=> window.location.href = "my-account.html", 800);
+        setTimeout(() => { window.location.href = "my-account.html"; }, 700);
         return;
       }
       resolve(user);
@@ -114,15 +121,48 @@ export function requireAdmin() {
   });
 }
 
-// ---- Auth actions for login page ----
+
+// ---------- Google sign-in (popup with iOS/Safari redirect fallback) ----------
 export async function signInWithGoogleFlow() {
   const provider = new GoogleAuthProvider();
-  return signInWithPopup(auth, provider);
+  try {
+    // First try popup (works best on desktop/Chrome)
+    return await signInWithPopup(auth, provider);
+  } catch (e) {
+    // If popup is blocked/cancelled or browser forbids it, use redirect.
+    const msg = (e?.message || "").toLowerCase();
+    if (
+      e?.code === "auth/popup-blocked" ||
+      e?.code === "auth/cancelled-popup-request" ||
+      msg.includes("popup")
+    ) {
+      return signInWithRedirect(auth, provider);
+    }
+    // Unknown error → bubble up so UI can show message
+    throw e;
+  }
 }
-export async function emailPasswordSignIn(email, pass) {
-  return signInWithEmailAndPassword(auth, email, pass);
+
+// Call this on login.html load to finish Google redirect (returns userCred or null)
+export async function completeGoogleRedirectIfNeeded() {
+  try {
+    return await getRedirectResult(auth); // null if not coming from redirect
+  } catch (e) {
+    console.warn("Google redirect completion error:", e);
+    return null;
+  }
 }
-export async function emailPasswordSignUp(email, pass) {
-  return createUserWithEmailAndPassword(auth, email, pass);
+
+
+// ---------- Email/password helpers ----------
+export async function emailPasswordSignIn(email, password) {
+  return signInWithEmailAndPassword(auth, email, password);
 }
-</script>
+
+export async function emailPasswordSignUp(email, password) {
+  return createUserWithEmailAndPassword(auth, email, password);
+}
+
+export async function requestPasswordReset(email) {
+  return sendPasswordResetEmail(auth, email);
+}
