@@ -187,8 +187,23 @@
     const $ = id => document.getElementById(id);
     const fmtINR = n => (n||0).toLocaleString('en-IN');
     const toast = msg => { const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1100); };
-    // Pick first non-empty value from possible names
-    const pick = (obj, ...names) => { for (const n of names){ const v=obj?.[n]; if(v!==undefined && v!==null && String(v).trim()!=='') return v; } return ''; };
+    // Pick first non-empty value; supports dot paths, e.g. "customer.name"
+const pick = (obj, ...names) => {
+  for (const n of names) {
+    let v = obj;
+    let ok = true;
+    for (const part of n.split('.')) {
+      if (v && Object.prototype.hasOwnProperty.call(v, part)) {
+        v = v[part];
+      } else {
+        ok = false; break;
+      }
+    }
+    if (ok && v !== undefined && v !== null && String(v).trim() !== '') return v;
+  }
+  return '';
+};
+
 
     let ORDERS = [];
 
@@ -249,8 +264,8 @@
       const ts = o.createdAt?.seconds ? new Date(o.createdAt.seconds*1000) : (o.createdAt? new Date(o.createdAt): new Date());
       const when = ts.toLocaleString();
       const orderId = pick(o,'orderId','id');
-      const name = pick(o,'customerName','custName','name');
-      const ph   = pick(o,'customerPhone','custPhone','phone');
+const name = pick(o,'customer.name','custName','customerName','name');
+const ph   = pick(o,'customer.phone','custPhone','customerPhone','phone');
 
       const itemsTxt = Array.isArray(o.items)
         ? o.items.map(it => `${it.name||''}${it.weight?` (${it.weight})`:''} × ${it.qty||1}`).join(', ')
@@ -313,23 +328,48 @@
     }
     $('overlay').onclick = closeModal;
 
-    function modalInner(order){
-      const name   = pick(order,'customerName','custName','name') || '—';
-      const phone  = pick(order,'customerPhone','custPhone','phone') || '—';
-      const email  = pick(order,'customerEmail','custEmail','email') || '—';
-      const addr   = pick(order,'address','custAddress') || '—';
-      const pin    = pick(order,'pincode','custPincode') || '—';
-      const pay    = pick(order,'payment','custPayment','payMode') || '—';
+function modalInner(order) {
+  const name  = pick(order, 'customer.name', 'custName', 'customerName', 'name') || '—';
+  const phone = pick(order, 'customer.phone', 'custPhone', 'customerPhone', 'phone') || '—';
+  const email = pick(order, 'customer.email', 'custEmail', 'customerEmail', 'email') || '—';
+  const addr  = pick(order, 'delivery.address', 'custAddress', 'address') || '—';
+  const pin   = pick(order, 'delivery.pincode', 'custPincode', 'pincode') || '—';
+  const pay   = pick(order, 'delivery.payment', 'custPayment', 'payment', 'payMode') || '—';
 
-      const items = Array.isArray(order.items) ? order.items : [];
-      const rows = items.map(it => `
-        <tr>
-          <td>${(it.name||'')}${it.weight?` (${it.weight})`:''}</td>
-          <td>${it.qty||1}</td>
-          <td>₹${fmtINR(it.price||0)}</td>
-          <td>₹${fmtINR((it.price||0) * (it.qty||1))}</td>
-        </tr>
-      `).join('');
+  const items = Array.isArray(order.items) ? order.items : [];
+  const rows = items.map(it => `
+    <tr>
+      <td>${(it.name || '')}${it.weight ? ` (${it.weight})` : ''}</td>
+      <td>${it.qty || 1}</td>
+      <td>₹${fmtINR(it.price || 0)}</td>
+      <td>₹${fmtINR((it.price || 0) * (it.qty || 1))}</td>
+    </tr>
+  `).join('');
+
+  return `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px">
+      <div class="card">
+        <h3>Customer</h3>
+        <p>${name}</p>
+        <p>${phone}</p>
+        <p>${email}</p>
+      </div>
+      <div class="card">
+        <h3>Delivery</h3>
+        <p>${addr}</p>
+        <p>Pincode: ${pin}</p>
+        <p>Payment: ${pay}</p>
+      </div>
+    </div>
+    <table class="table table-sm">
+      <thead>
+        <tr><th>Item</th><th>Qty</th><th>Price</th><th>Line</th></tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+}
+
 
       const subtotal = order.subtotal ?? items.reduce((s,i)=>s+(i.price||0)*(i.qty||1),0);
       const delivery = order.delivery ?? 0;
@@ -379,13 +419,12 @@
       const orderId = pick(order,'orderId','id');
       const when = new Date((order?.createdAt?.seconds||Date.now()/1000)*1000).toLocaleString();
 
-      const name   = pick(order,'customerName','custName','name') || '—';
-      const phone  = pick(order,'customerPhone','custPhone','phone') || '—';
-      const email  = pick(order,'customerEmail','custEmail','email') || '—';
-      const addr   = pick(order,'address','custAddress') || '—';
-      const pin    = pick(order,'pincode','custPincode') || '—';
-      const pay    = pick(order,'payment','custPayment','payMode') || '—';
-
+      const name   = pick(order,'customer.name','custName','customerName','name') || '—';
+const phone  = pick(order,'customer.phone','custPhone','customerPhone','phone') || '—';
+const email  = pick(order,'customer.email','custEmail','customerEmail','email') || '—';
+const addr   = pick(order,'delivery.address','custAddress','address') || '—';
+const pin    = pick(order,'delivery.pincode','custPincode','pincode') || '—';
+const pay    = pick(order,'delivery.payment','custPayment','payment','payMode') || '—';
       const items = Array.isArray(order.items) ? order.items : [];
       const rows = items.map(it => `
         <tr>
