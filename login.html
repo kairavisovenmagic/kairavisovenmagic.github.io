@@ -3,186 +3,105 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Login | Kairavi’s Oven Magic</title>
+  <title>Login — Kairavi’s Oven Magic</title>
   <link rel="icon" href="images/logo.png"/>
   <link rel="stylesheet" href="style.css"/>
-  <!-- ✅ Google Analytics (GA4) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4W0YRB7QQ2"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-4W0YRB7QQ2');
-</script>
-
-  <style>
-    .auth-hero{
-      min-height:calc(100vh - 120px);
-      display:grid;place-items:center;
-      background:linear-gradient(180deg,#fff7ef, #ffe9d8);
-    }
-    .auth-card{
-      width:min(480px,92%);
-      background:#fff;border-radius:16px;box-shadow:0 10px 24px rgba(0,0,0,.08);
-      padding:18px 18px 20px;
-    }
-    .auth-card h1{font-size:1.35rem;margin-bottom:6px}
-    .auth-tabs{display:flex;gap:8px;margin:8px 0 14px}
-    .auth-tabs button{flex:1;border:1px solid #e6dcd5;background:#faf7f3;border-radius:10px;padding:10px;font-weight:700;cursor:pointer}
-    .auth-tabs button.active{background:#ff7043;color:#fff;border-color:#ff7043}
-    .auth-form{display:grid;gap:10px;margin-top:6px}
-    .auth-form input{
-      padding:12px;border:1px solid #e6dcd5;border-radius:10px;font-size:1rem;background:#fff
-    }
-    .auth-form .btn-primary{width:100%;margin-top:4px}
-    .mini{text-align:center;color:#7a5b47;font-size:.9rem;margin-top:10px}
-  </style>
 </head>
 <body>
-
-  <div class="freebar">
-    Welcome back! Sign in to track your orders.
-    <a href="index.html">← Home</a>
-  </div>
-
   <header class="site-header">
     <div class="wrap nav">
-      <a class="brand" href="index.html"><img src="images/logo.png" alt="logo"><strong>Kairavi’s Oven Magic</strong></a>
+      <a class="brand" href="index.html">
+        <img src="images/logo.png" alt="logo"/><strong>Kairavi’s Oven Magic</strong>
+      </a>
       <nav class="menu">
         <a href="index.html">Home</a>
-        <a href="products.html" aria-current="page">Products</a>
-        <a href="contact.html">Contact</a>
-        <a href="cart.html">Cart <span class="badge" id="cartCount">0</span></a>
-        <!-- Auth controls -->
-        <a id="loginLink" href="login.html">Login</a>
+        <a href="products.html">Products</a>
+        <a id="loginLink" href="login.html" aria-current="page">Login</a>
         <a id="logoutLink" href="#" style="display:none">Logout</a>
       </nav>
     </div>
   </header>
 
-  <section class="auth-hero">
-    <div class="auth-card">
-      <h1>Login / Sign Up</h1>
-      <div class="auth-tabs">
-        <button id="tabSignIn" class="active">Sign In</button>
-        <button id="tabSignUp">Sign Up</button>
+  <main class="wrap" style="max-width:520px">
+    <h1>Login / Sign Up</h1>
+    <p class="sub">Use email & password or continue with Google.</p>
+
+    <section class="card" style="padding:16px;margin-bottom:16px">
+      <label>Email</label>
+      <input id="email" type="email" placeholder="you@example.com" required/>
+      <label>Password</label>
+      <input id="password" type="password" placeholder="••••••••" required/>
+      <div style="display:flex; gap:8px; margin-top:12px">
+        <button id="btnSignIn" class="btn btn-primary">Sign In</button>
+        <button id="btnSignUp" class="btn">Create Account</button>
       </div>
+    </section>
 
-      <!-- Sign In -->
-      <div id="paneSignIn">
-        <div class="auth-form">
-          <input id="inEmail" type="email" placeholder="Email" autocomplete="email" required>
-          <input id="inPass" type="password" placeholder="Password" autocomplete="current-password" required>
-          <button id="btnSignIn" class="btn btn-primary">Sign In</button>
-        </div>
-      </div>
+    <div style="text-align:center;margin:10px 0">— or —</div>
 
-      <!-- Sign Up -->
-      <div id="paneSignUp" style="display:none">
-        <div class="auth-form">
-          <input id="upEmail" type="email" placeholder="Email" autocomplete="email" required>
-          <input id="upPass" type="password" placeholder="Password (min 6 chars)" autocomplete="new-password" required>
-          <button id="btnSignUp" class="btn btn-primary">Create Account</button>
-        </div>
-        <div class="mini">By creating an account, you agree to receive order updates on WhatsApp/email.</div>
-      </div>
-    </div>
-  </section>
+    <button id="btnGoogle" class="btn btn-google" style="width:100%">
+      <img src="images/google.svg" alt="" style="height:18px;vertical-align:middle;margin-right:8px"/>
+      Continue with Google
+    </button>
+  </main>
 
-  <footer>
-    <div class="wrap footer-grid">
-      <div class="small">© 2025 Kairavi’s Oven Magic — Kairavi Food Products</div>
-      <div class="small" style="text-align:right">Email: <a href="mailto:kairavisovenmagic@gmail.com">kairavisovenmagic@gmail.com</a></div>
-    </div>
-  </footer>
-
-  <!-- Toast node -->
   <div class="toast" style="display:block;opacity:0;pointer-events:none"></div>
 
-  <!-- ✅ Firebase Auth: Login ↔ My Account ↔ Admin Switch + Logout Popup -->
-<script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
-  import { getAuth, onAuthStateChanged, signOut } 
-    from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
+  <script type="module">
+    import { attachHeaderAuth, toast,
+             signInWithGoogleFlow, emailPasswordSignIn, emailPasswordSignUp,
+             ADMIN_EMAILS, auth } from "./auth.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
-  // --- CONFIG (yours) ---
-  const firebaseConfig = {
-    apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
-    authDomain: "kairavis-oven-magic.firebaseapp.com",
-    projectId: "kairavis-oven-magic",
-    storageBucket: "kairavis-oven-magic.firebasestorage.app",
-    messagingSenderId: "270897232759",
-    appId: "1:270897232759:web:36ee0edc8b222046febf72"
-  };
+    attachHeaderAuth();
 
-  // --- Init Firebase ---
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  // --- Admin whitelist (add your admin emails here) ---
-  const ADMIN_EMAILS = ['kairavisovenmagic@gmail.com'];
-
-  // --- Elements ---
-  const loginLink  = document.getElementById('loginLink');
-  const logoutLink = document.getElementById('logoutLink');
-
-  // --- Toast helper ---
-  function toastMsg(msg) {
-    let t = document.querySelector('.toast');
-    if (!t) {
-      t = document.createElement('div');
-      t.className = 'toast';
-      t.style.position = 'fixed';
-      t.style.left = '50%';
-      t.style.bottom = '20px';
-      t.style.transform = 'translateX(-50%)';
-      t.style.background = '#333';
-      t.style.color = '#fff';
-      t.style.padding = '10px 18px';
-      t.style.borderRadius = '10px';
-      t.style.opacity = '0';
-      t.style.transition = 'opacity .25s';
-      t.style.zIndex = '9999';
-      document.body.appendChild(t);
-    }
-    t.textContent = msg;
-    t.style.opacity = '1';
-    setTimeout(() => { t.style.opacity = '0'; }, 1200);
-  }
-
-  // --- Update header links depending on user role ---
-  onAuthStateChanged(auth, (user) => {
-    if (!loginLink) return;
-    if (user) {
-      const email = (user.email || '').toLowerCase();
-      const isAdmin = ADMIN_EMAILS.includes(email);
-      loginLink.textContent = isAdmin ? 'Admin' : 'My Account';
-      loginLink.href = isAdmin ? 'admin.html' : 'my-account.html';
-      loginLink.title = user.email;
-      if (logoutLink) logoutLink.style.display = '';
-    } else {
-      loginLink.textContent = 'Login';
-      loginLink.href = 'login.html';
-      loginLink.removeAttribute('title');
-      if (logoutLink) logoutLink.style.display = 'none';
-    }
-  });
-
-  // --- Logout behavior ---
-  if (logoutLink) {
-    logoutLink.addEventListener('click', async (e) => {
-      e.preventDefault();
-      if (!confirm('Log out from Kairavi’s Oven Magic?')) return;
-      try {
-        await signOut(auth);
-        toastMsg('Logged out successfully!');
-        setTimeout(() => { window.location.href = 'index.html'; }, 900);
-      } catch (err) {
-        alert('Logout failed: ' + (err?.message || err));
+    // If already signed in, redirect away
+    const params = new URLSearchParams(location.search);
+    const next = params.get("next") || "index.html";
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const isAdmin = ADMIN_EMAILS.includes((user.email||"").toLowerCase());
+        window.location.href = isAdmin ? "admin.html" : next || "my-account.html";
       }
     });
-  }
-</script>
 
+    // Email/Password
+    document.getElementById("btnSignIn").addEventListener("click", async () => {
+      const email = document.getElementById("email").value.trim();
+      const pass  = document.getElementById("password").value;
+      if (!email || !pass) return toast("Enter email & password");
+      try {
+        await emailPasswordSignIn(email, pass);
+        toast("Welcome back!");
+        setTimeout(()=> window.location.href = next || "my-account.html", 600);
+      } catch (e) {
+        toast(e?.message || "Sign-in failed");
+      }
+    });
+
+    document.getElementById("btnSignUp").addEventListener("click", async () => {
+      const email = document.getElementById("email").value.trim();
+      const pass  = document.getElementById("password").value;
+      if (!email || !pass) return toast("Enter email & password");
+      try {
+        await emailPasswordSignUp(email, pass);
+        toast("Account created!");
+        setTimeout(()=> window.location.href = "my-account.html", 600);
+      } catch (e) {
+        toast(e?.message || "Sign-up failed");
+      }
+    });
+
+    // Google Sign-In
+    document.getElementById("btnGoogle").addEventListener("click", async () => {
+      try {
+        await signInWithGoogleFlow();
+        toast("Signed in with Google");
+        setTimeout(()=> window.location.href = next || "my-account.html", 600);
+      } catch (e) {
+        toast(e?.message || "Google sign-in failed");
+      }
+    });
+  </script>
 </body>
 </html>
