@@ -5,37 +5,109 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>My Account — Kairavi’s Oven Magic</title>
   <link rel="icon" href="images/logo.png"/>
-  <link rel="stylesheet" href="style.css?v=7"/>
+  <link rel="stylesheet" href="style.css?v=8"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     :root{
       --bg:#FFF7F0; --ink:#1f2328; --muted:#6b7280;
       --brand:#f15a24; --brand-900:#cc4b1e; --ring:rgba(241,90,36,.18);
-      --card:#fff; --stroke:#f0e6df; --shadow:0 16px 40px rgba(0,0,0,.08);
+      --card:#fff; --stroke:#f0e6df; --shadow:0 8px 30px rgba(0,0,0,.08);
       --radius:18px;
     }
     body{ background:var(--bg); color:var(--ink); }
-    .page{ max-width:980px; margin:28px auto 60px; padding:0 16px; }
-    .title{ font-size:36px; margin:0 0 6px; }
-    .sub{ color:var(--muted); margin:0 0 20px; }
-    .grid{ display:grid; gap:16px; }
-    @media (min-width:920px){ .cols-3{ grid-template-columns:2fr 1fr; } }
-    .card{ background:#fff; border:1px solid #ffe3d4; border-radius:var(--radius); box-shadow:var(--shadow); }
-    .card .hd{ padding:14px 16px; border-bottom:1px dashed #f1e6df; font-weight:700; }
-    .card .bd{ padding:16px; }
-    .pill{ display:inline-flex; gap:8px; align-items:center; padding:8px 12px; border:1px solid #eadace; border-radius:999px; background:#fff; color:#8a4b2b; }
-    .btn{ display:inline-flex; gap:8px; align-items:center; padding:10px 14px; border-radius:12px; border:1px solid #eadace; background:#fff; cursor:pointer; }
-    .btn:hover{ background:#fafafa; }
-    .btn-primary{ background:var(--brand); border-color:var(--brand); color:#fff; }
-    .btn-primary:hover{ background:var(--brand-900); }
-    .list{ display:grid; gap:10px; }
-    .row{ display:flex; justify-content:space-between; gap:12px; padding:10px 0; border-bottom:1px dashed #f1e6df; }
-    .row:last-child{ border-bottom:0; }
+    .page{ max-width:1100px; margin:40px auto 60px; padding:0 20px; }
+    .title{ font-size:34px; margin:0 0 6px; font-weight:700; }
+    .sub{ color:var(--muted); margin:0 0 30px; }
+
+    /* === layout === */
+    .account-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap:20px;
+    }
+
+    .card{
+      background:#fff;
+      border:1px solid #ffe3d4;
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .card h2{
+      font-size:18px;
+      margin:0 0 14px;
+      border-bottom:1px dashed #f1e6df;
+      padding-bottom:6px;
+    }
+
+    .profile-info{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:14px;
+    }
+    .profile-info img{
+      width:54px; height:54px;
+      border-radius:50%;
+      border:1px solid #f3e0d6;
+    }
+
     .muted{ color:var(--muted); }
-    .kpi{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
-    .k{ background:#fff; border:1px solid #ffe3d4; border-radius:12px; padding:12px; text-align:center; }
-    .k .v{ font-size:20px; font-weight:700; }
-    .toast{ position:fixed; left:50%; bottom:18px; transform:translateX(-50%); background:#111827; color:#fff; padding:10px 14px; border-radius:10px; opacity:0; transition:opacity .2s; z-index:9999; }
+    .stats{
+      display:flex; justify-content:space-between; gap:10px;
+    }
+    .stat-box{
+      flex:1;
+      text-align:center;
+      border:1px solid #ffe3d4;
+      border-radius:12px;
+      padding:10px 0;
+    }
+    .stat-value{ font-weight:700; font-size:20px; }
+    .stat-label{ color:var(--muted); font-size:13px; }
+
+    .list{ display:grid; gap:10px; }
+    .list-item{
+      padding:8px 0;
+      border-bottom:1px dashed #f1e6df;
+    }
+
+    .btn{
+      display:flex; align-items:center; gap:8px;
+      padding:10px 14px;
+      border-radius:12px;
+      border:1px solid #eadace;
+      background:#fff;
+      cursor:pointer;
+      justify-content:center;
+      transition:.2s;
+    }
+    .btn:hover{ background:#fafafa; }
+    .btn-primary{
+      background:var(--brand); color:#fff; border-color:var(--brand);
+    }
+    .btn-primary:hover{ background:var(--brand-900); }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:#fffaf7;
+      border:1px solid #ffe3d4;
+      border-radius:999px;
+      padding:8px 14px;
+      color:#8a4b2b;
+      font-size:14px;
+    }
+
+    .toast{
+      position:fixed; left:50%; bottom:18px;
+      transform:translateX(-50%);
+      background:#111827; color:#fff;
+      padding:10px 14px; border-radius:10px;
+      opacity:0; transition:opacity .2s;
+      z-index:9999;
+    }
     .toast.show{ opacity:1; }
   </style>
 </head>
@@ -56,82 +128,74 @@
 
   <main class="page">
     <h1 class="title">My Account</h1>
-    <p class="sub">Welcome to your account space. View your details, quick actions and recent activity.</p>
+    <p class="sub">Welcome to your account area. View your profile, actions, and recent activity.</p>
 
-    <div class="grid cols-3">
-      <!-- Left stack -->
-      <section class="grid">
-        <!-- Profile -->
-        <div class="card">
-          <div class="hd">Profile</div>
-          <div class="bd">
-            <div style="display:flex; gap:12px; align-items:center; margin-bottom:10px">
-              <img src="images/logo.png" alt="" style="width:44px;height:44px;border-radius:50%;border:1px solid #f3e0d6;">
-              <div>
-                <div id="accEmail" style="font-weight:700">—</div>
-                <div class="muted" id="accUid" style="font-size:12px">—</div>
-              </div>
-            </div>
-            <div class="kpi">
-              <div class="k"><div class="v" id="kOrders">0</div><div class="muted">Orders</div></div>
-              <div class="k"><div class="v" id="kPending">0</div><div class="muted">Pending</div></div>
-              <div class="k"><div class="v" id="kSpent">₹0</div><div class="muted">Total Spent</div></div>
-            </div>
+    <div class="account-grid">
+      <!-- Profile -->
+      <div class="card">
+        <h2>Profile</h2>
+        <div class="profile-info">
+          <img src="images/logo.png" alt="">
+          <div>
+            <div id="accEmail" style="font-weight:700">—</div>
+            <div class="muted" id="accUid" style="font-size:12px">—</div>
           </div>
         </div>
+        <div class="stats">
+          <div class="stat-box">
+            <div class="stat-value" id="kOrders">0</div>
+            <div class="stat-label">Orders</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="kPending">0</div>
+            <div class="stat-label">Pending</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="kSpent">₹0</div>
+            <div class="stat-label">Total Spent</div>
+          </div>
+        </div>
+      </div>
 
-        <!-- Recent activity (placeholder demo) -->
-        <div class="card">
-          <div class="hd">Recent Activity</div>
-          <div class="bd">
-            <div id="activity" class="list">
-              <div class="muted">No recent activity yet.</div>
-            </div>
-          </div>
+      <!-- Activity -->
+      <div class="card">
+        <h2>Recent Activity</h2>
+        <div id="activity" class="list">
+          <div class="muted">No recent activity yet.</div>
         </div>
-      </section>
+      </div>
 
-      <!-- Right column -->
-      <aside class="grid">
-        <div class="card">
-          <div class="hd">Quick actions</div>
-          <div class="bd" style="display:grid; gap:10px">
-            <a class="btn btn-primary" href="products.html"><i class="fa fa-cookie-bite"></i> Shop cookies</a>
-            <a class="btn" href="cart.html"><i class="fa fa-cart-shopping"></i> View cart</a>
-            <a class="btn" href="mailto:kairavisovenmagic@gmail.com"><i class="fa fa-envelope"></i> Contact support</a>
-            <button class="btn" id="btnCopyId"><i class="fa fa-copy"></i> Copy User ID</button>
-            <button class="btn" id="btnLogout"><i class="fa fa-right-from-bracket"></i> Logout</button>
-          </div>
+      <!-- Quick actions -->
+      <div class="card">
+        <h2>Quick Actions</h2>
+        <div class="list">
+          <a class="btn btn-primary" href="products.html"><i class="fa fa-cookie-bite"></i> Shop cookies</a>
+          <a class="btn" href="cart.html"><i class="fa fa-cart-shopping"></i> View cart</a>
+          <a class="btn" href="mailto:kairavisovenmagic@gmail.com"><i class="fa fa-envelope"></i> Contact support</a>
+          <button class="btn" id="btnCopyId"><i class="fa fa-copy"></i> Copy User ID</button>
+          <button class="btn" id="btnLogout"><i class="fa fa-right-from-bracket"></i> Logout</button>
         </div>
-        <div class="card">
-          <div class="hd">Account status</div>
-          <div class="bd">
-            <span class="pill"><i class="fa fa-shield-halved"></i> Email verified: <strong id="emailVer">—</strong></span>
-          </div>
-        </div>
-      </aside>
+      </div>
+
+      <!-- Status -->
+      <div class="card">
+        <h2>Account Status</h2>
+        <p><span class="pill"><i class="fa fa-shield-halved"></i> Email verified: <strong id="emailVer">—</strong></span></p>
+      </div>
     </div>
   </main>
 
   <div class="toast" id="toast"></div>
 
   <script type="module">
-    import { attachHeaderAuth, requireAuth, auth } from "./auth.js?v=7";
+    import { attachHeaderAuth, requireAuth, auth } from "./auth.js?v=8";
     import { onAuthStateChanged, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
     attachHeaderAuth();
-    await requireAuth(); // redirect to login if not signed in
+    await requireAuth();
 
     const $ = (id)=>document.getElementById(id);
     const showToast = (m)=>{ const t=$('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1100); };
-
-    // Simple local demo “order history” from cart snapshots if you want later
-    function demoStats(){
-      // Hook to real orders when ready. For now, leave zeros.
-      $('kOrders').textContent = 0;
-      $('kPending').textContent = 0;
-      $('kSpent').textContent = '₹0';
-    }
 
     onAuthStateChanged(auth, (user) => {
       if (!user) return;
@@ -139,17 +203,14 @@
       $('accUid').textContent = user.uid;
       $('emailVer').textContent = user.emailVerified ? 'Yes' : 'No';
       if(!user.emailVerified){
-        // Offer verify one-time per session
-        const act = document.createElement('div');
-        act.className = 'row';
-        act.innerHTML = `<div class="muted">Email not verified</div><button class="btn btn-primary" id="btnVerify">Send verify mail</button>`;
-        document.getElementById('activity').prepend(act);
-        act.querySelector('#btnVerify').onclick = async ()=>{
+        const note = document.createElement('div');
+        note.innerHTML = `<div class="muted" style="margin-top:10px">Your email is not verified. <button class="btn btn-primary" id="btnVerify">Verify now</button></div>`;
+        document.querySelector('.account-grid').appendChild(note);
+        note.querySelector('#btnVerify').onclick = async ()=>{
           await sendEmailVerification(user);
           showToast('Verification email sent');
         };
       }
-      demoStats();
     });
 
     $('btnLogout').onclick = async ()=>{
