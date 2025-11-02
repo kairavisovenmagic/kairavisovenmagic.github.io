@@ -6,6 +6,65 @@
   <title>My Account — Kairavi’s Oven Magic</title>
   <link rel="icon" href="images/logo.png"/>
   <link rel="stylesheet" href="style.css"/>
+
+  <style>
+    :root{
+      --bg:#FFF7F0; --card:#ffffff; --ink:#1f2328; --muted:#6b7280;
+      --brand:#f15a24; --brand-900:#cc4b1e; --ring:rgba(241,90,36,.22);
+      --ok:#16a34a; --warn:#f59e0b; --danger:#dc2626; --stroke:#e5e7eb;
+      --radius:16px; --shadow:0 12px 30px rgba(0,0,0,.06);
+    }
+    body{ background:var(--bg); color:var(--ink); }
+
+    .page{ max-width:1100px; margin:28px auto 60px; padding:0 16px; }
+    .title{ font-size:36px; line-height:1.15; margin:10px 0 18px; }
+    .grid{ display:grid; grid-template-columns:1fr; gap:18px; }
+    @media (min-width:980px){ .grid{ grid-template-columns: 1.2fr .8fr; gap:22px; } }
+
+    .card{ background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:20px; }
+    .section-title{ font-size:18px; margin:0 0 12px; }
+
+    .profile{ display:flex; gap:16px; align-items:flex-start; }
+    .avatar{
+      width:64px; height:64px; border-radius:50%;
+      display:grid; place-items:center; font-weight:700; font-size:22px;
+      background:linear-gradient(135deg,#ffe6d9,#ffd2bd); color:#7a3a1e; border:1px solid #ffd7c6;
+    }
+    .meta small{ color:var(--muted); }
+    .badge{
+      display:inline-flex; align-items:center; gap:6px; padding:4px 8px; border-radius:999px;
+      font-size:12px; border:1px solid var(--stroke); color:#374151; background:#fafafa;
+    }
+    .badge.ok{ border-color:#bbf7d0; background:#ecfdf5; color:#065f46; }
+    .badge.warn{ border-color:#fde68a; background:#fffbeb; color:#92400e; }
+    .badges{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+
+    .k-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:10px 14px; border-radius:12px; border:1px solid var(--stroke); background:#fff; cursor:pointer;
+      transition:box-shadow .15s, background .15s;
+    }
+    .btn:hover{ background:#fafafa; }
+    .btn-primary{ background:var(--brand); color:#fff; border-color:var(--brand); }
+    .btn-primary:hover{ background:var(--brand-900); }
+    .btn-ghost{ background:#fff; }
+    .btn-danger{ border-color:#fecaca; color:#991b1b; }
+    .btn-block{ width:100%; }
+
+    .two{ display:grid; grid-template-columns:1fr; gap:16px; }
+    @media (min-width:720px){ .two{ grid-template-columns:1fr 1fr; } }
+
+    .list{ display:grid; gap:10px; }
+    .item{ display:flex; justify-content:space-between; align-items:center; padding:12px; border:1px dashed #f1f1f1; border-radius:12px; background:#fffdfc; }
+    .muted{ color:var(--muted); }
+    .empty{
+      padding:18px; border:1px dashed var(--stroke); border-radius:12px; background:#fffdfc; color:#6b7280;
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+    }
+
+    .chip{ display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:999px; background:#f3f4f6; font-size:12px; color:#374151; border:1px solid #e5e7eb; }
+  </style>
 </head>
 <body>
   <header class="site-header">
@@ -22,27 +81,177 @@
     </div>
   </header>
 
-  <main class="wrap" style="max-width:720px; margin-top:24px">
-    <h1>My Account</h1>
-    <div id="profile" class="card" style="padding:16px">Loading…</div>
+  <main class="page">
+    <h1 class="title">My Account</h1>
+
+    <div class="grid">
+      <!-- LEFT COLUMN -->
+      <section class="card">
+        <h2 class="section-title">Profile</h2>
+        <div id="profile" class="profile">
+          <!-- filled by JS -->
+        </div>
+
+        <div id="providerBadges" class="badges"></div>
+
+        <div class="k-row">
+          <button id="btnEdit" class="btn" disabled title="Coming soon">Edit Details</button>
+          <button id="btnResetPw" class="btn">Reset Password</button>
+          <button id="btnLogout" class="btn btn-danger">Logout</button>
+        </div>
+      </section>
+
+      <!-- RIGHT COLUMN -->
+      <section class="card">
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="two">
+          <a class="btn btn-block btn-primary" href="products.html">Shop Cookies</a>
+          <a class="btn btn-block" href="https://wa.me/919766964845" target="_blank" rel="noopener">WhatsApp Support</a>
+          <button id="btnLinkGoogle" class="btn btn-block">Link Google</button>
+          <button id="btnUnlinkGoogle" class="btn btn-block" style="display:none">Unlink Google</button>
+        </div>
+        <p class="muted" style="margin-top:10px">Linking Google lets you sign in faster across devices.</p>
+      </section>
+
+      <!-- RECENT ORDERS -->
+      <section class="card">
+        <h2 class="section-title">Recent Orders</h2>
+        <div id="orders" class="empty">
+          <span>No orders yet. When you place your first order, it will show up here.</span>
+          <a class="btn btn-primary" href="products.html">Browse Products</a>
+        </div>
+      </section>
+
+      <!-- SECURITY -->
+      <section class="card">
+        <h2 class="section-title">Security & Activity</h2>
+        <div id="security" class="list">
+          <!-- filled by JS -->
+        </div>
+      </section>
+    </div>
   </main>
 
   <div class="toast" style="display:block;opacity:0;pointer-events:none"></div>
 
   <script type="module">
-    import { attachHeaderAuth, requireAuth, auth } from "./auth.js?v=6";
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+    import { attachHeaderAuth, requireAuth, auth, toast } from "./auth.js?v=6";
+    import {
+      onAuthStateChanged, GoogleAuthProvider, linkWithPopup, unlink,
+      sendPasswordResetEmail, sendEmailVerification
+    } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
     attachHeaderAuth();
     await requireAuth(); // redirect to login if not signed in
 
-    onAuthStateChanged(auth, (user) => {
-      const el = document.getElementById("profile");
+    // Small helpers
+    const el = (id) => document.getElementById(id);
+    const initials = (nameOrEmail) => {
+      const src = (nameOrEmail || "").trim();
+      if (!src) return "U";
+      const parts = src.replace(/@.*/,'').split(/[ ._-]+/).filter(Boolean);
+      if (parts.length === 1) return parts[0].slice(0,2).toUpperCase();
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    };
+    const fmt = (d) => new Date(d).toLocaleString();
+
+    const providerIcon = (pid) => {
+      if (pid === "google.com") return "🔗 Google";
+      if (pid === "password")   return "🔐 Email/Password";
+      return pid;
+    };
+
+    onAuthStateChanged(auth, async (user) => {
       if (!user) return;
-      el.innerHTML = `
-        <p><strong>Email:</strong> ${user.email || ""}</p>
-        <p><strong>User ID:</strong> ${user.uid}</p>
+
+      // Profile block
+      const name = user.displayName || user.email?.split("@")[0] || "User";
+      const pic = user.photoURL;
+      const avatar = pic
+        ? `<img src="${pic}" alt="" class="avatar" style="object-fit:cover"/>`
+        : `<div class="avatar">${initials(name)}</div>`;
+
+      el("profile").innerHTML = `
+        ${avatar}
+        <div class="meta">
+          <div style="font-weight:700; font-size:18px">${name}</div>
+          <div><small>${user.email || ""}</small></div>
+          <div class="badges" style="margin-top:6px">
+            <span class="badge ${user.emailVerified ? 'ok' : 'warn'}">
+              ${user.emailVerified ? 'Email verified' : 'Email not verified'}
+            </span>
+            <span class="badge">UID: <code style="font-family:monospace">${user.uid.slice(0,8)}…</code></span>
+          </div>
+        </div>
       `;
+
+      // Provider badges
+      const prov = user.providerData?.map(p => p.providerId) || [];
+      el("providerBadges").innerHTML = prov.map(p =>
+        `<span class="chip">${providerIcon(p)}</span>`
+      ).join("");
+
+      // Security/activity
+      const info = user.metadata || {};
+      el("security").innerHTML = `
+        <div class="item"><span>Created</span><span class="muted">${fmt(info.creationTime)}</span></div>
+        <div class="item"><span>Last sign-in</span><span class="muted">${fmt(info.lastSignInTime)}</span></div>
+        <div class="item"><span>Providers</span><span class="muted">${prov.join(", ") || "—"}</span></div>
+      `;
+
+      // Buttons visibility / actions
+      const hasGoogle = prov.includes("google.com");
+      const hasPassword = prov.includes("password");
+
+      el("btnLinkGoogle").style.display = hasGoogle ? "none" : "";
+      el("btnUnlinkGoogle").style.display = hasGoogle ? "" : "none";
+      el("btnResetPw").style.display = hasPassword ? "" : "none";
+
+      el("btnLogout").onclick = () => document.getElementById("logoutLink")?.click();
+
+      el("btnResetPw").onclick = async () => {
+        try {
+          await sendPasswordResetEmail(auth, user.email);
+          toast("Password reset email sent");
+        } catch (e) {
+          toast(e?.message || "Could not send reset email");
+          console.error(e);
+        }
+      };
+
+      // Email verification
+      if (!user.emailVerified) {
+        const verifyBtn = document.createElement("button");
+        verifyBtn.className = "btn";
+        verifyBtn.textContent = "Resend verification email";
+        verifyBtn.onclick = async () => {
+          try { await sendEmailVerification(user); toast("Verification email sent"); }
+          catch (e) { console.error(e); toast(e?.message || "Could not send verification"); }
+        };
+        el("profile").appendChild(document.createElement("div")).appendChild(verifyBtn);
+      }
+
+      // Link / Unlink Google
+      el("btnLinkGoogle").onclick = async () => {
+        try {
+          await linkWithPopup(user, new GoogleAuthProvider());
+          toast("Google linked");
+          location.reload();
+        } catch (e) {
+          console.error(e);
+          toast(e?.message || "Could not link Google");
+        }
+      };
+      el("btnUnlinkGoogle").onclick = async () => {
+        try {
+          await unlink(user, "google.com");
+          toast("Google unlinked");
+          location.reload();
+        } catch (e) {
+          console.error(e);
+          toast(e?.message || "Could not unlink Google");
+        }
+      };
     });
   </script>
 </body>
