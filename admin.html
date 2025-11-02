@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Admin Dashboard — Kairavi’s Oven Magic</title>
   <link rel="icon" href="images/logo.png"/>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css?v=7"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
@@ -14,7 +14,6 @@
       --brand:#f15a24; --brand-900:#cc4b1e; --ring:rgba(241,90,36,.18);
       --card:#fff; --stroke:#f0e6df; --shadow:0 16px 40px rgba(0,0,0,.08);
       --radius:18px;
-      --ok:#16a34a; --warn:#f59e0b; --bad:#dc2626;
     }
     body{ background:var(--bg); color:var(--ink); }
 
@@ -28,45 +27,30 @@
     .btn:hover{ background:#fafafa; }
     .btn-primary{ background:var(--brand); border-color:var(--brand); color:#fff; }
     .btn-primary:hover{ background:var(--brand-900); }
-    .btn-danger{ color:#991b1b; border-color:#fecaca; }
-    .chip{ padding:8px 12px; border-radius:999px; background:#fff; border:1px solid var(--stroke); color:var(--muted); }
 
-    /* KPI cards */
     .kpis{ display:grid; gap:16px; grid-template-columns:repeat(2,1fr); }
     @media (min-width:920px){ .kpis{ grid-template-columns:repeat(4,1fr);} }
     .kpi{ background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px; border:1px solid #ffe3d4; }
     .kpi .label{ color:var(--muted); font-size:12px; }
     .kpi .value{ font-size:24px; font-weight:700; }
-    .kpi small{ color:var(--muted); }
 
-    /* Tabs */
     .tabs{ margin-top:18px; border-bottom:1px solid #f1e6df; display:flex; gap:8px; }
     .tab{ padding:10px 14px; border-radius:10px 10px 0 0; background:#fff3ea; color:#8a4b2b; border:1px solid #ffd9c5; border-bottom:0; cursor:pointer; }
     .tab[aria-selected="true"]{ background:#fff; color:#1f2328; font-weight:700; }
     .panel{ background:#fff; border:1px solid #ffd9c5; border-top:0; border-radius:0 0 var(--radius) var(--radius); box-shadow:var(--shadow); padding:16px; }
 
-    /* Orders table */
     .table{ width:100%; border-collapse:separate; border-spacing:0; }
     .table th, .table td{ padding:10px 12px; border-bottom:1px dashed #f1e6df; text-align:left; }
     .table th{ font-size:12px; color:var(--muted); font-weight:600; }
-    .status{ padding:4px 10px; border-radius:999px; font-size:12px; border:1px solid #e5e7eb; }
-    .status.pending{ background:#fffbeb; color:#92400e; border-color:#fde68a; }
-    .status.packed{ background:#eef2ff; color:#3730a3; border-color:#c7d2fe; }
-    .status.shipped{ background:#ecfdf5; color:#065f46; border-color:#bbf7d0; }
-    .status.cancelled{ background:#fef2f2; color:#991b1b; border-color:#fecaca; }
+    .right{ text-align:right; }
+    .nowrap{ white-space:nowrap; }
 
-    .row-actions{ display:flex; gap:8px; }
-    .input, select, textarea{
-      border:1px solid #eadace; padding:10px 12px; border-radius:12px; outline:0; background:#fff;
-    }
-    .input:focus, select:focus, textarea:focus{ border-color:var(--brand); box-shadow:0 0 0 4px var(--ring); }
+    .input, select{ border:1px solid #eadace; padding:10px 12px; border-radius:12px; outline:0; background:#fff; }
+    .input:focus, select:focus{ border-color:var(--brand); box-shadow:0 0 0 4px var(--ring); }
     .grid{ display:grid; gap:12px; }
     @media (min-width:720px){ .grid.two{ grid-template-columns:1fr 1fr; } .grid.three{ grid-template-columns:repeat(3,1fr);} }
 
-    .empty{ padding:16px; border:1px dashed #f2e9e2; border-radius:12px; color:var(--muted); background:#fffdfc; }
-    .note{ color:var(--muted); font-size:12px; }
-    .right{ text-align:right; }
-    .nowrap{ white-space:nowrap; }
+    .empty{ padding:16px; border:1px dashed #f2e9e2; border-radius:12px; color:#6b7280; background:#fffdfc; }
     .toast{ position:fixed; left:50%; bottom:18px; transform:translateX(-50%); background:#111827; color:#fff; padding:10px 14px; border-radius:10px; opacity:0; transition:opacity .2s; z-index:9999; }
     .toast.show{ opacity:1; }
   </style>
@@ -92,328 +76,146 @@
 
     <div class="toolbar">
       <div class="tool-left">
-        <span class="chip"><i class="fa fa-calendar-day"></i> <span id="today"></span></span>
+        <span id="today" class="btn" style="cursor:default"></span>
         <button class="btn" id="btnExport"><i class="fa fa-file-export"></i> Export Orders (CSV)</button>
-        <a class="btn" href="https://wa.me/919766964845" target="_blank" rel="noopener"><i class="fa fa-whatsapp"></i> WhatsApp</a>
       </div>
       <div class="tool-right">
         <button class="btn btn-primary" id="btnNewProduct"><i class="fa fa-plus"></i> New Product</button>
-        <button class="btn btn-danger" id="btnWipeDemo"><i class="fa fa-broom"></i> Clear Demo Data</button>
       </div>
     </div>
 
-    <!-- KPI CARDS -->
-    <section class="kpis" id="kpis">
-      <div class="kpi"><div class="label">Orders today</div><div class="value" id="kpiToday">0</div><small id="kpiTodayAmt">₹0</small></div>
-      <div class="kpi"><div class="label">Pending</div><div class="value" id="kpiPending">0</div><small>To pack</small></div>
-      <div class="kpi"><div class="label">Shipped (30d)</div><div class="value" id="kpiShipped">0</div><small id="kpiShippedAmt">₹0</small></div>
-      <div class="kpi"><div class="label">Avg. order value</div><div class="value" id="kpiAOV">₹0</div><small>Last 30 days</small></div>
+    <section class="kpis">
+      <div class="kpi"><div class="label">Orders today</div><div class="value" id="kpiToday">0</div></div>
+      <div class="kpi"><div class="label">Pending</div><div class="value" id="kpiPending">0</div></div>
+      <div class="kpi"><div class="label">Shipped (30d)</div><div class="value" id="kpiShipped">0</div></div>
+      <div class="kpi"><div class="label">Avg. order value</div><div class="value" id="kpiAOV">₹0</div></div>
     </section>
 
-    <!-- TABS -->
     <nav class="tabs" role="tablist" aria-label="Admin sections">
-      <button class="tab" role="tab" aria-selected="true" aria-controls="panelOrders" id="tabOrders">Orders</button>
+      <button class="tab" role="tab" aria-selected="true"  aria-controls="panelOrders"   id="tabOrders">Orders</button>
       <button class="tab" role="tab" aria-selected="false" aria-controls="panelProducts" id="tabProducts">Products</button>
       <button class="tab" role="tab" aria-selected="false" aria-controls="panelMessages" id="tabMessages">Messages</button>
       <button class="tab" role="tab" aria-selected="false" aria-controls="panelSettings" id="tabSettings">Settings</button>
     </nav>
 
-    <!-- PANELS -->
     <section class="panel" id="panelOrders" role="tabpanel" aria-labelledby="tabOrders">
       <div class="grid two" style="margin-bottom:10px">
-        <input id="orderSearch" class="input" placeholder="Search orders (name / phone / email / item)…"/>
+        <input id="orderSearch" class="input" placeholder="Search orders…"/>
         <select id="statusFilter">
           <option value="">All statuses</option>
           <option>pending</option><option>packed</option><option>shipped</option><option>cancelled</option>
         </select>
       </div>
-
       <div id="ordersWrap"></div>
     </section>
 
     <section class="panel" id="panelProducts" role="tabpanel" aria-labelledby="tabProducts" hidden>
       <h3 style="margin:0 0 10px">Catalog</h3>
       <div id="productsWrap"></div>
-
-      <hr style="border:none;border-top:1px dashed #f1e6df;margin:18px 0">
-      <h3 style="margin:0 0 10px">Add / Update Product</h3>
-      <div class="grid three">
-        <input class="input" id="pName" placeholder="Name *">
-        <input class="input" id="pPrice" type="number" placeholder="Price (₹) *">
-        <input class="input" id="pWeight" placeholder="Weight (e.g., 250 g)">
-        <input class="input" id="pImage" placeholder="Image URL *">
-        <input class="input" id="pTags" placeholder="Tags (comma separated)">
-        <select id="pFlags" class="input">
-          <option value="">Flags</option>
-          <option value="best">Bestseller</option>
-          <option value="new">New</option>
-        </select>
-      </div>
-      <div class="grid two" style="margin-top:10px">
-        <button class="btn btn-primary" id="btnSaveProduct"><i class="fa fa-save"></i> Save Product</button>
-        <small class="note">This demo stores catalog in your browser. When you’re ready, we’ll wire this to a Google Sheet or Firebase.</small>
-      </div>
     </section>
 
     <section class="panel" id="panelMessages" role="tabpanel" aria-labelledby="tabMessages" hidden>
-      <div id="msgsWrap" class="empty">No messages yet. Hook your contact form to store submissions here.</div>
+      <div id="msgsWrap" class="empty">No messages yet.</div>
     </section>
 
     <section class="panel" id="panelSettings" role="tabpanel" aria-labelledby="tabSettings" hidden>
-      <div class="grid two">
-        <div>
-          <h3>Store Info</h3>
-          <div class="grid">
-            <input class="input" id="sPhone" placeholder="WhatsApp number">
-            <input class="input" id="sEmail" placeholder="Support email">
-            <input class="input" id="sCity"  placeholder="City">
-          </div>
-          <div style="margin-top:10px">
-            <button class="btn btn-primary" id="btnSaveSettings"><i class="fa fa-save"></i> Save Settings</button>
-          </div>
-          <p class="note" style="margin-top:8px">Settings are saved locally for demo. We can later sync to a config file.</p>
-        </div>
-        <div>
-          <h3>Danger Zone</h3>
-          <p class="note">For testing only.</p>
-          <button class="btn btn-danger" id="btnClearOrders"><i class="fa fa-trash"></i> Clear Orders</button>
-        </div>
-      </div>
+      <div class="empty">Settings area (demo).</div>
     </section>
   </main>
 
   <div class="toast" id="toast" aria-live="polite"></div>
 
-  <!-- Admin guard + utilities -->
   <script type="module">
-    import { attachHeaderAuth, requireAdmin, toast } from "./auth.js?v=6";
+    import { attachHeaderAuth, requireAdmin, toast } from "./auth.js?v=7"; // cache-busted
 
     attachHeaderAuth();
-    await requireAdmin(); // blocks non-admins
+    await requireAdmin();
 
-    // ---- Tiny helpers ----
     const $ = (id)=>document.getElementById(id);
     const fmt = (d)=> new Date(d).toLocaleString();
     const showToast = (m)=>{ const t=$('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1200); };
 
-    // ---- Demo stores (local) ----
-    const LS_ORDERS   = 'kom_admin_orders';
-    const LS_PRODUCTS = 'kom_admin_products';
-    const LS_MSGS     = 'kom_admin_msgs';
-    const LS_SETTINGS = 'kom_admin_settings';
+    $('today').textContent = new Date().toLocaleDateString();
 
-    const read = (k, fallback)=> JSON.parse(localStorage.getItem(k) || JSON.stringify(fallback));
-    const write= (k, v)=> localStorage.setItem(k, JSON.stringify(v));
-
-    // ---- Seed demo data once ----
-    function seedIfEmpty(){
-      if(!localStorage.getItem(LS_ORDERS)){
-        write(LS_ORDERS, [
-          {id:'KOM-1007', ts: Date.now()-2*3600e3, name:'Arpita',  phone:'98xxxxxx10', email:'arpita@example.com', items:'Jeera x1, Gulkand x1', total:500, status:'pending'},
-          {id:'KOM-1006', ts: Date.now()-26*3600e3, name:'Vishal',  phone:'90xxxxxx22', email:'vishal@example.com', items:'Chocolate x2',        total:500, status:'shipped'},
-          {id:'KOM-1005', ts: Date.now()-5*24*3600e3, name:'Rahul', phone:'97xxxxxx33', email:'rahul@example.com', items:'Ragi x1',             total:250, status:'packed'}
-        ]);
-      }
-      if(!localStorage.getItem(LS_PRODUCTS)){
-        write(LS_PRODUCTS, [
-          {name:'Gulkand Nankhatai', price:250, weight:'250 g', img:'images/gulkand.jpg', flags:['best']},
-          {name:'Wheat Nankhatai', price:200, weight:'250 g', img:'images/wheat.jpg', flags:['best']},
-          {name:'Ragi Nankhatai', price:250, weight:'250 g', img:'images/ragi.jpg', flags:['new']}
-        ]);
-      }
-      if(!localStorage.getItem(LS_MSGS)){
-        write(LS_MSGS, [
-          {ts: Date.now()-3600e3, name:'Sanyukta', email:'sanyukta@example.com', msg:'Loved the Ragi cookies! When is next batch?'}
-        ]);
-      }
+    // Tiny demo data so the UI renders even on first load
+    const ORDERS_KEY='kom_admin_orders';
+    const read = (k,f)=>JSON.parse(localStorage.getItem(k)||JSON.stringify(f));
+    const write=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+    if(!localStorage.getItem(ORDERS_KEY)){
+      write(ORDERS_KEY,[
+        {id:'KOM-1007', ts: Date.now()-2*3600e3, name:'Arpita', items:'Jeera x1, Gulkand x1', total:500, status:'pending'},
+        {id:'KOM-1006', ts: Date.now()-26*3600e3, name:'Vishal', items:'Chocolate x2', total:500, status:'shipped'}
+      ]);
     }
-    seedIfEmpty();
 
-    // ---- KPIs ----
     function calcKPIs(){
-      const orders = read(LS_ORDERS,[]);
+      const list = read(ORDERS_KEY,[]);
       const todayStart = new Date(); todayStart.setHours(0,0,0,0);
-      const last30 = Date.now() - 30*24*3600e3;
+      const last30 = Date.now()-30*24*3600e3;
 
-      const todayList = orders.filter(o=> o.ts >= todayStart.getTime());
-      const shipped30 = orders.filter(o=> o.status==='shipped' && o.ts >= last30);
-      const aov = shipped30.length ? Math.round(shipped30.reduce((s,o)=>s+o.total,0)/shipped30.length) : 0;
-      const pending = orders.filter(o=> o.status==='pending').length;
+      const today=list.filter(o=>o.ts>=todayStart.getTime()).length;
+      const pending=list.filter(o=>o.status==='pending').length;
+      const shipped=list.filter(o=>o.status==='shipped'&&o.ts>=last30);
+      const aov=shipped.length?Math.round(shipped.reduce((s,o)=>s+o.total,0)/shipped.length):0;
 
-      $('kpiToday').textContent = todayList.length;
-      $('kpiTodayAmt').textContent = '₹'+ todayList.reduce((s,o)=>s+o.total,0);
-      $('kpiShipped').textContent = shipped30.length;
-      $('kpiShippedAmt').textContent = '₹'+ shipped30.reduce((s,o)=>s+o.total,0);
-      $('kpiPending').textContent = pending;
-      $('kpiAOV').textContent = '₹'+ aov;
-      $('today').textContent = new Date().toLocaleDateString();
+      $('kpiToday').textContent=today;
+      $('kpiPending').textContent=pending;
+      $('kpiShipped').textContent=shipped.length;
+      $('kpiAOV').textContent='₹'+aov;
     }
 
-    // ---- Orders table ----
     function renderOrders(){
-      const wrap = $('ordersWrap');
-      const orders = read(LS_ORDERS,[]);
-      if(!orders.length){ wrap.innerHTML = `<div class="empty">No orders yet.</div>`; return; }
+      const q=$('orderSearch').value.trim().toLowerCase();
+      const f=$('statusFilter').value;
+      const list=read(ORDERS_KEY,[]).filter(o=>{
+        const text=`${o.id} ${o.name} ${o.items}`.toLowerCase();
+        return (!q||text.includes(q)) && (!f||o.status===f);
+      }).sort((a,b)=>b.ts-a.ts);
 
-      const q = $('orderSearch').value.trim().toLowerCase();
-      const f = $('statusFilter').value;
-
-      const list = orders.filter(o=>{
-        const text = `${o.id} ${o.name} ${o.phone} ${o.email} ${o.items}`.toLowerCase();
-        const matchText = !q || text.includes(q);
-        const matchStatus = !f || o.status===f;
-        return matchText && matchStatus;
-      }).sort((a,b)=> b.ts-a.ts);
-
-      let html = `<table class="table">
-        <thead><tr>
-          <th>Order</th><th>Date</th><th>Customer</th><th>Items</th>
-          <th class="right">Total</th><th>Status</th><th>Actions</th>
-        </tr></thead><tbody>`;
-      html += list.map(o=>`
-        <tr data-id="${o.id}">
-          <td class="nowrap"><strong>${o.id}</strong></td>
-          <td>${fmt(o.ts)}</td>
-          <td>${o.name}<br><small class="muted">${o.phone} · ${o.email}</small></td>
-          <td>${o.items}</td>
-          <td class="right">₹${o.total}</td>
-          <td>
-            <select class="input input-status" data-id="${o.id}">
-              <option ${o.status==='pending'?'selected':''}>pending</option>
-              <option ${o.status==='packed'?'selected':''}>packed</option>
-              <option ${o.status==='shipped'?'selected':''}>shipped</option>
-              <option ${o.status==='cancelled'?'selected':''}>cancelled</option>
-            </select>
-          </td>
-          <td class="row-actions">
-            <button class="btn btn-ghost btnCopy" data-id="${o.id}"><i class="fa fa-copy"></i> Copy</button>
-            <button class="btn btn-danger btnDel" data-id="${o.id}"><i class="fa fa-trash"></i></button>
-          </td>
-        </tr>`).join('');
-      html += `</tbody></table>`;
-      wrap.innerHTML = html;
-
-      // Events
-      wrap.querySelectorAll('.input-status').forEach(sel=>{
-        sel.addEventListener('change', e=>{
-          const id = e.target.dataset.id;
-          const orders = read(LS_ORDERS,[]);
-          const o = orders.find(x=>x.id===id);
-          if(o){ o.status = e.target.value; write(LS_ORDERS, orders); calcKPIs(); showToast('Status updated'); }
-        });
-      });
-      wrap.querySelectorAll('.btnDel').forEach(btn=>{
-        btn.onclick = ()=>{
-          const id = btn.dataset.id;
-          const orders = read(LS_ORDERS,[]).filter(x=>x.id!==id);
-          write(LS_ORDERS, orders); renderOrders(); calcKPIs(); showToast('Order removed');
-        };
-      });
-      wrap.querySelectorAll('.btnCopy').forEach(btn=>{
-        btn.onclick = ()=>{
-          const id = btn.dataset.id;
-          const o = read(LS_ORDERS,[]).find(x=>x.id===id);
-          navigator.clipboard.writeText(`${o.id} | ${o.name} | ₹${o.total} | ${o.items}`);
-          showToast('Copied');
-        };
-      });
+      if(!list.length){ $('ordersWrap').innerHTML='<div class="empty">No orders found.</div>'; return; }
+      $('ordersWrap').innerHTML = `
+        <table class="table">
+          <thead><tr><th>Order</th><th>Date</th><th>Customer</th><th>Items</th><th class="right">Total</th><th>Status</th></tr></thead>
+          <tbody>
+            ${list.map(o=>`
+              <tr>
+                <td class="nowrap"><strong>${o.id}</strong></td>
+                <td>${fmt(o.ts)}</td>
+                <td>${o.name}</td>
+                <td>${o.items}</td>
+                <td class="right">₹${o.total}</td>
+                <td>${o.status}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>`;
     }
 
-    // ---- Products (demo catalog editor) ----
-    function renderProducts(){
-      const list = read(LS_PRODUCTS,[]);
-      const wrap = $('productsWrap');
-      if(!list.length){ wrap.innerHTML = `<div class="empty">No products yet.</div>`; return; }
-      wrap.innerHTML = list.map((p,i)=>`
-        <div class="grid two" style="border:1px dashed #f1e6df; border-radius:12px; padding:10px; margin-bottom:10px">
-          <div><strong>${p.name}</strong><div class="muted">${p.weight || ''}</div></div>
-          <div class="right">₹${p.price} &nbsp; ${p.flags?.map(f=>`<span class="chip">${f}</span>`).join('') || ''}</div>
-        </div>
-      `).join('');
-    }
-
-    // ---- Messages ----
-    function renderMessages(){
-      const msgs = read(LS_MSGS,[]);
-      const wrap = $('msgsWrap');
-      if(!msgs.length){ wrap.className='empty'; wrap.textContent='No messages yet.'; return; }
-      wrap.className=''; wrap.innerHTML = msgs.sort((a,b)=>b.ts-a.ts).map(m=>`
-        <div style="border:1px dashed #f1e6df; border-radius:12px; padding:12px; margin-bottom:10px">
-          <div><strong>${m.name}</strong> <span class="muted">· ${m.email}</span></div>
-          <div class="muted" style="font-size:12px">${fmt(m.ts)}</div>
-          <div style="margin-top:6px">${m.msg}</div>
-        </div>
-      `).join('');
-    }
-
-    // ---- Export CSV ----
-    function exportCSV(){
-      const rows = read(LS_ORDERS,[]);
-      if(!rows.length){ showToast('No orders to export'); return; }
-      const header = ['id','date','name','phone','email','items','total','status'];
-      const csv = [header.join(',')].concat(
-        rows.map(o=>[
-          o.id, new Date(o.ts).toISOString(), JSON.stringify(o.name),
-          o.phone, o.email, JSON.stringify(o.items), o.total, o.status
-        ].join(','))
-      ).join('\n');
-      const blob = new Blob([csv], {type:'text/csv'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'kom-orders.csv';
-      a.click();
-    }
-
-    // ---- Settings ----
-    function renderSettings(){
-      const s = read(LS_SETTINGS,{});
-      $('sPhone').value = s.phone || '';
-      $('sEmail').value = s.email || '';
-      $('sCity').value  = s.city  || '';
-    }
-
-    // ---- Events ----
     $('orderSearch').addEventListener('input', renderOrders);
     $('statusFilter').addEventListener('input', renderOrders);
-    $('btnExport').onclick = exportCSV;
-
-    $('btnSaveProduct').onclick = ()=>{
-      const name=$('pName').value.trim(), price=+$('pPrice').value, weight=$('pWeight').value.trim();
-      const img=$('pImage').value.trim(), tags=$('pTags').value.trim(), flag=$('pFlags').value;
-      if(!name || !price || !img){ showToast('Name, price & image are required'); return; }
-      const list = read(LS_PRODUCTS,[]);
-      const idx = list.findIndex(p=>p.name.toLowerCase()===name.toLowerCase());
-      const item = {name, price, weight, img, tags, flags:flag? [flag]: []};
-      if(idx>=0) list[idx]=item; else list.push(item);
-      write(LS_PRODUCTS, list);
-      renderProducts(); showToast('Saved');
-      ['pName','pPrice','pWeight','pImage','pTags'].forEach(id=>$(id).value=''); $('pFlags').value='';
+    $('btnExport').onclick=()=>{
+      const rows=read(ORDERS_KEY,[]);
+      if(!rows.length){ showToast('No orders to export'); return; }
+      const header=['id','date','customer','items','total','status'];
+      const csv=[header.join(',')].concat(
+        rows.map(o=>[o.id,new Date(o.ts).toISOString(),JSON.stringify(o.name),JSON.stringify(o.items),o.total,o.status].join(','))
+      ).join('\n');
+      const blob=new Blob([csv],{type:'text/csv'});
+      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='kom-orders.csv'; a.click();
     };
 
-    $('btnSaveSettings').onclick = ()=>{
-      write(LS_SETTINGS, { phone:$('sPhone').value.trim(), email:$('sEmail').value.trim(), city:$('sCity').value.trim() });
-      showToast('Settings saved');
-    };
-    $('btnClearOrders').onclick = ()=>{ write(LS_ORDERS, []); renderOrders(); calcKPIs(); showToast('Orders cleared'); };
-    $('btnWipeDemo').onclick = ()=>{ [LS_ORDERS,LS_PRODUCTS,LS_MSGS].forEach(k=>localStorage.removeItem(k)); seedIfEmpty(); renderAll(); showToast('Demo data reset'); };
-
-    // New product quick focus
-    $('btnNewProduct').onclick = ()=>{ document.getElementById('tabProducts').click(); $('pName').focus(); };
-
-    // ---- Tabs ----
+    // Tabs
     function setTab(id){
-      ['Orders','Products','Messages','Settings'].forEach(name=>{
-        $('tab'+name).setAttribute('aria-selected', String(name===id));
-        $('panel'+name).hidden = name!==id;
+      ['Orders','Products','Messages','Settings'].forEach(n=>{
+        $('tab'+n).setAttribute('aria-selected', String(n===id));
+        $('panel'+n).hidden = n!==id;
       });
     }
-    $('tabOrders').onclick   = ()=>setTab('Orders');
-    $('tabProducts').onclick = ()=>setTab('Products');
-    $('tabMessages').onclick = ()=>setTab('Messages');
-    $('tabSettings').onclick = ()=>setTab('Settings');
+    $('tabOrders').onclick=()=>setTab('Orders');
+    $('tabProducts').onclick=()=>setTab('Products');
+    $('tabMessages').onclick=()=>setTab('Messages');
+    $('tabSettings').onclick=()=>setTab('Settings');
 
-    function renderAll(){ calcKPIs(); renderOrders(); renderProducts(); renderMessages(); renderSettings(); }
-    renderAll();
+    calcKPIs(); renderOrders();
   </script>
 </body>
 </html>
