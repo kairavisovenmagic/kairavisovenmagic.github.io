@@ -11,14 +11,14 @@ import {
 
 // ---------- Your Firebase config ----------
 export const firebaseConfig = {
-  apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
-  authDomain: "kairavis-oven-magic.firebaseapp.com",
-  projectId: "kairavis-oven-magic",
-  storageBucket: "kairavis-oven-magic.firebasestorage.app",
-  messagingSenderId: "270897232759",
-  appId: "1:270897232759:web:36ee0edc8b222046febf72"
+  apiKey: "AIzaSyDjBryw_WVRpKirKh5baTKo2w6hO1sreLM",
+  authDomain: "kairavis-oven-magic-f13de.firebaseapp.com",
+  projectId: "kairavis-oven-magic-f13de",
+  storageBucket: "kairavis-oven-magic-f13de.appspot.com", // ← corrected
+  messagingSenderId: "555671503591",
+  appId: "1:555671503591:web:e255c02855187982111842",
+  measurementId: "G-EG345BBL41" // optional, fine to keep
 };
-
 // ---------- Init ----------
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
