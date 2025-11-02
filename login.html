@@ -6,29 +6,20 @@
   <title>Login — Kairavi’s Oven Magic</title>
   <link rel="icon" href="images/logo.png"/>
   <link rel="stylesheet" href="style.css"/>
-
   <style>
-    /* --- Minimal, classy auth page styles --- */
     :root{
-      --bg:#FFF7F0;           /* warm background */
-      --card:#ffffff;
-      --text:#2a2a2a;
-      --muted:#6c6c6c;
-      --brand:#f15a24;        /* your orange */
-      --brand-900:#cc4b1e;
-      --ring:rgba(241,90,36,.35);
-      --radius:16px;
-      --shadow:0 10px 25px rgba(0,0,0,.06);
+      --bg:#FFF7F0; --card:#ffffff; --text:#2a2a2a; --muted:#6c6c6c;
+      --brand:#f15a24; --brand-900:#cc4b1e; --ring:rgba(241,90,36,.35);
+      --radius:16px; --shadow:0 10px 25px rgba(0,0,0,.06);
     }
     body{ background:var(--bg); color:var(--text); }
-    .auth-wrap{ max-width:860px; margin:40px auto; padding:0 16px; }
+    .auth-wrap{ max-width:980px; margin:40px auto; padding:0 16px; }
     .auth-title{ font-size:42px; line-height:1.15; margin:12px 0 8px; }
     .auth-sub{ color:var(--muted); margin-bottom:20px; }
     .auth-grid{ display:grid; grid-template-columns:1fr; gap:18px; }
     @media (min-width:900px){ .auth-grid{ grid-template-columns: 1.1fr .9fr; gap:24px; } }
-    .auth-card{
-      background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
-      padding:22px;
+    .auth-card,.side-card{
+      background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px;
     }
     label{ display:block; font-size:14px; color:var(--muted); margin:10px 0 6px; }
     input[type=email], input[type=password]{
@@ -45,20 +36,16 @@
     .row{ display:flex; gap:10px; flex-wrap:wrap; }
     .center{ text-align:center; }
     .divider{ color:var(--muted); margin:4px 0 10px; }
-    .google-btn{
-      border:1px solid #e7e7e7; background:#fff; font-weight:600;
+    .google-btn{ border:1px solid #e7e7e7; background:#fff; font-weight:600;
       display:flex; align-items:center; justify-content:center; gap:10px;
-      padding:14px 18px; border-radius:12px;
-    }
+      padding:14px 18px; border-radius:12px; }
     .google-btn:hover{ background:#f7f7f7; }
-    .side-card{ background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px; }
     .bullet{ margin:0; padding-left:18px; }
     .bullet li{ margin:6px 0; color:#444; }
     .smallmuted{ color:var(--muted); font-size:12px; margin-top:6px; }
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header class="site-header">
     <div class="wrap nav">
       <a class="brand" href="index.html">
@@ -88,15 +75,15 @@
           <input id="password" type="password" placeholder="••••••••" autocomplete="current-password" required/>
 
           <div class="row" style="margin-top:14px">
-            <button id="btnSignIn" class="btn btn-primary">Sign In</button>
-            <button id="btnSignUp" class="btn">Create Account</button>
+            <button id="btnSignIn" class="btn btn-primary" type="button">Sign In</button>
+            <button id="btnSignUp" class="btn" type="button">Create Account</button>
             <a id="btnReset" class="btn" href="#" title="Reset password">Forgot?</a>
           </div>
         </form>
 
         <div class="center divider">— or —</div>
 
-        <button id="btnGoogle" class="google-btn btn-block" aria-label="Continue with Google">
+        <button id="btnGoogle" class="google-btn btn-block" type="button" aria-label="Continue with Google">
           <img src="images/google.svg" alt="" style="height:18px"/>
           Continue with Google
         </button>
@@ -116,85 +103,79 @@
     </div>
   </main>
 
+  <div id="authErrorBanner" style="display:none;position:fixed;left:0;right:0;top:0;padding:10px 16px;background:#ffeded;color:#8a1f1f;border-bottom:1px solid #e4bcbc;z-index:9999;text-align:center;font-weight:600">
+    Login script failed to load. Check that <code>auth.js</code> is beside this file and imported with <code>./auth.js</code>.
+  </div>
   <div class="toast" style="display:block;opacity:0;pointer-events:none"></div>
 
   <script type="module">
-    import {
-      attachHeaderAuth, toast, ADMIN_EMAILS, auth,
-      signInWithGoogleFlow, completeGoogleRedirectIfNeeded,
-      emailPasswordSignIn, emailPasswordSignUp
-    } from "./auth.js";
-    import {
-      onAuthStateChanged, sendPasswordResetEmail
-    } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+    // Hardened boot: attach handlers after DOM ready, show banner if import fails
+    const ready = (fn) => (document.readyState !== 'loading') ? fn() : document.addEventListener('DOMContentLoaded', fn);
 
-    attachHeaderAuth();
+    ready(async () => {
+      const showBanner = (msg) => {
+        const b = document.getElementById('authErrorBanner');
+        b.style.display = 'block';
+        if (msg) b.innerHTML = msg;
+      };
 
-    // Finish Google redirect sessions if returning from Google
-    await completeGoogleRedirectIfNeeded();
-
-    // If already signed in, route away
-    const params = new URLSearchParams(location.search);
-    const next = params.get("next") || "my-account.html";
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const isAdmin = ADMIN_EMAILS.includes((user.email||"").toLowerCase());
-        window.location.href = isAdmin ? "admin.html" : next;
-      }
-    });
-
-    // Email/Password
-    document.getElementById("btnSignIn").addEventListener("click", async () => {
-      const email = document.getElementById("email").value.trim();
-      const pass  = document.getElementById("password").value;
-      if (!email || !pass) return toast("Enter email & password");
       try {
-        await emailPasswordSignIn(email, pass);
-        toast("Welcome back!");
-        setTimeout(()=> window.location.href = next, 400);
-      } catch (e) {
-        console.error(e);
-        toast(e?.message || "Sign-in failed");
-      }
-    });
+        const mod = await import('./auth.js');
+        const {
+          attachHeaderAuth, toast, ADMIN_EMAILS, auth,
+          signInWithGoogleFlow, completeGoogleRedirectIfNeeded,
+          emailPasswordSignIn, emailPasswordSignUp, requestPasswordReset
+        } = mod;
 
-    document.getElementById("btnSignUp").addEventListener("click", async () => {
-      const email = document.getElementById("email").value.trim();
-      const pass  = document.getElementById("password").value;
-      if (!email || !pass) return toast("Enter email & password");
-      try {
-        await emailPasswordSignUp(email, pass);
-        toast("Account created!");
-        setTimeout(()=> window.location.href = "my-account.html", 400);
-      } catch (e) {
-        console.error(e);
-        toast(e?.message || "Sign-up failed");
-      }
-    });
+        attachHeaderAuth();
+        await completeGoogleRedirectIfNeeded();
 
-    // Password reset
-    document.getElementById("btnReset").addEventListener("click", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("email").value.trim();
-      if (!email) return toast("Enter your email above first");
-      try {
-        await sendPasswordResetEmail(auth, email);
-        toast("Reset link sent to your email");
-      } catch (e) {
-        console.error(e);
-        toast(e?.message || "Could not send reset email");
-      }
-    });
+        const emailEl = document.getElementById('email');
+        const passEl  = document.getElementById('password');
+        const next = new URLSearchParams(location.search).get('next') || 'my-account.html';
 
-    // Google Sign-In (popup → redirect fallback)
-    document.getElementById("btnGoogle").addEventListener("click", async () => {
-      try {
-        await signInWithGoogleFlow(); // popup or redirect
-        // If popup succeeded, we reach here and can redirect:
-        setTimeout(()=> window.location.href = next, 200);
-      } catch (e) {
-        console.error(e);
-        toast(e?.message || "Google sign-in failed");
+        document.getElementById('btnSignIn').addEventListener('click', async () => {
+          try {
+            const email = emailEl.value.trim(); const pass = passEl.value;
+            if (!email || !pass) return toast('Enter email & password');
+            await emailPasswordSignIn(email, pass);
+            toast('Welcome back!'); setTimeout(()=> location.href = next, 300);
+          } catch (e) { console.error(e); toast(e?.message || 'Sign-in failed'); }
+        });
+
+        document.getElementById('btnSignUp').addEventListener('click', async () => {
+          try {
+            const email = emailEl.value.trim(); const pass = passEl.value;
+            if (!email || !pass) return toast('Enter email & password');
+            await emailPasswordSignUp(email, pass);
+            toast('Account created!'); setTimeout(()=> location.href = 'my-account.html', 300);
+          } catch (e) { console.error(e); toast(e?.message || 'Sign-up failed'); }
+        });
+
+        document.getElementById('btnReset').addEventListener('click', async (e) => {
+          e.preventDefault();
+          try {
+            const email = emailEl.value.trim();
+            if (!email) return toast('Enter your email above first');
+            await requestPasswordReset(email);
+            toast('Reset link sent to your email');
+          } catch (e2) { console.error(e2); toast(e2?.message || 'Could not send reset email'); }
+        });
+
+        document.getElementById('btnGoogle').addEventListener('click', async () => {
+          try {
+            await signInWithGoogleFlow();         // popup or redirect fallback
+            setTimeout(()=> location.href = next, 200);
+          } catch (e) {
+            console.error('Google sign-in error:', e);
+            if (!(String(e?.message||'').toLowerCase().includes('popup'))) {
+              toast(e?.message || 'Google sign-in failed');
+            }
+          }
+        });
+      } catch (err) {
+        console.error('Failed to import ./auth.js', err);
+        showBanner('Login script failed to load. Ensure <code>auth.js</code> is beside this file and imported with <code>./auth.js</code>.');
       }
     });
   </script>
