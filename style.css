@@ -394,3 +394,47 @@ footer{background:var(--ink);color:#fff;padding:35px 0 40px;margin-top:40px}
 .pro-grid{ display:grid; }
 .pro-card{ display:flex; flex-direction:column; }
 .pro-card[style*="display: none"]{ display:none!important; }
+
+/* ====================================
+   Product detail page — warm palette
+   ==================================== */
+
+/* pack size buttons */
+.products-page .detail-packs .pack {
+  border: 2px solid #f3d3c2;
+  background: #fff7f2;
+  color: #5b4032;
+}
+.products-page .detail-packs .pack.active {
+  background: #ffe6d6;
+  border-color: #e6b196;
+  color: #3a241a;
+}
+
+/* quantity control */
+.products-page .qty-control.soft.lg {
+  background: #fff7f0;
+  border: 1.5px solid #edd8cc;
+  color: #4e3b30;
+}
+
+/* add to cart button */
+.products-page .btn-solid {
+  background: #f15a24;         /* warm orange */
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-weight: 800;
+}
+.products-page .btn-solid:hover {
+  background: #cc4b1e;         /* darker hover */
+}
+
+/* details accordion outline */
+.products-page .acc {
+  border-color: #f0d7c8;
+}
+.products-page .acc summary {
+  color: #3b2b22;
+}
