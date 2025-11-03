@@ -5,11 +5,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Products | Kairavi’s Oven Magic</title>
   <link rel="icon" href="images/logo.png"/>
-  <link rel="stylesheet" href="style.css?v=12"/>
+  <!-- bump cache buster if needed -->
+  <link rel="stylesheet" href="style.css?v=13"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <meta name="description" content="Freshly baked cookies & nankhatai made with 100% atta and pure butter. Order from Kairavi’s Oven Magic, Pune."/>
 
-  <style>.hidden{display:none!important}</style>
+  <style>
+    .hidden{display:none!important}
+    /* minimal MRP style so the strike-through shows even without CSS changes */
+    .price{display:flex;align-items:baseline;gap:6px}
+    .price .mrp{font-weight:600;opacity:.7;text-decoration:line-through;font-size:.95rem}
+  </style>
 </head>
 <body class="products-page">
   <div class="freebar">
@@ -100,51 +106,62 @@
   </a>
 
   <script type="module">
-    import { attachHeaderAuth } from "./auth.js?v=12";
+    import { attachHeaderAuth } from "./auth.js?v=13";
     attachHeaderAuth();
 
-    /* ---------- DATA (with 2–3 images each; safe fallbacks) ---------- */
+    /* ---------- DATA (now with optional MRP per pack) ---------- */
     const P = (o)=>({imgs:[o.img, ...(o.imgs||[])].slice(0,3).map(x=>x||o.img), ...o});
     const PRODUCTS = [
       P({slug:"gulkand", name:"Gulkand Nankhatai", brand:"Kairavi's Homemade cookies.", price:250, img:"images/gulkand.jpg",
          imgs:["images/gulkand-box.jpg","images/gulkand-alt.jpg"], tags:"gulkand rose", best:true,
-         packs:[{label:"250 g", price:250},{label:"500 g", price:480}],
+         packs:[{label:"250 g", price:250, mrp:349},{label:"500 g", price:480, mrp:560}],
          highlights:["100% eggless","Made with real gulkand","No maida, no palm oil"],
          shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
          ingredients:"Whole wheat flour, butter, gulkand, sugar, cardamom, baking soda"}),
+
       P({slug:"wheat", name:"Wheat Nankhatai", brand:"Kairavi's Homemade cookies.", price:200, img:"images/wheat.jpg",
          imgs:["images/wheat-box.jpg","images/wheat-alt.jpg"], tags:"wheat atta", best:true,
-         packs:[{label:"250 g", price:200},{label:"500 g", price:380}]}),
+         packs:[{label:"250 g", price:200, mrp:249},{label:"500 g", price:380, mrp:440}]}),
+
       P({slug:"ragi", name:"Ragi Nankhatai", brand:"Kairavi's Homemade cookies.", price:250, img:"images/ragi.jpg",
          imgs:["images/ragi-box.jpg","images/ragi-alt.jpg"], tags:"ragi finger millet",
-         packs:[{label:"250 g", price:250},{label:"500 g", price:480}]}),
+         packs:[{label:"250 g", price:250, mrp:329},{label:"500 g", price:480, mrp:560}]}),
+
       P({slug:"oats", name:"Oats Nankhatai", brand:"Kairavi's Homemade cookies.", price:250, img:"images/oats.jpg",
          imgs:["images/oats-box.jpg","images/oats-alt.jpg"], tags:"oats",
-         packs:[{label:"250 g", price:250},{label:"500 g", price:480}]}),
+         packs:[{label:"250 g", price:250, mrp:329},{label:"500 g", price:480, mrp:560}]}),
+
       P({slug:"maize", name:"Maize (Corn) Nankhatai", brand:"Kairavi's Homemade cookies.", price:250, img:"images/maize.jpg",
          imgs:["images/maize-box.jpg","images/maize-alt.jpg"], tags:"maize corn",
-         packs:[{label:"250 g", price:250},{label:"500 g", price:480}]}),
+         packs:[{label:"250 g", price:250, mrp:329},{label:"500 g", price:480, mrp:560}]}),
+
       P({slug:"jowar", name:"Jowar Nankhatai", brand:"Kairavi's Homemade cookies.", price:250, img:"images/jowar.jpg",
          imgs:["images/jowar-box.jpg","images/jowar-alt.jpg"], tags:"jowar",
-         packs:[{label:"250 g", price:250},{label:"500 g", price:480}]}),
+         packs:[{label:"250 g", price:250, mrp:329},{label:"500 g", price:480, mrp:560}]}),
+
       P({slug:"upvas", name:"Upvas Nankhatai", brand:"Kairavi's Homemade cookies.", price:250, img:"images/upvas.jpg",
          imgs:["images/upvas-box.jpg","images/upvas-alt.jpg"], tags:"upvas fasting",
-         packs:[{label:"250 g", price:250},{label:"500 g", price:480}]}),
+         packs:[{label:"250 g", price:250, mrp:329},{label:"500 g", price:480, mrp:560}]}),
+
       P({slug:"chocolate", name:"Chocolate Nankhatai", brand:"Kairavi's Homemade cookies.", price:250, img:"images/chocolate.jpg",
          imgs:["images/chocolate-box.jpg","images/chocolate-alt.jpg"], tags:"chocolate choco", best:true,
-         packs:[{label:"250 g", price:250},{label:"500 g", price:480}]}),
+         packs:[{label:"250 g", price:250, mrp:349},{label:"500 g", price:480, mrp:560}]}),
+
       P({slug:"ajwain-sticks", name:"Ajwain Sticks", brand:"Kairavi's Homemade cookies.", price:250, img:"images/ajwain-sticks.jpg",
          imgs:["images/ajwain-sticks-box.jpg","images/ajwain-sticks-alt.jpg"], tags:"ajwain sticks",
-         packs:[{label:"250 g", price:250},{label:"500 g", price:480}]}),
+         packs:[{label:"250 g", price:250, mrp:329},{label:"500 g", price:480, mrp:560}]}),
+
       P({slug:"ajwain-cookies", name:"Ajwain Cookies", brand:"Kairavi's Homemade cookies.", price:200, img:"images/ajwain-cookies.jpg",
          imgs:["images/ajwain-cookies-box.jpg","images/ajwain-cookies-alt.jpg"], tags:"ajwain cookies",
-         packs:[{label:"250 g", price:200},{label:"500 g", price:380}]}),
+         packs:[{label:"250 g", price:200, mrp:249},{label:"500 g", price:380, mrp:440}]}),
+
       P({slug:"jeera", name:"Jeera Cookies", brand:"Kairavi's Homemade cookies.", price:250, img:"images/jeera.jpg",
          imgs:["images/jeera-box.jpg","images/jeera-alt.jpg"], tags:"jeera cumin",
-         packs:[{label:"250 g", price:250},{label:"500 g", price:480}]}),
+         packs:[{label:"250 g", price:250, mrp:329},{label:"500 g", price:480, mrp:560}]}),
+
       P({slug:"marble", name:"Mini Marble Cookies", brand:"Kairavi's Homemade cookies.", price:200, img:"images/marble.jpg",
          imgs:["images/marble-box.jpg","images/marble-alt.jpg"], tags:"marble vanilla chocolate", new:true,
-         packs:[{label:"250 g", price:200},{label:"500 g", price:380}]})
+         packs:[{label:"250 g", price:200, mrp:249},{label:"500 g", price:380, mrp:440}]})
     ];
 
     /* ---------- CART ---------- */
@@ -161,7 +178,10 @@
     function cardHTML(p){
       const link = `products.html?product=${encodeURIComponent(p.slug)}`;
       const id = btoa(p.slug).replace(/=/g,'');
-      const unit = p.packs?.[0]?.price ?? p.price;
+      const firstPack = (p.packs && p.packs[0]) || {price:p.price, mrp:p.mrp || p.price};
+      const unit = firstPack.price;
+      const unitMrp = firstPack.mrp ?? unit;
+
       return `
         <article class="pro-card" data-product="${p.slug}">
           <a class="thumb link-wrap" href="${link}" aria-label="${p.name}">
@@ -175,13 +195,15 @@
             <div class="pro-sub">${p.brand || "Kairavi's Homemade cookies."}</div>
 
             <div class="price-row">
-              <div class="price" id="price-${id}" data-unit="${unit}">${money(unit)}</div>
+              <div class="price" id="price-${id}" data-unit="${unit}" data-mrp="${unitMrp}">
+                ${money(unit)} <span class="mrp" id="mrp-${id}">${money(unitMrp)}</span>
+              </div>
               <div class="pro-note">All inclusive. Shipping calculated at checkout.</div>
             </div>
 
             <div class="pro-packs" id="packs-${id}">
-              ${(p.packs||[{label:"250 g",price:p.price}]).map((pk,i)=>`
-                <button class="pack ${i===0?'active':''}" data-price="${pk.price}">${pk.label}</button>
+              ${(p.packs||[{label:"250 g",price:p.price,mrp:unitMrp}]).map((pk,i)=>`
+                <button class="pack ${i===0?'active':''}" data-price="${pk.price}" data-mrp="${pk.mrp ?? pk.price}">${pk.label}</button>
               `).join('')}
             </div>
 
@@ -202,20 +224,31 @@
       const id = btoa(p.slug).replace(/=/g,'');
       const root = grid.querySelector(`article[data-product="${CSS.escape(p.slug)}"]`);
       const priceEl = root.querySelector(`#price-${id}`);
+      const mrpEl   = root.querySelector(`#mrp-${id}`);
       const packsEl = root.querySelector(`#packs-${id}`);
       const minus = root.querySelector(`.minus[data-id="${id}"]`);
       const plus  = root.querySelector(`.plus[data-id="${id}"]`);
       const add   = root.querySelector(`.btn-card[data-id="${id}"]`);
       const count = root.querySelector(`#c-${id}`);
 
-      let unit = Number(priceEl.dataset.unit), qty = 1;
-      const update = ()=>{ priceEl.textContent = money(unit*qty); count.textContent = qty; };
+      let unit = Number(priceEl.dataset.unit),
+          unitMrp = Number(priceEl.dataset.mrp),
+          qty = 1;
+
+      const update = ()=>{
+        priceEl.firstChild.nodeValue = money(unit*qty) + ' ';
+        if(mrpEl) mrpEl.textContent = money(unitMrp*qty);
+        count.textContent = qty;
+      };
 
       packsEl.querySelectorAll('.pack').forEach(btn=>{
         btn.addEventListener('click', ()=>{
           packsEl.querySelectorAll('.pack').forEach(b=>b.classList.remove('active'));
           btn.classList.add('active');
           unit = Number(btn.dataset.price);
+          unitMrp = Number(btn.dataset.mrp || unit);
+          priceEl.dataset.unit = unit;
+          priceEl.dataset.mrp  = unitMrp;
           qty = 1; update();
         });
       });
@@ -236,7 +269,8 @@
     }
 
     function renderGrid(list=PRODUCTS){
-      grid.innerHTML = list.map(cardHTML).join('');
+      const html = list.map(cardHTML).join('');
+      document.getElementById('productsGrid').innerHTML = html;
       list.forEach(attachHandlers);
       updateCartCount();
       applyFilters();
@@ -255,7 +289,7 @@
       const best = onlyBest.checked;
 
       let visible = 0;
-      grid.querySelectorAll('.pro-card').forEach(card=>{
+      document.querySelectorAll('.pro-card').forEach(card=>{
         const p = PRODUCTS.find(x=>x.slug===card.dataset.product);
         const base = p.packs?.[0]?.price ?? p.price;
         const show = (!term || (p.name.toLowerCase().includes(term) || (p.tags||'').toLowerCase().includes(term)))
@@ -269,7 +303,7 @@
     [q, priceMax, onlyBest].forEach(el=>el.addEventListener('input', applyFilters));
     clearFilters.addEventListener('click', ()=>{ q.value=''; priceMax.value=''; onlyBest.checked=false; applyFilters(); });
 
-    /* ---------- DETAIL ROUTER (no stars/reviews; non-stretched image) ---------- */
+    /* ---------- DETAIL ROUTER (unchanged) ---------- */
     const listView = document.getElementById('listView');
     const detailView = document.getElementById('detailView');
     const detailRoot = document.getElementById('detailRoot');
