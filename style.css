@@ -290,3 +290,9 @@ footer{background:var(--ink);color:#fff;padding:35px 0 40px;margin-top:40px}
   .whatsapp-float img{width:24px;height:24px}
   .brand img{width:44px;height:44px}
 }
+/* --- safety to ensure product grid displays --- */
+.pro-grid{ display:grid; }
+.pro-card{ display:flex; flex-direction:column; }
+
+/* if any inline JS toggled display:none, respect it; otherwise show */
+.pro-card[style*="display: none"]{ display:none!important; }
