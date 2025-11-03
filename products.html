@@ -5,24 +5,29 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Products | Kairavi’s Oven Magic</title>
   <link rel="icon" href="images/logo.png"/>
-  <!-- bump cache buster if needed -->
   <link rel="stylesheet" href="style.css?v=13"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <meta name="description" content="Freshly baked cookies & nankhatai made with 100% atta and pure butter. Order from Kairavi’s Oven Magic, Pune."/>
 
+  <!-- Minimal helpers so MRP shows even if CSS cache lags -->
   <style>
     .hidden{display:none!important}
-    /* minimal MRP style so the strike-through shows even without CSS changes */
+    /* card price + mrp */
     .price{display:flex;align-items:baseline;gap:6px}
     .price .mrp{font-weight:600;opacity:.7;text-decoration:line-through;font-size:.95rem}
+    /* detail price + mrp */
+    .detail-price.price{display:flex;align-items:baseline;gap:8px;font-weight:800;color:#1b1b1b}
+    #detailMrp{font-weight:600;opacity:.7;text-decoration:line-through;font-size:1rem}
   </style>
 </head>
 <body class="products-page">
+  <!-- FREE DELIVERY BAR -->
   <div class="freebar">
     FREE delivery over ₹1599 • Pune city
     <a href="cart.html">View Cart →</a>
   </div>
 
+  <!-- HEADER -->
   <header class="site-header">
     <div class="wrap nav">
       <a class="brand" href="index.html">
@@ -43,6 +48,7 @@
     </div>
   </header>
 
+  <!-- PAGE BANNER -->
   <section class="products-hero">
     <div class="wrap products-hero-inner">
       <div>
@@ -56,6 +62,7 @@
     </div>
   </section>
 
+  <!-- FILTER BAR -->
   <div class="filterbar stick">
     <div class="wrap filterbar-inner">
       <div class="filter-left">
@@ -92,6 +99,7 @@
     <div class="wrap detail-grid" id="detailRoot"></div>
   </section>
 
+  <!-- FOOTER -->
   <footer>
     <div class="wrap footer-grid">
       <div class="small">© 2025 Kairavi’s Oven Magic — Kairavi Food Products</div>
@@ -101,15 +109,17 @@
     </div>
   </footer>
 
+  <!-- WhatsApp Floating -->
   <a class="whatsapp-float" href="https://wa.me/918975149980?text=Hi%2C%20I%20want%20to%20order%20cookies" target="_blank" aria-label="Chat on WhatsApp">
     <img src="images/whatsapp.png" alt="WhatsApp">
   </a>
 
+  <!-- ====== PRODUCTS + CART + FILTERS + DETAIL ====== -->
   <script type="module">
     import { attachHeaderAuth } from "./auth.js?v=13";
     attachHeaderAuth();
 
-    /* ---------- DATA (now with optional MRP per pack) ---------- */
+    /* ---------- DATA (3 images each; packs include optional MRP) ---------- */
     const P = (o)=>({imgs:[o.img, ...(o.imgs||[])].slice(0,3).map(x=>x||o.img), ...o});
     const PRODUCTS = [
       P({slug:"gulkand", name:"Gulkand Nankhatai", brand:"Kairavi's Homemade cookies.", price:250, img:"images/gulkand.jpg",
@@ -172,7 +182,7 @@
     const money = (n) => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',minimumFractionDigits:2}).format(n);
     function toast(msg){ let t=document.querySelector('.toast'); if(!t){ t=document.createElement('div'); t.className='toast'; document.body.appendChild(t); } t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1200); }
 
-    /* ---------- GRID (uses .pro-card) ---------- */
+    /* ---------- GRID (card list) ---------- */
     const grid = document.getElementById('productsGrid');
 
     function cardHTML(p){
@@ -236,7 +246,9 @@
           qty = 1;
 
       const update = ()=>{
+        // Update sale price (first text node in .price)
         priceEl.firstChild.nodeValue = money(unit*qty) + ' ';
+        // Update MRP
         if(mrpEl) mrpEl.textContent = money(unitMrp*qty);
         count.textContent = qty;
       };
@@ -245,7 +257,7 @@
         btn.addEventListener('click', ()=>{
           packsEl.querySelectorAll('.pack').forEach(b=>b.classList.remove('active'));
           btn.classList.add('active');
-          unit = Number(btn.dataset.price);
+          unit    = Number(btn.dataset.price);
           unitMrp = Number(btn.dataset.mrp || unit);
           priceEl.dataset.unit = unit;
           priceEl.dataset.mrp  = unitMrp;
@@ -269,14 +281,13 @@
     }
 
     function renderGrid(list=PRODUCTS){
-      const html = list.map(cardHTML).join('');
-      document.getElementById('productsGrid').innerHTML = html;
+      grid.innerHTML = list.map(cardHTML).join('');
       list.forEach(attachHandlers);
       updateCartCount();
       applyFilters();
     }
 
-    /* ---------- FILTERS (targets .pro-card) ---------- */
+    /* ---------- FILTERS ---------- */
     const q = document.getElementById('q');
     const priceMax = document.getElementById('priceMax');
     const onlyBest = document.getElementById('onlyBest');
@@ -289,7 +300,7 @@
       const best = onlyBest.checked;
 
       let visible = 0;
-      document.querySelectorAll('.pro-card').forEach(card=>{
+      grid.querySelectorAll('.pro-card').forEach(card=>{
         const p = PRODUCTS.find(x=>x.slug===card.dataset.product);
         const base = p.packs?.[0]?.price ?? p.price;
         const show = (!term || (p.name.toLowerCase().includes(term) || (p.tags||'').toLowerCase().includes(term)))
@@ -303,13 +314,16 @@
     [q, priceMax, onlyBest].forEach(el=>el.addEventListener('input', applyFilters));
     clearFilters.addEventListener('click', ()=>{ q.value=''; priceMax.value=''; onlyBest.checked=false; applyFilters(); });
 
-    /* ---------- DETAIL ROUTER (unchanged) ---------- */
+    /* ---------- DETAIL (inside) ---------- */
     const listView = document.getElementById('listView');
     const detailView = document.getElementById('detailView');
     const detailRoot = document.getElementById('detailRoot');
 
     function renderDetail(p){
-      const min = p.packs?.[0]?.price ?? p.price;
+      const firstPack = (p.packs && p.packs[0]) || {price:p.price, mrp:p.mrp||p.price};
+      const minPrice = firstPack.price;
+      const minMrp   = firstPack.mrp ?? minPrice;
+
       detailRoot.innerHTML = `
         <div class="detail-left">
           <div class="detail-hero"><img id="heroImg" src="${p.imgs[0]}" alt="${p.name}"></div>
@@ -321,11 +335,17 @@
           <a class="back-link" href="products.html">← Back to all products</a>
           <h2 class="detail-title">${p.name}</h2>
 
-          <div class="detail-price" id="detailPrice" data-unit="${min}">${money(min)}</div>
+          <div class="detail-price price" id="detailPrice" data-unit="${minPrice}" data-mrp="${minMrp}">
+            ${money(minPrice)} <span id="detailMrp" class="mrp">${money(minMrp)}</span>
+          </div>
           <div class="detail-sub">All inclusive. Shipping calculated at checkout.</div>
 
           <div class="detail-packs" id="packRow">
-            ${(p.packs||[{label:"250 g", price:p.price}]).map((pk,i)=>`<button class="pack ${i===0?'active':''}" data-price="${pk.price}">${pk.label}</button>`).join('')}
+            ${(p.packs||[{label:"250 g", price:p.price, mrp:minMrp}]).map((pk,i)=>`
+              <button class="pack ${i===0?'active':''}" data-price="${pk.price}" data-mrp="${pk.mrp ?? pk.price}">
+                ${pk.label}
+              </button>
+            `).join('')}
           </div>
 
           <div class="detail-qty-row">
@@ -349,6 +369,7 @@
         </div>
       `;
 
+      // thumbs
       const hero = document.getElementById('heroImg');
       document.querySelectorAll('.detail-thumbs img').forEach(img=>{
         img.addEventListener('click', ()=>{
@@ -358,21 +379,31 @@
         });
       });
 
-      let unit = min, qty = 1;
+      // price logic (sale + mrp) with packs & qty
+      let unit = minPrice, unitMrp = minMrp, qty = 1;
+
       const priceEl = document.getElementById('detailPrice');
+      const mrpEl   = document.getElementById('detailMrp');
       const packRow = document.getElementById('packRow');
       const dqMinus = document.getElementById('dq-minus');
       const dqPlus  = document.getElementById('dq-plus');
       const dqCount = document.getElementById('dq-count');
       const dqAdd   = document.getElementById('dq-add');
 
-      const update = ()=>{ priceEl.textContent = money(unit*qty); dqCount.textContent = qty; };
+      const update = ()=>{
+        priceEl.firstChild.nodeValue = money(unit*qty) + ' ';
+        if(mrpEl) mrpEl.textContent = money(unitMrp*qty);
+        dqCount.textContent = qty;
+      };
 
       packRow.querySelectorAll('.pack').forEach(btn=>{
         btn.addEventListener('click', ()=>{
           packRow.querySelectorAll('.pack').forEach(b=>b.classList.remove('active'));
           btn.classList.add('active');
-          unit = Number(btn.dataset.price);
+          unit    = Number(btn.dataset.price);
+          unitMrp = Number(btn.dataset.mrp || unit);
+          priceEl.dataset.unit = unit;
+          priceEl.dataset.mrp  = unitMrp;
           qty = 1; update();
         });
       });
@@ -392,6 +423,10 @@
       update();
     }
 
+    /* ---------- Router (list ↔ detail) ---------- */
+    const listView = document.getElementById('listView');
+    const detailView = document.getElementById('detailView');
+
     function route(){
       const slug = new URLSearchParams(location.search).get('product');
       if(slug){
@@ -410,6 +445,7 @@
     route();
   </script>
 
+  <!-- toast host -->
   <div class="toast" style="display:none"></div>
 </body>
 </html>
