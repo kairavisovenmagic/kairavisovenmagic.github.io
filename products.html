@@ -6,7 +6,7 @@
   <title>Products | Kairavi’s Oven Magic</title>
 
   <link rel="icon" href="images/logo.png"/>
-  <link rel="stylesheet" href="style.css?v=10"/>
+  <link rel="stylesheet" href="style.css?v=11"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <meta name="description" content="Freshly baked cookies & nankhatai made with 100% atta and pure butter. Order from Kairavi’s Oven Magic, Pune."/>
   <link rel="canonical" href="https://kairavisovenmagic.github.io/products.html"/>
@@ -19,16 +19,16 @@
   </script>
   <style>.hidden{display:none!important}</style>
 </head>
-<body>
+<body class="products-page"><!-- <- body class to scope styles only here -->
 
-  <!-- FREE DELIVERY BAR -->
+  <!-- FREE DELIVERY BAR (unchanged sitewide) -->
   <div class="freebar">
     FREE delivery over ₹1599 • Pune city
     <a href="cart.html">View Cart →</a>
   </div>
 
-  <!-- HEADER -->
-  <header class="site-header pro-header">
+  <!-- HEADER (unchanged sitewide) -->
+  <header class="site-header">
     <div class="wrap nav">
       <a class="brand" href="index.html">
         <img src="images/logo.png" alt="Kairavi's Oven Magic logo">
@@ -48,7 +48,7 @@
     </div>
   </header>
 
-  <!-- HERO -->
+  <!-- PRODUCTS HERO -->
   <section class="products-hero">
     <div class="wrap products-hero-inner">
       <div>
@@ -63,7 +63,7 @@
   </section>
 
   <!-- FILTER BAR -->
-  <div class="filterbar stick">
+  <div class="filterbar stick products-filter">
     <div class="wrap filterbar-inner">
       <div class="filter-left">
         <label class="search-wrap">
@@ -90,14 +90,14 @@
     </div>
   </div>
 
-  <!-- GRID VIEW -->
+  <!-- LIST VIEW (cards like your screenshot) -->
   <section class="section section-products" id="listView">
     <div class="wrap">
       <div class="grid pro-grid" id="productsGrid"></div>
     </div>
   </section>
 
-  <!-- DETAIL VIEW -->
+  <!-- DETAIL VIEW (kept — opens on image/name click) -->
   <section class="section product-detail hidden" id="detailView">
     <div class="wrap detail-grid" id="detailRoot"></div>
   </section>
@@ -119,12 +119,10 @@
 
   <!-- ====== JS ====== -->
   <script type="module">
-    import { attachHeaderAuth } from "./auth.js?v=10";
+    import { attachHeaderAuth } from "./auth.js?v=11";
     attachHeaderAuth();
 
-    // ---------- DATA ----------
-    // Each product can have multiple images (cookie, box, other).
-    // If extra images are missing in /images, the code falls back to the main image.
+    /* ---------- PRODUCT DATA (with 2–3 images each) ---------- */
     const PRODUCTS = [
       {slug:"gulkand", name:"Gulkand Nankhatai", brand:"Kairavi's Homemade cookies.", weight:"250 g", price:250, img:"images/gulkand.jpg",
         imgs:["images/gulkand.jpg","images/gulkand-box.jpg","images/gulkand-alt.jpg"],
@@ -223,41 +221,27 @@
         ingredients:"Wheat flour, butter, sugar, vanilla, cocoa"
       }
     ];
+    // fallback if optional images missing
+    PRODUCTS.forEach(p=>{ p.imgs = (p.imgs && p.imgs.length) ? p.imgs.map(x=>x||p.img) : [p.img,p.img,p.img]; });
 
-    // fallback if alt images missing
-    PRODUCTS.forEach(p=>{
-      p.imgs = (p.imgs && p.imgs.length) ? p.imgs : [p.img,p.img,p.img];
-      p.imgs = p.imgs.map(src => src || p.img);
-    });
-
-    // ---------- STORAGE / UTILS ----------
+    /* ---------- CART/UTILS ---------- */
     const CART_KEY = 'kom_cart';
     const getCart = () => JSON.parse(localStorage.getItem(CART_KEY) || '[]');
     const saveCart = (c) => { localStorage.setItem(CART_KEY, JSON.stringify(c)); updateCartCount(); toast('Added to cart'); };
-    function updateCartCount(){
-      const el = document.getElementById('cartCount');
-      if(!el) return;
-      const qty = getCart().reduce((s,i)=>s+i.qty,0);
-      el.textContent = qty;
-    }
+    function updateCartCount(){ const el=document.getElementById('cartCount'); if(!el) return; el.textContent = getCart().reduce((s,i)=>s+i.qty,0); }
     const money = (n) => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',minimumFractionDigits:2}).format(n);
-    function toast(msg){
-      let t=document.querySelector('.toast');
-      if(!t){ t=document.createElement('div'); t.className='toast'; document.body.appendChild(t); }
-      t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1200);
-    }
+    function toast(msg){ let t=document.querySelector('.toast'); if(!t){ t=document.createElement('div'); t.className='toast'; document.body.appendChild(t); } t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1200); }
     const bySlug = (slug)=>PRODUCTS.find(p=>p.slug===slug);
 
-    // ---------- GRID ----------
+    /* ---------- GRID (card like your screenshot) ---------- */
     const grid = document.getElementById('productsGrid');
 
     function cardHTML(p){
-      const minPrice = p.packs ? Math.min(...p.packs.map(x=>x.price)) : p.price;
-      const hasVariants = p.packs && p.packs.length>1;
-      const priceText = hasVariants ? `From ${money(minPrice)}` : money(minPrice);
+      const minPrice = Math.min(...(p.packs||[{price:p.price}]).map(x=>x.price));
       const link = `products.html?product=${encodeURIComponent(p.slug)}`;
+      const id = btoa(p.slug).replace(/=/g,'');
       return `
-        <article class="pro-card" data-product="${p.slug}" data-price="${minPrice}">
+        <article class="pro-card pro-card-lg" data-product="${p.slug}" data-price="${minPrice}">
           <a class="thumb link-wrap" href="${link}" aria-label="${p.name}">
             ${p.best ? '<div class="ribbon">Bestseller</div>' : ''}
             ${p.new ? '<div class="ribbon new">New</div>' : ''}
@@ -268,26 +252,78 @@
             <a class="pro-title" href="${link}">${p.name}</a>
             <div class="pro-sub">${p.brand || "Kairavi's Homemade cookies."}</div>
 
-            <div class="price-row">
-              <span class="price">${priceText}</span>
+            <div class="pro-price" id="price-${id}" data-unit="${minPrice}">${money(minPrice)}</div>
+            <div class="pro-note">All inclusive. Shipping calculated at checkout.</div>
+
+            <div class="pro-packs" id="packs-${id}">
+              ${(p.packs||[{label:p.weight,price:p.price}]).map((pk,i)=>`
+                <button class="pack ${i===0?'active':''}" data-price="${pk.price}">${pk.label}</button>
+              `).join('')}
             </div>
 
-            <div class="row-actions compact">
-              <a class="btn-card" href="${link}" rel="noopener">${hasVariants?'Choose options':'Add to cart'}</a>
+            <div class="row-actions inline">
+              <div class="qty-control soft">
+                <button class="minus" data-id="${id}" aria-label="Decrease quantity">−</button>
+                <span class="count" id="c-${id}">1</span>
+                <button class="plus" data-id="${id}" aria-label="Increase quantity">+</button>
+              </div>
+              <a class="btn-card-solid" data-id="${id}" href="#" rel="noopener">Add to cart</a>
             </div>
           </div>
         </article>
       `;
     }
 
+    function attachCardHandlers(p){
+      const id = btoa(p.slug).replace(/=/g,'');
+      const article = grid.querySelector(`article[data-product="${CSS.escape(p.slug)}"]`);
+      const priceEl = article.querySelector(`#price-${CSS.escape(id)}`);
+      const packsEl = article.querySelector(`#packs-${CSS.escape(id)}`);
+      const minus = article.querySelector(`.minus[data-id="${id}"]`);
+      const plus  = article.querySelector(`.plus[data-id="${id}"]`);
+      const add   = article.querySelector(`.btn-card-solid[data-id="${id}"]`);
+      const count = article.querySelector(`#c-${CSS.escape(id)}`);
+
+      let unit = Number(priceEl.dataset.unit);
+      let qty = 1;
+
+      function update(){ priceEl.textContent = money(unit*qty); count.textContent = qty; }
+
+      // pack switch
+      packsEl.querySelectorAll('.pack').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          packsEl.querySelectorAll('.pack').forEach(b=>b.classList.remove('active'));
+          btn.classList.add('active');
+          unit = Number(btn.dataset.price);
+          qty = 1; update();
+        });
+      });
+
+      minus.addEventListener('click', ()=>{ if(qty>1){ qty--; update(); }});
+      plus .addEventListener('click', ()=>{ if(qty<10){ qty++; update(); }});
+      add  .addEventListener('click', (e)=>{
+        e.preventDefault();
+        const activePack = packsEl.querySelector('.pack.active')?.textContent || (p.weight||'1 pack');
+        const key = `${p.name}|${activePack}|${unit}`;
+        const cart = getCart();
+        const found = cart.find(i=>i.key===key);
+        if(found){ found.qty += qty; } else { cart.push({ key, name:p.name, weight:activePack, price:unit, qty }); }
+        saveCart(cart);
+        try{ gtag('event','add_to_cart',{currency:'INR', value: unit*qty, items:[{item_name:p.name, price:unit, quantity:qty}]}); }catch(_){}
+      });
+
+      update();
+    }
+
     function renderGrid(list=PRODUCTS){
       grid.innerHTML = list.map(cardHTML).join('');
+      list.forEach(attachCardHandlers);
       updateCartCount();
       applyFilters();
       try{ gtag('event','view_item_list',{items:list.map((p,i)=>({item_name:p.name,index:i,price:p.price}))}); }catch(_){}
     }
 
-    // ---------- FILTERS ----------
+    /* ---------- FILTERS ---------- */
     const q = document.getElementById('q');
     const priceMax = document.getElementById('priceMax');
     const onlyBest = document.getElementById('onlyBest');
@@ -301,7 +337,7 @@
 
       let visible = 0;
       grid.querySelectorAll('.pro-card').forEach(card=>{
-        const p = bySlug(card.dataset.product);
+        const p = PRODUCTS.find(x=>x.slug===card.dataset.product);
         const name = p.name.toLowerCase();
         const tags = (p.tags||'').toLowerCase();
         const base = Number(card.dataset.price);
@@ -339,10 +375,12 @@
     [q, priceMax, onlyBest].forEach(el=>el.addEventListener('input', applyFilters));
     clearFilters.addEventListener('click', ()=>{ q.value=''; priceMax.value=''; onlyBest.checked=false; applyFilters(); });
 
-    // ---------- DETAIL ----------
+    /* ---------- DETAIL (unchanged behaviour, reviews removed, image not stretched) ---------- */
     const listView = document.getElementById('listView');
     const detailView = document.getElementById('detailView');
     const detailRoot = document.getElementById('detailRoot');
+
+    const bySlug = (slug)=>PRODUCTS.find(p=>p.slug===slug);
 
     function renderDetail(p){
       const min = Math.min(...p.packs.map(x=>x.price));
@@ -362,8 +400,6 @@
           <a class="back-link" href="products.html">← Back to all products</a>
           <h2 class="detail-title">${p.name}</h2>
 
-          <!-- reviews row intentionally removed as requested -->
-
           <div class="detail-price" id="detailPrice" data-unit="${min}">${money(min)}</div>
           <div class="detail-sub">All inclusive. Shipping calculated at checkout.</div>
 
@@ -382,20 +418,13 @@
 
           <p class="detail-desc">Classic cookie freshly baked with pure butter and premium ingredients.</p>
 
-          <details class="acc">
-            <summary>Highlights</summary>
+          <details class="acc"><summary>Highlights</summary>
             <ul>${(p.highlights||[]).map(x=>`<li>${x}</li>`).join('')}</ul>
           </details>
-
-          <details class="acc">
-            <summary>Shipping</summary>
+          <details class="acc"><summary>Shipping</summary>
             <ul>${(p.shipping||[]).map(x=>`<li>${x}</li>`).join('')}</ul>
           </details>
-
-          <details class="acc">
-            <summary>Ingredients</summary>
-            <p>${p.ingredients||'—'}</p>
-          </details>
+          <details class="acc"><summary>Ingredients</summary><p>${p.ingredients||'—'}</p></details>
 
           <div class="share-row">
             <a class="share" href="https://wa.me/?text=${encodeURIComponent(p.name + ' — ' + location.href)}" target="_blank" rel="noopener">
@@ -405,7 +434,6 @@
         </div>
       `;
 
-      // thumbs switch
       const hero = document.getElementById('heroImg');
       document.querySelectorAll('.detail-thumbs img').forEach(img=>{
         img.addEventListener('click', ()=>{
@@ -415,16 +443,13 @@
         });
       });
 
-      // qty + packs
+      let unit = min, qty = 1;
       const priceEl = document.getElementById('detailPrice');
       const packRow = document.getElementById('packRow');
-      let unit = min;
-      let qty = 1;
       const dqMinus = document.getElementById('dq-minus');
       const dqPlus  = document.getElementById('dq-plus');
       const dqCount = document.getElementById('dq-count');
       const dqAdd   = document.getElementById('dq-add');
-
       const update = ()=>{ priceEl.textContent = money(unit*qty); dqCount.textContent = qty; };
 
       packRow.querySelectorAll('.pack').forEach(btn=>{
@@ -443,30 +468,23 @@
         const found = cart.find(i=>i.key===key);
         if(found){ found.qty += qty; } else { cart.push({ key, name:p.name, weight:document.querySelector('.pack.active').textContent, price:unit, qty }); }
         saveCart(cart);
-        try{ gtag('event','add_to_cart',{currency:'INR', value: unit*qty, items:[{item_name:p.name, price:unit, quantity:qty}]}); }catch(_){}
       });
 
       update();
     }
 
-    // ---------- ROUTER ----------
-    const listView = document.getElementById('listView');
-    const detailView = document.getElementById('detailView');
-
     function route(){
       const sp = new URLSearchParams(location.search);
       const slug = sp.get('product');
-
       if(slug){
-        listView.classList.add('hidden');
+        document.getElementById('listView').classList.add('hidden');
         detailView.classList.remove('hidden');
-
         const p = bySlug(slug);
         if(!p){ detailRoot.innerHTML = '<p>Product not found.</p>'; return; }
         renderDetail(p);
       }else{
         detailView.classList.add('hidden');
-        listView.classList.remove('hidden');
+        document.getElementById('listView').classList.remove('hidden');
         initFromURL();
         renderGrid();
       }
