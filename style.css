@@ -296,3 +296,101 @@ footer{background:var(--ink);color:#fff;padding:35px 0 40px;margin-top:40px}
 
 /* if any inline JS toggled display:none, respect it; otherwise show */
 .pro-card[style*="display: none"]{ display:none!important; }
+/* ================================
+   Products page — warm theme polish
+   (override blues + filter/search UI)
+   ================================ */
+
+.products-page{
+  --warm:#f15a24;
+  --warm-900:#cc4b1e;
+  --warm-soft:#fff3ec;
+  --warm-stroke:#ffe1d2;
+}
+
+/* Card frame + title */
+.products-page .pro-card{ border-color:var(--warm-stroke); }
+.products-page .pro-card:hover{ border-color:#ffd1bd; box-shadow:0 10px 22px rgba(0,0,0,.08); }
+
+.products-page .pro-title{
+  color:#2b2623;
+  text-decoration:none;
+}
+.products-page .pro-title:hover{
+  color:var(--warm-900);
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+.products-page .pro-sub{ color:#8a6f61; letter-spacing:0; }
+
+/* Price/controls (remove blues) */
+.products-page .pro-packs .pack{
+  border:2px solid #f3d3c2;
+  background:#fff7f2;
+  color:#5b4032;
+}
+.products-page .pro-packs .pack.active{
+  background:#ffe6d6;
+  border-color:#e6b196;
+  color:#3a241a;
+}
+
+.products-page .qty-control.soft{
+  background:#fff7f0;
+  border:1.5px solid #edd8cc;
+  color:#4e3b30;
+}
+
+.products-page .btn-card{
+  background:var(--warm);
+  color:#fff;
+  border:none;
+  border-radius:12px;
+  padding:10px 16px;
+  font-weight:800;
+}
+.products-page .btn-card:hover{ filter:brightness(1.05); }
+
+/* Ribbon already warm; keep as is */
+
+/* ---------- Filter / Search polish ---------- */
+.products-page .filterbar.stick{
+  background:#fff;
+  border-bottom:1px solid #f5e6dc;
+  box-shadow:0 4px 18px rgba(0,0,0,.05);
+}
+.products-page .filterbar-inner{ padding:14px 0; }
+
+.products-page .search-wrap i{
+  left:14px;
+  color:#b48b75;
+}
+.products-page .search-wrap input{
+  height:42px;
+  padding-left:40px;
+  border:1.5px solid #ead9cc;
+  border-radius:14px;
+  background:#fff;
+}
+.products-page .select select{
+  border:1.5px solid #ead9cc;
+  border-radius:12px;
+  padding:10px 12px;
+  background:#fff;
+}
+.products-page .check{ color:#7a5b47; }
+.products-page .result-count{ color:#7a5b47; }
+
+.products-page .btn.btn-ghost{
+  border-color:#ead9cc;
+  color:#7a5b47;
+}
+.products-page .btn.btn-ghost:hover{
+  background:var(--warm-soft);
+  color:#3b2b22;
+}
+
+/* Safety (keeps cards visible) */
+.pro-grid{ display:grid; }
+.pro-card{ display:flex; flex-direction:column; }
+.pro-card[style*="display: none"]{ display:none!important; }
