@@ -4,30 +4,19 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Products | Kairavi’s Oven Magic</title>
-
   <link rel="icon" href="images/logo.png"/>
-  <link rel="stylesheet" href="style.css?v=11"/>
+  <link rel="stylesheet" href="style.css?v=12"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <meta name="description" content="Freshly baked cookies & nankhatai made with 100% atta and pure butter. Order from Kairavi’s Oven Magic, Pune."/>
-  <link rel="canonical" href="https://kairavisovenmagic.github.io/products.html"/>
 
-  <!-- GA4 (optional) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4W0YRB7QQ2"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-4W0YRB7QQ2');
-  </script>
   <style>.hidden{display:none!important}</style>
 </head>
-<body class="products-page"><!-- <- body class to scope styles only here -->
-
-  <!-- FREE DELIVERY BAR (unchanged sitewide) -->
+<body class="products-page">
   <div class="freebar">
     FREE delivery over ₹1599 • Pune city
     <a href="cart.html">View Cart →</a>
   </div>
 
-  <!-- HEADER (unchanged sitewide) -->
   <header class="site-header">
     <div class="wrap nav">
       <a class="brand" href="index.html">
@@ -48,29 +37,26 @@
     </div>
   </header>
 
-  <!-- PRODUCTS HERO -->
   <section class="products-hero">
     <div class="wrap products-hero-inner">
       <div>
         <h1 class="products-title">Our Cookies & Nankhatai</h1>
         <p class="products-sub">100% atta • Pure unsalted butter • No maida • No palm oil</p>
       </div>
-      <div class="legend" aria-hidden="true">
+      <div class="legend">
         <span class="legend-dot best"></span><span>Bestseller</span>
         <span class="legend-dot new"></span><span>New</span>
       </div>
     </div>
   </section>
 
-  <!-- FILTER BAR -->
-  <div class="filterbar stick products-filter">
+  <div class="filterbar stick">
     <div class="wrap filterbar-inner">
       <div class="filter-left">
         <label class="search-wrap">
-          <i class="fa fa-magnifying-glass" aria-hidden="true"></i>
+          <i class="fa fa-magnifying-glass"></i>
           <input id="q" type="search" placeholder="Search (e.g., ragi, gulkand)…" aria-label="Search products"/>
         </label>
-
         <label class="select"><span class="sub">Max price</span>
           <select id="priceMax" aria-label="Maximum price">
             <option value="">No limit</option>
@@ -79,10 +65,8 @@
             <option value="300">₹300</option>
           </select>
         </label>
-
         <label class="check"><input type="checkbox" id="onlyBest"> <span>Bestseller only</span></label>
       </div>
-
       <div class="filter-right">
         <div id="resultCount" class="result-count">Showing —</div>
         <button class="btn btn-ghost" id="clearFilters" type="button"><i class="fa fa-rotate-right"></i> Clear</button>
@@ -90,19 +74,18 @@
     </div>
   </div>
 
-  <!-- LIST VIEW (cards like your screenshot) -->
-  <section class="section section-products" id="listView">
+  <!-- LIST VIEW -->
+  <section class="section" id="listView">
     <div class="wrap">
       <div class="grid pro-grid" id="productsGrid"></div>
     </div>
   </section>
 
-  <!-- DETAIL VIEW (kept — opens on image/name click) -->
+  <!-- DETAIL VIEW -->
   <section class="section product-detail hidden" id="detailView">
     <div class="wrap detail-grid" id="detailRoot"></div>
   </section>
 
-  <!-- FOOTER -->
   <footer>
     <div class="wrap footer-grid">
       <div class="small">© 2025 Kairavi’s Oven Magic — Kairavi Food Products</div>
@@ -112,184 +95,122 @@
     </div>
   </footer>
 
-  <!-- WhatsApp Floating -->
   <a class="whatsapp-float" href="https://wa.me/918975149980?text=Hi%2C%20I%20want%20to%20order%20cookies" target="_blank" aria-label="Chat on WhatsApp">
     <img src="images/whatsapp.png" alt="WhatsApp">
   </a>
 
-  <!-- ====== JS ====== -->
   <script type="module">
-    import { attachHeaderAuth } from "./auth.js?v=11";
+    import { attachHeaderAuth } from "./auth.js?v=12";
     attachHeaderAuth();
 
-    /* ---------- PRODUCT DATA (with 2–3 images each) ---------- */
+    /* ---------- DATA (with 2–3 images each; safe fallbacks) ---------- */
+    const P = (o)=>({imgs:[o.img, ...(o.imgs||[])].slice(0,3).map(x=>x||o.img), ...o});
     const PRODUCTS = [
-      {slug:"gulkand", name:"Gulkand Nankhatai", brand:"Kairavi's Homemade cookies.", weight:"250 g", price:250, img:"images/gulkand.jpg",
-        imgs:["images/gulkand.jpg","images/gulkand-box.jpg","images/gulkand-alt.jpg"],
-        tags:"gulkand rose", best:true,
-        packs:[{label:"250 g", price:250},{label:"500 g", price:480}],
-        highlights:["100% eggless","Made with real gulkand","No maida, no palm oil"],
-        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
-        ingredients:"Whole wheat flour, pure unsalted butter, gulkand, sugar, cardamom, baking soda"
-      },
-      {slug:"wheat", name:"Wheat Nankhatai", brand:"Kairavi's Homemade cookies.", weight:"250 g", price:200, img:"images/wheat.jpg",
-        imgs:["images/wheat.jpg","images/wheat-box.jpg","images/wheat-alt.jpg"],
-        tags:"wheat atta", best:true,
-        packs:[{label:"250 g", price:200},{label:"500 g", price:380}],
-        highlights:["Melt-in-mouth texture","With pure butter"],
-        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
-        ingredients:"Whole wheat flour, butter, sugar, baking powder"
-      },
-      {slug:"ragi", name:"Ragi Nankhatai", brand:"Kairavi's Homemade cookies.", weight:"250 g", price:250, img:"images/ragi.jpg",
-        imgs:["images/ragi.jpg","images/ragi-box.jpg","images/ragi-alt.jpg"],
-        tags:"ragi finger millet",
-        packs:[{label:"250 g", price:250},{label:"500 g", price:480}],
-        highlights:["Finger millet goodness","Kid-friendly"],
-        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
-        ingredients:"Ragi flour, whole wheat flour, butter, sugar, baking powder"
-      },
-      {slug:"oats", name:"Oats Nankhatai", brand:"Kairavi's Homemade cookies.", weight:"250 g", price:250, img:"images/oats.jpg",
-        imgs:["images/oats.jpg","images/oats-box.jpg","images/oats-alt.jpg"],
-        tags:"oats",
-        packs:[{label:"250 g", price:250},{label:"500 g", price:480}],
-        highlights:["Rolled oats crunch","Lightly sweet"],
-        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
-        ingredients:"Oats, whole wheat flour, butter, sugar, vanilla"
-      },
-      {slug:"maize", name:"Maize (Corn) Nankhatai", brand:"Kairavi's Homemade cookies.", weight:"250 g", price:250, img:"images/maize.jpg",
-        imgs:["images/maize.jpg","images/maize-box.jpg","images/maize-alt.jpg"],
-        tags:"maize corn",
-        packs:[{label:"250 g", price:250},{label:"500 g", price:480}],
-        highlights:["Maize flour aroma","Crisp bite"],
-        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
-        ingredients:"Maize flour, whole wheat flour, butter, sugar"
-      },
-      {slug:"jowar", name:"Jowar Nankhatai", brand:"Kairavi's Homemade cookies.", weight:"250 g", price:250, img:"images/jowar.jpg",
-        imgs:["images/jowar.jpg","images/jowar-box.jpg","images/jowar-alt.jpg"],
-        tags:"jowar sorghum",
-        packs:[{label:"250 g", price:250},{label:"500 g", price:480}],
-        highlights:["Sorghum flour base","Balanced sweetness"],
-        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
-        ingredients:"Jowar flour, whole wheat flour, butter, sugar"
-      },
-      {slug:"upvas", name:"Upvas Nankhatai", brand:"Kairavi's Homemade cookies.", weight:"250 g", price:250, img:"images/upvas.jpg",
-        imgs:["images/upvas.jpg","images/upvas-box.jpg","images/upvas-alt.jpg"],
-        tags:"upvas fasting sabudana rajgira",
-        packs:[{label:"250 g", price:250},{label:"500 g", price:480}],
-        highlights:["Fasting-friendly","Light & aromatic"],
-        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
-        ingredients:"Rajgira, sabudana, peanut, ghee, sugar"
-      },
-      {slug:"chocolate", name:"Chocolate Nankhatai", brand:"Kairavi's Homemade cookies.", weight:"250 g", price:250, img:"images/chocolate.jpg",
-        imgs:["images/chocolate.jpg","images/chocolate-box.jpg","images/chocolate-alt.jpg"],
-        tags:"chocolate choco", best:true,
-        packs:[{label:"250 g", price:250},{label:"500 g", price:480}],
-        highlights:["Dark cocoa","Kids’ favourite"],
-        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
-        ingredients:"Whole wheat flour, butter, cocoa, sugar, choco chips"
-      },
-      {slug:"ajwain-sticks", name:"Ajwain Sticks", brand:"Kairavi's Homemade cookies.", weight:"250 g", price:250, img:"images/ajwain-sticks.jpg",
-        imgs:["images/ajwain-sticks.jpg","images/ajwain-sticks-box.jpg","images/ajwain-sticks-alt.jpg"],
-        tags:"ajwain sticks",
-        packs:[{label:"250 g", price:250},{label:"500 g", price:480}],
-        highlights:["Tea-time snack","Ajwain flavour"],
-        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
-        ingredients:"Wheat flour, ajwain, butter, salt"
-      },
-      {slug:"ajwain-cookies", name:"Ajwain Cookies", brand:"Kairavi's Homemade cookies.", weight:"250 g", price:200, img:"images/ajwain-cookies.jpg",
-        imgs:["images/ajwain-cookies.jpg","images/ajwain-cookies-box.jpg","images/ajwain-cookies-alt.jpg"],
-        tags:"ajwain cookies",
-        packs:[{label:"250 g", price:200},{label:"500 g", price:380}],
-        highlights:["Mild ajwain","Crisp & light"],
-        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
-        ingredients:"Wheat flour, ajwain, butter, sugar"
-      },
-      {slug:"jeera", name:"Jeera Cookies", brand:"Kairavi's Homemade cookies.", weight:"250 g", price:250, img:"images/jeera.jpg",
-        imgs:["images/jeera.jpg","images/jeera-box.jpg","images/jeera-alt.jpg"],
-        tags:"jeera cumin",
-        packs:[{label:"250 g", price:250},{label:"500 g", price:480}],
-        highlights:["Cumin savoury note","Crisp bite"],
-        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
-        ingredients:"Wheat flour, cumin, butter, sugar"
-      },
-      {slug:"marble", name:"Mini Marble Cookies", brand:"Kairavi's Homemade cookies.", weight:"250 g", price:200, img:"images/marble.jpg",
-        imgs:["images/marble.jpg","images/marble-box.jpg","images/marble-alt.jpg"],
-        tags:"marble vanilla chocolate", new:true,
-        packs:[{label:"250 g", price:200},{label:"500 g", price:380}],
-        highlights:["Vanilla + chocolate swirl","Kid-approved"],
-        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
-        ingredients:"Wheat flour, butter, sugar, vanilla, cocoa"
-      }
+      P({slug:"gulkand", name:"Gulkand Nankhatai", brand:"Kairavi's Homemade cookies.", price:250, img:"images/gulkand.jpg",
+         imgs:["images/gulkand-box.jpg","images/gulkand-alt.jpg"], tags:"gulkand rose", best:true,
+         packs:[{label:"250 g", price:250},{label:"500 g", price:480}],
+         highlights:["100% eggless","Made with real gulkand","No maida, no palm oil"],
+         shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
+         ingredients:"Whole wheat flour, butter, gulkand, sugar, cardamom, baking soda"}),
+      P({slug:"wheat", name:"Wheat Nankhatai", brand:"Kairavi's Homemade cookies.", price:200, img:"images/wheat.jpg",
+         imgs:["images/wheat-box.jpg","images/wheat-alt.jpg"], tags:"wheat atta", best:true,
+         packs:[{label:"250 g", price:200},{label:"500 g", price:380}]}),
+      P({slug:"ragi", name:"Ragi Nankhatai", brand:"Kairavi's Homemade cookies.", price:250, img:"images/ragi.jpg",
+         imgs:["images/ragi-box.jpg","images/ragi-alt.jpg"], tags:"ragi finger millet",
+         packs:[{label:"250 g", price:250},{label:"500 g", price:480}]}),
+      P({slug:"oats", name:"Oats Nankhatai", brand:"Kairavi's Homemade cookies.", price:250, img:"images/oats.jpg",
+         imgs:["images/oats-box.jpg","images/oats-alt.jpg"], tags:"oats",
+         packs:[{label:"250 g", price:250},{label:"500 g", price:480}]}),
+      P({slug:"maize", name:"Maize (Corn) Nankhatai", brand:"Kairavi's Homemade cookies.", price:250, img:"images/maize.jpg",
+         imgs:["images/maize-box.jpg","images/maize-alt.jpg"], tags:"maize corn",
+         packs:[{label:"250 g", price:250},{label:"500 g", price:480}]}),
+      P({slug:"jowar", name:"Jowar Nankhatai", brand:"Kairavi's Homemade cookies.", price:250, img:"images/jowar.jpg",
+         imgs:["images/jowar-box.jpg","images/jowar-alt.jpg"], tags:"jowar",
+         packs:[{label:"250 g", price:250},{label:"500 g", price:480}]}),
+      P({slug:"upvas", name:"Upvas Nankhatai", brand:"Kairavi's Homemade cookies.", price:250, img:"images/upvas.jpg",
+         imgs:["images/upvas-box.jpg","images/upvas-alt.jpg"], tags:"upvas fasting",
+         packs:[{label:"250 g", price:250},{label:"500 g", price:480}]}),
+      P({slug:"chocolate", name:"Chocolate Nankhatai", brand:"Kairavi's Homemade cookies.", price:250, img:"images/chocolate.jpg",
+         imgs:["images/chocolate-box.jpg","images/chocolate-alt.jpg"], tags:"chocolate choco", best:true,
+         packs:[{label:"250 g", price:250},{label:"500 g", price:480}]}),
+      P({slug:"ajwain-sticks", name:"Ajwain Sticks", brand:"Kairavi's Homemade cookies.", price:250, img:"images/ajwain-sticks.jpg",
+         imgs:["images/ajwain-sticks-box.jpg","images/ajwain-sticks-alt.jpg"], tags:"ajwain sticks",
+         packs:[{label:"250 g", price:250},{label:"500 g", price:480}]}),
+      P({slug:"ajwain-cookies", name:"Ajwain Cookies", brand:"Kairavi's Homemade cookies.", price:200, img:"images/ajwain-cookies.jpg",
+         imgs:["images/ajwain-cookies-box.jpg","images/ajwain-cookies-alt.jpg"], tags:"ajwain cookies",
+         packs:[{label:"250 g", price:200},{label:"500 g", price:380}]}),
+      P({slug:"jeera", name:"Jeera Cookies", brand:"Kairavi's Homemade cookies.", price:250, img:"images/jeera.jpg",
+         imgs:["images/jeera-box.jpg","images/jeera-alt.jpg"], tags:"jeera cumin",
+         packs:[{label:"250 g", price:250},{label:"500 g", price:480}]}),
+      P({slug:"marble", name:"Mini Marble Cookies", brand:"Kairavi's Homemade cookies.", price:200, img:"images/marble.jpg",
+         imgs:["images/marble-box.jpg","images/marble-alt.jpg"], tags:"marble vanilla chocolate", new:true,
+         packs:[{label:"250 g", price:200},{label:"500 g", price:380}]})
     ];
-    // fallback if optional images missing
-    PRODUCTS.forEach(p=>{ p.imgs = (p.imgs && p.imgs.length) ? p.imgs.map(x=>x||p.img) : [p.img,p.img,p.img]; });
 
-    /* ---------- CART/UTILS ---------- */
+    /* ---------- CART ---------- */
     const CART_KEY = 'kom_cart';
     const getCart = () => JSON.parse(localStorage.getItem(CART_KEY) || '[]');
     const saveCart = (c) => { localStorage.setItem(CART_KEY, JSON.stringify(c)); updateCartCount(); toast('Added to cart'); };
     function updateCartCount(){ const el=document.getElementById('cartCount'); if(!el) return; el.textContent = getCart().reduce((s,i)=>s+i.qty,0); }
     const money = (n) => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',minimumFractionDigits:2}).format(n);
     function toast(msg){ let t=document.querySelector('.toast'); if(!t){ t=document.createElement('div'); t.className='toast'; document.body.appendChild(t); } t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1200); }
-    const bySlug = (slug)=>PRODUCTS.find(p=>p.slug===slug);
 
-    /* ---------- GRID (card like your screenshot) ---------- */
+    /* ---------- GRID (uses .pro-card) ---------- */
     const grid = document.getElementById('productsGrid');
 
     function cardHTML(p){
-      const minPrice = Math.min(...(p.packs||[{price:p.price}]).map(x=>x.price));
       const link = `products.html?product=${encodeURIComponent(p.slug)}`;
       const id = btoa(p.slug).replace(/=/g,'');
+      const unit = p.packs?.[0]?.price ?? p.price;
       return `
-        <article class="pro-card pro-card-lg" data-product="${p.slug}" data-price="${minPrice}">
+        <article class="pro-card" data-product="${p.slug}">
           <a class="thumb link-wrap" href="${link}" aria-label="${p.name}">
             ${p.best ? '<div class="ribbon">Bestseller</div>' : ''}
             ${p.new ? '<div class="ribbon new">New</div>' : ''}
-            <img loading="lazy" src="${p.img}" alt="${p.name}" width="800" height="600">
+            <img loading="lazy" src="${p.img}" alt="${p.name}">
           </a>
 
           <div class="pro-body">
             <a class="pro-title" href="${link}">${p.name}</a>
             <div class="pro-sub">${p.brand || "Kairavi's Homemade cookies."}</div>
 
-            <div class="pro-price" id="price-${id}" data-unit="${minPrice}">${money(minPrice)}</div>
-            <div class="pro-note">All inclusive. Shipping calculated at checkout.</div>
+            <div class="price-row">
+              <div class="price" id="price-${id}" data-unit="${unit}">${money(unit)}</div>
+              <div class="pro-note">All inclusive. Shipping calculated at checkout.</div>
+            </div>
 
             <div class="pro-packs" id="packs-${id}">
-              ${(p.packs||[{label:p.weight,price:p.price}]).map((pk,i)=>`
+              ${(p.packs||[{label:"250 g",price:p.price}]).map((pk,i)=>`
                 <button class="pack ${i===0?'active':''}" data-price="${pk.price}">${pk.label}</button>
               `).join('')}
             </div>
 
-            <div class="row-actions inline">
+            <div class="row-actions compact">
               <div class="qty-control soft">
-                <button class="minus" data-id="${id}" aria-label="Decrease quantity">−</button>
+                <button class="minus" data-id="${id}">−</button>
                 <span class="count" id="c-${id}">1</span>
-                <button class="plus" data-id="${id}" aria-label="Increase quantity">+</button>
+                <button class="plus" data-id="${id}">+</button>
               </div>
-              <a class="btn-card-solid" data-id="${id}" href="#" rel="noopener">Add to cart</a>
+              <a class="btn-card" data-id="${id}" href="#">Add to cart</a>
             </div>
           </div>
         </article>
       `;
     }
 
-    function attachCardHandlers(p){
+    function attachHandlers(p){
       const id = btoa(p.slug).replace(/=/g,'');
-      const article = grid.querySelector(`article[data-product="${CSS.escape(p.slug)}"]`);
-      const priceEl = article.querySelector(`#price-${CSS.escape(id)}`);
-      const packsEl = article.querySelector(`#packs-${CSS.escape(id)}`);
-      const minus = article.querySelector(`.minus[data-id="${id}"]`);
-      const plus  = article.querySelector(`.plus[data-id="${id}"]`);
-      const add   = article.querySelector(`.btn-card-solid[data-id="${id}"]`);
-      const count = article.querySelector(`#c-${CSS.escape(id)}`);
+      const root = grid.querySelector(`article[data-product="${CSS.escape(p.slug)}"]`);
+      const priceEl = root.querySelector(`#price-${id}`);
+      const packsEl = root.querySelector(`#packs-${id}`);
+      const minus = root.querySelector(`.minus[data-id="${id}"]`);
+      const plus  = root.querySelector(`.plus[data-id="${id}"]`);
+      const add   = root.querySelector(`.btn-card[data-id="${id}"]`);
+      const count = root.querySelector(`#c-${id}`);
 
-      let unit = Number(priceEl.dataset.unit);
-      let qty = 1;
+      let unit = Number(priceEl.dataset.unit), qty = 1;
+      const update = ()=>{ priceEl.textContent = money(unit*qty); count.textContent = qty; };
 
-      function update(){ priceEl.textContent = money(unit*qty); count.textContent = qty; }
-
-      // pack switch
       packsEl.querySelectorAll('.pack').forEach(btn=>{
         btn.addEventListener('click', ()=>{
           packsEl.querySelectorAll('.pack').forEach(b=>b.classList.remove('active'));
@@ -303,13 +224,12 @@
       plus .addEventListener('click', ()=>{ if(qty<10){ qty++; update(); }});
       add  .addEventListener('click', (e)=>{
         e.preventDefault();
-        const activePack = packsEl.querySelector('.pack.active')?.textContent || (p.weight||'1 pack');
+        const activePack = packsEl.querySelector('.pack.active')?.textContent || '1 pack';
         const key = `${p.name}|${activePack}|${unit}`;
         const cart = getCart();
         const found = cart.find(i=>i.key===key);
         if(found){ found.qty += qty; } else { cart.push({ key, name:p.name, weight:activePack, price:unit, qty }); }
         saveCart(cart);
-        try{ gtag('event','add_to_cart',{currency:'INR', value: unit*qty, items:[{item_name:p.name, price:unit, quantity:qty}]}); }catch(_){}
       });
 
       update();
@@ -317,13 +237,12 @@
 
     function renderGrid(list=PRODUCTS){
       grid.innerHTML = list.map(cardHTML).join('');
-      list.forEach(attachCardHandlers);
+      list.forEach(attachHandlers);
       updateCartCount();
       applyFilters();
-      try{ gtag('event','view_item_list',{items:list.map((p,i)=>({item_name:p.name,index:i,price:p.price}))}); }catch(_){}
     }
 
-    /* ---------- FILTERS ---------- */
+    /* ---------- FILTERS (targets .pro-card) ---------- */
     const q = document.getElementById('q');
     const priceMax = document.getElementById('priceMax');
     const onlyBest = document.getElementById('onlyBest');
@@ -332,70 +251,38 @@
 
     function applyFilters(){
       const term = q.value.trim().toLowerCase();
-      const max = priceMax.value ? parseInt(priceMax.value,10) : Infinity;
+      const max  = priceMax.value ? parseInt(priceMax.value,10) : Infinity;
       const best = onlyBest.checked;
 
       let visible = 0;
       grid.querySelectorAll('.pro-card').forEach(card=>{
         const p = PRODUCTS.find(x=>x.slug===card.dataset.product);
-        const name = p.name.toLowerCase();
-        const tags = (p.tags||'').toLowerCase();
-        const base = Number(card.dataset.price);
-        const isBest = !!p.best;
-
-        const textMatch = !term || name.includes(term) || tags.includes(term);
-        const priceMatch = base <= max;
-        const bestMatch  = !best || isBest;
-
-        const show = textMatch && priceMatch && bestMatch;
+        const base = p.packs?.[0]?.price ?? p.price;
+        const show = (!term || (p.name.toLowerCase().includes(term) || (p.tags||'').toLowerCase().includes(term)))
+                     && base <= max
+                     && (!best || p.best);
         card.style.display = show ? '' : 'none';
         if(show) visible++;
       });
       resultCount.textContent = `Showing ${visible} item${visible===1?'':'s'}`;
-      setURLState();
-    }
-    function setURLState(){
-      const params = new URLSearchParams(location.search);
-      if(!params.get('product')){
-        params.delete('product');
-        if(q.value.trim()) params.set('q', q.value.trim()); else params.delete('q');
-        if(priceMax.value) params.set('max', priceMax.value); else params.delete('max');
-        if(onlyBest.checked) params.set('best','1'); else params.delete('best');
-        const qs = params.toString();
-        const url = qs ? `?${qs}` : location.pathname;
-        history.replaceState(null,'',url);
-      }
-    }
-    function initFromURL(){
-      const sp = new URLSearchParams(location.search);
-      if(sp.has('q')) q.value = sp.get('q');
-      if(sp.has('max')) priceMax.value = sp.get('max');
-      if(sp.get('best')==='1') onlyBest.checked = true;
     }
     [q, priceMax, onlyBest].forEach(el=>el.addEventListener('input', applyFilters));
     clearFilters.addEventListener('click', ()=>{ q.value=''; priceMax.value=''; onlyBest.checked=false; applyFilters(); });
 
-    /* ---------- DETAIL (unchanged behaviour, reviews removed, image not stretched) ---------- */
+    /* ---------- DETAIL ROUTER (no stars/reviews; non-stretched image) ---------- */
     const listView = document.getElementById('listView');
     const detailView = document.getElementById('detailView');
     const detailRoot = document.getElementById('detailRoot');
 
-    const bySlug = (slug)=>PRODUCTS.find(p=>p.slug===slug);
-
     function renderDetail(p){
-      const min = Math.min(...p.packs.map(x=>x.price));
-      const imgs = p.imgs;
-
+      const min = p.packs?.[0]?.price ?? p.price;
       detailRoot.innerHTML = `
         <div class="detail-left">
-          <div class="detail-hero">
-            <img id="heroImg" src="${imgs[0]}" alt="${p.name}">
-          </div>
+          <div class="detail-hero"><img id="heroImg" src="${p.imgs[0]}" alt="${p.name}"></div>
           <div class="detail-thumbs">
-            ${imgs.map((src,i)=>`<img class="${i===0?'active':''}" data-src="${src}" src="${src}" alt="${p.name} ${i+1}">`).join('')}
+            ${p.imgs.map((src,i)=>`<img class="${i===0?'active':''}" data-src="${src}" src="${src}" alt="${p.name} ${i+1}">`).join('')}
           </div>
         </div>
-
         <div class="detail-right">
           <a class="back-link" href="products.html">← Back to all products</a>
           <h2 class="detail-title">${p.name}</h2>
@@ -403,15 +290,15 @@
           <div class="detail-price" id="detailPrice" data-unit="${min}">${money(min)}</div>
           <div class="detail-sub">All inclusive. Shipping calculated at checkout.</div>
 
-          <div class="detail-packs" id="packRow" role="radiogroup" aria-label="Pack Size">
-            ${p.packs.map((pk,i)=>`<button class="pack ${i===0?'active':''}" data-price="${pk.price}" aria-checked="${i===0?'true':'false'}">${pk.label}</button>`).join('')}
+          <div class="detail-packs" id="packRow">
+            ${(p.packs||[{label:"250 g", price:p.price}]).map((pk,i)=>`<button class="pack ${i===0?'active':''}" data-price="${pk.price}">${pk.label}</button>`).join('')}
           </div>
 
           <div class="detail-qty-row">
             <div class="qty-control soft lg">
-              <button class="minus" id="dq-minus" aria-label="Decrease quantity">−</button>
+              <button class="minus" id="dq-minus">−</button>
               <span class="count" id="dq-count">1</span>
-              <button class="plus" id="dq-plus" aria-label="Increase quantity">+</button>
+              <button class="plus" id="dq-plus">+</button>
             </div>
             <a class="btn-solid" id="dq-add" href="#">Add to cart</a>
           </div>
@@ -425,12 +312,6 @@
             <ul>${(p.shipping||[]).map(x=>`<li>${x}</li>`).join('')}</ul>
           </details>
           <details class="acc"><summary>Ingredients</summary><p>${p.ingredients||'—'}</p></details>
-
-          <div class="share-row">
-            <a class="share" href="https://wa.me/?text=${encodeURIComponent(p.name + ' — ' + location.href)}" target="_blank" rel="noopener">
-              <i class="fa-brands fa-whatsapp"></i> Share
-            </a>
-          </div>
         </div>
       `;
 
@@ -450,23 +331,27 @@
       const dqPlus  = document.getElementById('dq-plus');
       const dqCount = document.getElementById('dq-count');
       const dqAdd   = document.getElementById('dq-add');
+
       const update = ()=>{ priceEl.textContent = money(unit*qty); dqCount.textContent = qty; };
 
       packRow.querySelectorAll('.pack').forEach(btn=>{
         btn.addEventListener('click', ()=>{
-          packRow.querySelectorAll('.pack').forEach(b=>{ b.classList.remove('active'); b.setAttribute('aria-checked','false'); });
-          btn.classList.add('active'); btn.setAttribute('aria-checked','true');
-          unit = Number(btn.dataset.price); qty = 1; update();
+          packRow.querySelectorAll('.pack').forEach(b=>b.classList.remove('active'));
+          btn.classList.add('active');
+          unit = Number(btn.dataset.price);
+          qty = 1; update();
         });
       });
+
       dqMinus.addEventListener('click', ()=>{ if(qty>1){ qty--; update(); }});
       dqPlus .addEventListener('click', ()=>{ if(qty<10){ qty++; update(); }});
       dqAdd  .addEventListener('click', (e)=>{
         e.preventDefault();
-        const key = `${p.name}|${document.querySelector('.pack.active').textContent}|${unit}`;
+        const weight = document.querySelector('.pack.active').textContent;
+        const key = `${p.name}|${weight}|${unit}`;
         const cart = getCart();
         const found = cart.find(i=>i.key===key);
-        if(found){ found.qty += qty; } else { cart.push({ key, name:p.name, weight:document.querySelector('.pack.active').textContent, price:unit, qty }); }
+        if(found){ found.qty += qty; } else { cart.push({ key, name:p.name, weight, price:unit, qty }); }
         saveCart(cart);
       });
 
@@ -474,18 +359,15 @@
     }
 
     function route(){
-      const sp = new URLSearchParams(location.search);
-      const slug = sp.get('product');
+      const slug = new URLSearchParams(location.search).get('product');
       if(slug){
-        document.getElementById('listView').classList.add('hidden');
+        listView.classList.add('hidden');
         detailView.classList.remove('hidden');
-        const p = bySlug(slug);
-        if(!p){ detailRoot.innerHTML = '<p>Product not found.</p>'; return; }
-        renderDetail(p);
+        const p = PRODUCTS.find(x=>x.slug===slug);
+        if(p) renderDetail(p); else detailRoot.innerHTML = '<p>Product not found.</p>';
       }else{
         detailView.classList.add('hidden');
-        document.getElementById('listView').classList.remove('hidden');
-        initFromURL();
+        listView.classList.remove('hidden');
         renderGrid();
       }
       updateCartCount();
