@@ -9,13 +9,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <meta name="description" content="Freshly baked cookies & nankhatai made with 100% atta and pure butter. Order from Kairavi’s Oven Magic, Pune."/>
 
-  <!-- Minimal helpers so MRP shows even if CSS cache lags -->
+  <!-- helpers so MRP shows even if CSS cache lags -->
   <style>
     .hidden{display:none!important}
-    /* card price + mrp */
     .price{display:flex;align-items:baseline;gap:6px}
     .price .mrp{font-weight:600;opacity:.7;text-decoration:line-through;font-size:.95rem}
-    /* detail price + mrp */
     .detail-price.price{display:flex;align-items:baseline;gap:8px;font-weight:800;color:#1b1b1b}
     #detailMrp{font-weight:600;opacity:.7;text-decoration:line-through;font-size:1rem}
   </style>
@@ -246,9 +244,7 @@
           qty = 1;
 
       const update = ()=>{
-        // Update sale price (first text node in .price)
         priceEl.firstChild.nodeValue = money(unit*qty) + ' ';
-        // Update MRP
         if(mrpEl) mrpEl.textContent = money(unitMrp*qty);
         count.textContent = qty;
       };
@@ -424,9 +420,6 @@
     }
 
     /* ---------- Router (list ↔ detail) ---------- */
-    const listView = document.getElementById('listView');
-    const detailView = document.getElementById('detailView');
-
     function route(){
       const slug = new URLSearchParams(location.search).get('product');
       if(slug){
