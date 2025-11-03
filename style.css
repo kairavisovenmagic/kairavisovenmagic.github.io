@@ -481,4 +481,9 @@ footer{background:var(--ink);color:#fff;padding:35px 0 40px;margin-top:40px}
 }
 .products-page #detailMrp{
   font-weight:600; opacity:.7; text-decoration:line-through; font-size:1rem;
+
+   <div class="price-row" data-off="25% OFF">
+  <div class="price">₹259 <span class="mrp">₹349</span></div>
+</div>
+
 }
