@@ -438,3 +438,38 @@ footer{background:var(--ink);color:#fff;padding:35px 0 40px;margin-top:40px}
 .products-page .acc summary {
   color: #3b2b22;
 }
+
+/* ===============================
+   Discounted price style
+   =============================== */
+.products-page .price {
+  font-weight: 800;
+  color: #1b1b1b;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.products-page .price .mrp {
+  font-weight: 600;
+  color: #8a6f61;
+  font-size: 0.95rem;
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+/* Optional small badge for discount percent */
+.products-page .price-row::after {
+  content: attr(data-off);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  background: #f15a24;
+  border-radius: 6px;
+  padding: 2px 6px;
+  margin-left: 6px;
+}
+
+<div class="price-row" data-off="25% OFF">
+  <div class="price">₹259 <span class="mrp">₹349</span></div>
+</div>
