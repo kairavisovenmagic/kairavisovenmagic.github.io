@@ -4,68 +4,23 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Products | Kairavi’s Oven Magic</title>
+
   <link rel="icon" href="images/logo.png"/>
-  <link rel="stylesheet" href="style.css?v=7"/>
+  <link rel="stylesheet" href="style.css?v=9"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <meta name="description" content="Freshly baked cookies & nankhatai made with 100% atta and pure butter. Order from Kairavi’s Oven Magic, Pune."/>
+  <link rel="canonical" href="https://kairavisovenmagic.github.io/products.html"/>
+
+  <!-- GA4 (optional, safe if missing) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-4W0YRB7QQ2"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-4W0YRB7QQ2');
+    function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-4W0YRB7QQ2');
   </script>
+
   <style>
-    :root{
-      --bg:#FFF7F0; --ink:#1f2328; --muted:#6b7280;
-      --brand:#f15a24; --brand-900:#cc4b1e; --ring:rgba(241,90,36,.18);
-      --card:#fff; --stroke:#f0e6df; --shadow:0 16px 40px rgba(0,0,0,.08);
-      --radius:18px;
-      --best:#ffedd5; --new:#dcfce7;
-    }
-    body{ background:var(--bg); color:var(--ink); }
-    .hero{ background:linear-gradient(180deg,#fff1e6 0,#fff7f0 100%); border-bottom:1px solid #ffe5d6; }
-    .hero-inner{ max-width:1180px; margin:0 auto; padding:26px 16px; display:flex; gap:16px; align-items:center; justify-content:space-between; }
-    .products-title{ font-size:32px; margin:0; }
-    .products-sub{ color:var(--muted); margin:8px 0 0; }
-    .legend{ display:flex; gap:12px; align-items:center; color:#8a4b2b; }
-    .legend-dot{ width:10px; height:10px; border-radius:999px; display:inline-block; margin-right:6px; }
-    .legend .best{ background:#fb923c; }
-    .legend .new{ background:#16a34a; }
-
-    .stick{ position:sticky; top:0; z-index:9; background:#fff; border-bottom:1px solid #ffe5d6; }
-    .filterbar-inner{ max-width:1180px; margin:0 auto; padding:12px 16px; display:flex; gap:12px; align-items:center; justify-content:space-between; }
-    .filter-left{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    .search-wrap{ display:flex; align-items:center; gap:8px; border:1px solid #eadace; padding:10px 12px; border-radius:12px; background:#fff; width:min(500px,60vw); }
-    .search-wrap input{ border:0; outline:0; width:100%; }
-    .select{ display:flex; gap:8px; align-items:center; }
-    .select select{ border:1px solid #eadace; padding:10px 12px; border-radius:12px; outline:0; background:#fff; }
-    .check{ display:flex; gap:8px; align-items:center; color:var(--muted); }
-    .btn{ display:inline-flex; gap:8px; align-items:center; padding:10px 14px; border-radius:12px; border:1px solid #eadace; background:#fff; cursor:pointer; }
-    .btn:hover{ background:#fafafa; }
-
-    .section{ padding:22px 0 60px; }
-    .wrap{ max-width:1180px; margin:0 auto; padding:0 16px; }
-    .grid{ display:grid; gap:16px; }
-    .pro-grid{ grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); }
-
-    .card{ background:#fff; border:1px solid #ffe3d4; border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; }
-    .thumb{ aspect-ratio:4/3; overflow:hidden; background:#fff; }
-    .thumb img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .3s ease; }
-    .card:hover .thumb img{ transform:scale(1.03); }
-    .card-body{ padding:12px; display:grid; gap:8px; }
-    .meta{ display:flex; align-items:center; justify-content:space-between; color:var(--muted); }
-    .price{ font-weight:700; color:#111827; }
-    .ribbon{ position:absolute; top:10px; left:10px; font-size:12px; padding:6px 10px; border-radius:999px; background:var(--best); border:1px solid #fed7aa; color:#8a4b2b; }
-    .ribbon.new{ background:var(--new); border-color:#bbf7d0; color:#065f46; }
-    .row-actions{ display:flex; gap:8px; align-items:center; justify-content:space-between; }
-    .qty-control{ display:inline-flex; gap:8px; align-items:center; border:1px solid #eadace; border-radius:999px; padding:6px 10px; }
-    .qty-control button{ border:0; background:transparent; font-size:16px; cursor:pointer; }
-    .addbtn{ background:var(--brand); color:#fff; padding:10px 14px; border-radius:12px; text-decoration:none; }
-    .addbtn:hover{ background:var(--brand-900); }
-    .badge{ background:#111827; color:#fff; border-radius:999px; padding:2px 8px; font-size:12px; }
-    .toast{ position:fixed; left:50%; bottom:18px; transform:translateX(-50%); background:#111827; color:#fff; padding:10px 14px; border-radius:10px; opacity:0; transition:opacity .2s; z-index:9999; }
-    .toast.show{ opacity:1; }
+    /* tiny page-only helpers (page still uses style.css for main styles) */
+    .hidden{display:none !important}
   </style>
 </head>
 <body>
@@ -77,32 +32,34 @@
   </div>
 
   <!-- HEADER -->
-  <header class="site-header">
+  <header class="site-header pro-header">
     <div class="wrap nav">
       <a class="brand" href="index.html">
         <img src="images/logo.png" alt="Kairavi's Oven Magic logo">
-        <strong>Kairavi’s Oven Magic</strong>
+        <div class="brand-text">
+          <strong>Kairavi’s Oven Magic</strong>
+          <span class="brand-sub">Homemade Cookies & Nankhatai</span>
+        </div>
       </a>
       <nav class="menu">
         <a href="index.html">Home</a>
         <a href="products.html" aria-current="page">Products</a>
         <a href="contact.html">Contact</a>
-        <a href="cart.html">Cart <span class="badge" id="cartCount">0</span></a>
-        <!-- Auth controls -->
-        <a id="loginLink" href="login.html">Login</a>
-        <a id="logoutLink" href="#" style="display:none">Logout</a>
+        <a href="cart.html" class="btn-pill">Cart <span class="badge" id="cartCount">0</span></a>
+        <a id="loginLink" href="login.html" class="btn-outline">Login</a>
+        <a id="logoutLink" href="#" style="display:none" class="btn-outline">Logout</a>
       </nav>
     </div>
   </header>
 
-  <!-- PAGE BANNER -->
-  <section class="hero">
-    <div class="hero-inner">
+  <!-- HERO -->
+  <section class="products-hero">
+    <div class="wrap products-hero-inner">
       <div>
         <h1 class="products-title">Our Cookies & Nankhatai</h1>
         <p class="products-sub">100% atta • Pure unsalted butter • No maida • No palm oil</p>
       </div>
-      <div class="legend">
+      <div class="legend" aria-hidden="true">
         <span class="legend-dot best"></span><span>Bestseller</span>
         <span class="legend-dot new"></span><span>New</span>
       </div>
@@ -110,37 +67,43 @@
   </section>
 
   <!-- FILTER BAR -->
-  <div class="stick" role="region" aria-label="Filters">
-    <div class="filterbar-inner">
+  <div class="filterbar stick">
+    <div class="wrap filterbar-inner">
       <div class="filter-left">
         <div class="search-wrap">
-          <i class="fa fa-magnifying-glass"></i>
-          <input id="q" type="search" placeholder="Search by name (e.g., ragi, gulkand)…" aria-label="Search products"/>
+          <i class="fa fa-magnifying-glass" aria-hidden="true"></i>
+          <input id="q" type="search" placeholder="Search (e.g., ragi, gulkand)…" aria-label="Search products"/>
         </div>
 
-        <label class="select">
-          <span class="muted">Max price</span>
+        <label class="select"><span class="sub">Max price</span>
           <select id="priceMax" aria-label="Maximum price">
             <option value="">No limit</option>
             <option value="200">₹200</option>
             <option value="250">₹250</option>
+            <option value="300">₹300</option>
           </select>
         </label>
 
         <label class="check"><input type="checkbox" id="onlyBest"> <span>Bestseller only</span></label>
       </div>
-
       <div class="filter-right">
-        <div id="resultCount" class="muted">Showing 0 items</div>
-        <button class="btn" id="clearFilters" type="button"><i class="fa fa-rotate-right"></i> Clear</button>
+        <div id="resultCount" class="result-count">Showing —</div>
+        <button class="btn btn-ghost" id="clearFilters" type="button"><i class="fa fa-rotate-right"></i> Clear</button>
       </div>
     </div>
   </div>
 
-  <!-- PRODUCTS GRID -->
-  <section class="section">
+  <!-- GRID VIEW (default) -->
+  <section class="section section-products" id="listView">
     <div class="wrap">
       <div class="grid pro-grid" id="productsGrid"></div>
+    </div>
+  </section>
+
+  <!-- DETAIL VIEW (when ?product=slug) -->
+  <section class="section product-detail hidden" id="detailView">
+    <div class="wrap detail-grid" id="detailRoot">
+      <!-- JS injects the product detail here -->
     </div>
   </section>
 
@@ -159,28 +122,89 @@
     <img src="images/whatsapp.png" alt="WhatsApp">
   </a>
 
-  <!-- ====== PRODUCTS + CART + FILTERS ====== -->
+  <!-- ====== PRODUCTS + CART + FILTERS + DETAIL ====== -->
   <script type="module">
-    import { attachHeaderAuth } from "./auth.js?v=7";
+    import { attachHeaderAuth } from "./auth.js?v=9";
     attachHeaderAuth();
 
-    // ---- PRODUCT DATA (images/prices/tags) ----
+    // ---------- DATA ----------
+    // If a product has multiple packs, provide packs:[{label, price},...]
     const PRODUCTS = [
-      {name:"Gulkand Nankhatai", weight:"250 g", price:250, img:"images/gulkand.jpg", tags:"gulkand rose", best:true},
-      {name:"Wheat Nankhatai",  weight:"250 g", price:200, img:"images/wheat.jpg",   tags:"wheat atta", best:true},
-      {name:"Ragi Nankhatai",   weight:"250 g", price:250, img:"images/ragi.jpg",    tags:"ragi finger millet"},
-      {name:"Oats Nankhatai",   weight:"250 g", price:250, img:"images/oats.jpg",    tags:"oats"},
-      {name:"Maize (Corn) Nankhatai", weight:"250 g", price:250, img:"images/maize.jpg",  tags:"maize corn"},
-      {name:"Jowar Nankhatai",  weight:"250 g", price:250, img:"images/jowar.jpg",   tags:"jowar sorghum"},
-      {name:"Upvas Nankhatai",  weight:"250 g", price:250, img:"images/upvas.jpg",   tags:"upvas fasting sabudana rajgira"},
-      {name:"Chocolate Nankhatai", weight:"250 g", price:250, img:"images/chocolate.jpg", tags:"chocolate choco", best:true},
-      {name:"Ajwain Sticks",    weight:"250 g", price:250, img:"images/ajwain-sticks.jpg", tags:"ajwain sticks"},
-      {name:"Ajwain Cookies",   weight:"250 g", price:200, img:"images/ajwain-cookies.jpg", tags:"ajwain cookies"},
-      {name:"Jeera Cookies",    weight:"250 g", price:250, img:"images/jeera.jpg", tags:"jeera cumin"},
-      {name:"Mini Marble Cookies", weight:"250 g", price:200, img:"images/marble.jpg", tags:"marble vanilla chocolate", new:true}
+      {slug:"gulkand", name:"Gulkand Nankhatai", brand:"Kairavi Cookies", weight:"250 g", price:250, img:"images/gulkand.jpg",  stars:4.6, reviews:120, tags:"gulkand rose", best:true,
+        packs:[{label:"250 g", price:250},{label:"500 g", price:480}],
+        highlights:["100% eggless","Made with real gulkand","No maida, no palm oil"],
+        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
+        ingredients:"Whole wheat flour, pure unsalted butter, gulkand, sugar, cardamom, baking soda"
+      },
+      {slug:"wheat", name:"Wheat Nankhatai",  brand:"Kairavi Cookies", weight:"250 g", price:200, img:"images/wheat.jpg",   stars:4.7, reviews:86, tags:"wheat atta", best:true,
+        packs:[{label:"250 g", price:200},{label:"500 g", price:380}],
+        highlights:["Melt-in-mouth texture","With pure butter"],
+        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
+        ingredients:"Whole wheat flour, butter, sugar, baking powder"
+      },
+      {slug:"ragi", name:"Ragi Nankhatai",   brand:"Kairavi Cookies", weight:"250 g", price:250, img:"images/ragi.jpg",    stars:4.5, reviews:64, tags:"ragi finger millet",
+        packs:[{label:"250 g", price:250},{label:"500 g", price:480}],
+        highlights:["Finger millet goodness","Kid-friendly"],
+        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
+        ingredients:"Ragi flour, whole wheat flour, butter, sugar, baking powder"
+      },
+      {slug:"oats", name:"Oats Nankhatai",   brand:"Kairavi Cookies", weight:"250 g", price:250, img:"images/oats.jpg",    stars:4.4, reviews:52, tags:"oats",
+        packs:[{label:"250 g", price:250},{label:"500 g", price:480}],
+        highlights:["Rolled oats crunch","Lightly sweet"],
+        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
+        ingredients:"Oats, whole wheat flour, butter, sugar, vanilla"
+      },
+      {slug:"maize", name:"Maize (Corn) Nankhatai", weight:"250 g", price:250, img:"images/maize.jpg",  stars:4.3, reviews:38, tags:"maize corn",
+        packs:[{label:"250 g", price:250},{label:"500 g", price:480}],
+        highlights:["Maize flour aroma","Crisp bite"],
+        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
+        ingredients:"Maize flour, whole wheat flour, butter, sugar"
+      },
+      {slug:"jowar", name:"Jowar Nankhatai",  brand:"Kairavi Cookies", weight:"250 g", price:250, img:"images/jowar.jpg",   stars:4.4, reviews:40, tags:"jowar sorghum",
+        packs:[{label:"250 g", price:250},{label:"500 g", price:480}],
+        highlights:["Sorghum flour base","Balanced sweetness"],
+        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
+        ingredients:"Jowar flour, whole wheat flour, butter, sugar"
+      },
+      {slug:"upvas", name:"Upvas Nankhatai",  brand:"Kairavi Cookies", weight:"250 g", price:250, img:"images/upvas.jpg",   stars:4.5, reviews:50, tags:"upvas fasting sabudana rajgira",
+        packs:[{label:"250 g", price:250},{label:"500 g", price:480}],
+        highlights:["Fasting-friendly","Light & aromatic"],
+        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
+        ingredients:"Rajgira, sabudana, peanut, ghee, sugar"
+      },
+      {slug:"chocolate", name:"Chocolate Nankhatai", weight:"250 g", price:250, img:"images/chocolate.jpg", stars:4.8, reviews:155, tags:"chocolate choco", best:true,
+        packs:[{label:"250 g", price:250},{label:"500 g", price:480}],
+        highlights:["Dark cocoa","Kids’ favourite"],
+        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
+        ingredients:"Whole wheat flour, butter, cocoa, sugar, choco chips"
+      },
+      {slug:"ajwain-sticks", name:"Ajwain Sticks",  weight:"250 g", price:250, img:"images/ajwain-sticks.jpg", stars:4.2, reviews:24, tags:"ajwain sticks",
+        packs:[{label:"250 g", price:250},{label:"500 g", price:480}],
+        highlights:["Tea-time snack","Ajwain flavour"],
+        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
+        ingredients:"Wheat flour, ajwain, butter, salt"
+      },
+      {slug:"ajwain-cookies", name:"Ajwain Cookies", weight:"250 g", price:200, img:"images/ajwain-cookies.jpg", stars:4.1, reviews:19, tags:"ajwain cookies",
+        packs:[{label:"250 g", price:200},{label:"500 g", price:380}],
+        highlights:["Mild ajwain","Crisp & light"],
+        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
+        ingredients:"Wheat flour, ajwain, butter, sugar"
+      },
+      {slug:"jeera", name:"Jeera Cookies",    weight:"250 g", price:250, img:"images/jeera.jpg", stars:4.6, reviews:72, tags:"jeera cumin",
+        packs:[{label:"250 g", price:250},{label:"500 g", price:480}],
+        highlights:["Cumin savoury note","Crisp bite"],
+        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
+        ingredients:"Wheat flour, cumin, butter, sugar"
+      },
+      {slug:"marble", name:"Mini Marble Cookies", weight:"250 g", price:200, img:"images/marble.jpg", stars:4.7, reviews:30, tags:"marble vanilla chocolate", new:true,
+        packs:[{label:"250 g", price:200},{label:"500 g", price:380}],
+        highlights:["Vanilla + chocolate swirl","Kid-approved"],
+        shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
+        ingredients:"Wheat flour, butter, sugar, vanilla, cocoa"
+      }
     ];
 
-    // ---- CART STORAGE ----
+    // ---------- STORAGE / UTILS ----------
     const CART_KEY = 'kom_cart';
     const getCart = () => JSON.parse(localStorage.getItem(CART_KEY) || '[]');
     const saveCart = (c) => { localStorage.setItem(CART_KEY, JSON.stringify(c)); updateCartCount(); toast('Added to cart'); };
@@ -190,76 +214,124 @@
       const qty = getCart().reduce((s,i)=>s+i.qty,0);
       el.textContent = qty;
     }
+    const money = (n) => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',minimumFractionDigits:2}).format(n).replace('₹','₹');
     function toast(msg){
-      let t=document.querySelector('.toast'); 
+      let t=document.querySelector('.toast');
       if(!t){ t=document.createElement('div'); t.className='toast'; document.body.appendChild(t); }
-      t.textContent=msg; t.classList.add('show'); 
-      setTimeout(()=>t.classList.remove('show'),1100);
+      t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1200);
     }
+    const bySlug = (slug)=>PRODUCTS.find(p=>p.slug===slug);
 
-    // ---- RENDER PRODUCTS ----
+    // ---------- GRID RENDER ----------
     const grid = document.getElementById('productsGrid');
 
-    function cardHTML(p) {
-      const id = btoa(p.name).replace(/=/g,'');
+    // Star HTML (rounded like sample)
+    function starsHTML(rating){
+      const full = Math.floor(rating);
+      const half = rating - full >= 0.5;
+      let out='';
+      for(let i=0;i<full;i++) out += '<i class="fa fa-star"></i>';
+      if(half) out += '<i class="fa fa-star-half-stroke"></i>';
+      for(let i=full+(half?1:0); i<5; i++) out += '<i class="fa-regular fa-star"></i>';
+      return out;
+    }
+
+    function cardHTML(p){
+      const minPrice = p.packs ? Math.min(...p.packs.map(x=>x.price)) : p.price;
+      const hasVariants = p.packs && p.packs.length>1;
+      const priceText = hasVariants ? `From ${money(minPrice)}` : money(p.price);
+      const link = `products.html?product=${encodeURIComponent(p.slug)}`;
+
+      const id = btoa(p.slug).replace(/=/g,'');
       return `
-        <article class="card ${p.best?'best':''}" data-product="${p.name}" data-weight="${p.weight}" data-price="${p.price}" data-tags="${p.tags}">
-          ${p.best ? '<div class="ribbon">Bestseller</div>' : ''}
-          ${p.new ? '<div class="ribbon new">New</div>' : ''}
-          <figure class="thumb">
-            <img loading="lazy" src="${p.img}" alt="${p.name}">
-          </figure>
-          <div class="card-body">
-            <h3 style="margin:0">${p.name}</h3>
-            <div class="meta">
-              <span>${p.weight}</span>
-              <span class="price" data-price="${p.price}">₹${p.price}</span>
+        <article class="pro-card" data-product="${p.slug}" data-price="${minPrice}">
+          <a class="thumb link-wrap" href="${link}" aria-label="${p.name}">
+            ${p.best ? '<div class="ribbon">Bestseller</div>' : ''}
+            ${p.new ? '<div class="ribbon new">New</div>' : ''}
+            <img loading="lazy" src="${p.img}" alt="${p.name}" width="800" height="600">
+          </a>
+
+          <div class="pro-body">
+            <a class="pro-title" href="${link}">${p.name}</a>
+            <div class="pro-sub">${(p.brand||'Kairavi Cookies').toUpperCase()}</div>
+
+            <div class="rating-row">
+              <span class="stars">${starsHTML(p.stars||4.5)}</span>
+              <span class="reviews">(${p.reviews||0})</span>
             </div>
-            <div class="row-actions">
-              <div class="qty-control" aria-label="Quantity control">
-                <button class="minus" data-id="${id}" title="Decrease">−</button>
+
+            <div class="price-row">
+              <span class="price" id="price-${id}" data-unit="${minPrice}" data-base="${minPrice}">${priceText}</span>
+            </div>
+
+            <div class="row-actions compact">
+              <div class="qty-control soft">
+                <button class="minus" data-id="${id}" aria-label="Decrease quantity">−</button>
                 <span class="count" id="c-${id}">1</span>
-                <button class="plus" data-id="${id}" title="Increase">+</button>
+                <button class="plus" data-id="${id}" aria-label="Increase quantity">+</button>
               </div>
-              <a class="addbtn" data-id="${id}" href="#" rel="noopener">Add to Cart</a>
+              <a class="btn-card" data-id="${id}" href="#" rel="noopener">${hasVariants?'Choose options':'Add to cart'}</a>
             </div>
           </div>
         </article>
       `;
     }
 
-    function renderGrid(list = PRODUCTS){
-      grid.innerHTML = list.map(cardHTML).join('');
-      // attach handlers
-      list.forEach(p=>{
-        const id = btoa(p.name).replace(/=/g,'');
-        const priceEl = grid.querySelector(`article[data-product="${p.name}"] .price`);
-        const countEl = document.getElementById(`c-${id}`);
-        const minus = grid.querySelector(`.minus[data-id="${id}"]`);
-        const plus  = grid.querySelector(`.plus[data-id="${id}"]`);
-        const add   = grid.querySelector(`.addbtn[data-id="${id}"]`);
-        let qty = 1;
-        const update = () => { priceEl.textContent = `₹${p.price * qty}`; countEl.textContent = qty; };
+    function attachCardHandlers(p){
+      const id = btoa(p.slug).replace(/=/g,'');
+      const article = grid.querySelector(`article[data-product="${CSS.escape(p.slug)}"]`);
+      const priceEl = article.querySelector(`#price-${CSS.escape(id)}`);
+      const minus = article.querySelector(`.minus[data-id="${id}"]`);
+      const plus  = article.querySelector(`.plus[data-id="${id}"]`);
+      const add   = article.querySelector(`.btn-card[data-id="${id}"]`);
+      const count = article.querySelector(`#c-${CSS.escape(id)}`);
+      const hasVariants = p.packs && p.packs.length>1;
 
-        minus.addEventListener('click', ()=>{ if(qty>1){ qty--; update(); }});
-        plus .addEventListener('click', ()=>{ if(qty<10){ qty++; update(); }});
-        add  .addEventListener('click', (e)=>{
-          e.preventDefault();
-          const cart = getCart();
-          const key = `${p.name}|${p.weight}|${p.price}`;
-          const found = cart.find(i=>i.key===key);
-          if(found){ found.qty += qty; } else { cart.push({ key, name:p.name, weight:p.weight, price:p.price, qty }); }
-          saveCart(cart);
-        });
+      let qty = 1;
+      const unit = Number(priceEl.dataset.unit);
 
-        update();
+      const update = ()=>{
+        if(hasVariants){
+          priceEl.textContent = `From ${money(unit*1)}`; // grid shows 'From', ignore qty here
+        }else{
+          priceEl.textContent = money(unit*qty);
+        }
+        count.textContent = qty;
+      };
+
+      const inc = ()=>{ if(qty<10){ qty++; update(); } };
+      const dec = ()=>{ if(qty>1){ qty--; update(); } };
+
+      minus.addEventListener('click', dec);
+      plus .addEventListener('click', inc);
+
+      add.addEventListener('click', (e)=>{
+        e.preventDefault();
+        if(hasVariants){
+          // go to detail page to choose pack size
+          location.href = `products.html?product=${encodeURIComponent(p.slug)}`;
+          return;
+        }
+        const key = `${p.name}|${p.weight}|${unit}`;
+        const cart = getCart();
+        const found = cart.find(i=>i.key===key);
+        if(found){ found.qty += qty; } else { cart.push({ key, name:p.name, weight:p.weight, price:unit, qty }); }
+        saveCart(cart);
+        try{ gtag('event','add_to_cart',{currency:'INR',value:unit*qty,items:[{item_name:p.name,price:unit,quantity:qty}]}); }catch(_){}
       });
 
-      updateCartCount();
-      applyFilters();
+      update();
     }
 
-    // ---- FILTERS ----
+    function renderGrid(list=PRODUCTS){
+      grid.innerHTML = list.map(cardHTML).join('');
+      list.forEach(attachCardHandlers);
+      updateCartCount();
+      applyFilters();
+      try{ gtag('event','view_item_list',{items:list.map((p,i)=>({item_name:p.name,index:i,price:p.price}))}); }catch(_){}
+    }
+
+    // ---------- FILTERS ----------
     const q = document.getElementById('q');
     const priceMax = document.getElementById('priceMax');
     const onlyBest = document.getElementById('onlyBest');
@@ -268,31 +340,181 @@
 
     function applyFilters(){
       const term = q.value.trim().toLowerCase();
-      const max  = priceMax.value ? parseInt(priceMax.value,10) : Infinity;
+      const max = priceMax.value ? parseInt(priceMax.value,10) : Infinity;
       const best = onlyBest.checked;
 
       let visible = 0;
-      grid.querySelectorAll('.card').forEach(card=>{
-        const name  = card.dataset.product.toLowerCase();
-        const tags  = (card.dataset.tags||'').toLowerCase();
-        const price = parseInt(card.dataset.price,10);
-        const isBest = card.querySelector('.ribbon') && card.querySelector('.ribbon').textContent.includes('Best');
+      grid.querySelectorAll('.pro-card').forEach(card=>{
+        const slug = card.dataset.product;
+        const p = bySlug(slug);
+        const name = p.name.toLowerCase();
+        const tags = (p.tags||'').toLowerCase();
+        const base = Number(card.dataset.price);
+        const isBest = !!p.best;
 
         const textMatch = !term || name.includes(term) || tags.includes(term);
-        const priceMatch = price <= max;
-        const bestMatch  = !best || isBest;
+        const priceMatch = base <= max;
+        const bestMatch = !best || isBest;
 
         const show = textMatch && priceMatch && bestMatch;
         card.style.display = show ? '' : 'none';
         if(show) visible++;
       });
       resultCount.textContent = `Showing ${visible} item${visible===1?'':'s'}`;
+      setURLState();
     }
-
-    [q, priceMax, onlyBest].forEach(el => el.addEventListener('input', applyFilters));
+    function setURLState(){
+      const params = new URLSearchParams(location.search);
+      // keep ?product= when in detail
+      if(!params.get('product')){ // only in list mode
+        params.delete('product');
+        if(q.value.trim()) params.set('q', q.value.trim()); else params.delete('q');
+        if(priceMax.value) params.set('max', priceMax.value); else params.delete('max');
+        if(onlyBest.checked) params.set('best','1'); else params.delete('best');
+        const qs = params.toString();
+        const url = qs ? `?${qs}` : location.pathname;
+        history.replaceState(null,'',url);
+      }
+    }
+    function initFromURL(){
+      const sp = new URLSearchParams(location.search);
+      if(sp.has('q')) q.value = sp.get('q');
+      if(sp.has('max')) priceMax.value = sp.get('max');
+      if(sp.get('best')==='1') onlyBest.checked = true;
+    }
+    [q, priceMax, onlyBest].forEach(el=>el.addEventListener('input', applyFilters));
     clearFilters.addEventListener('click', ()=>{ q.value=''; priceMax.value=''; onlyBest.checked=false; applyFilters(); });
 
-    renderGrid();
+    // ---------- DETAIL VIEW ----------
+    const listView = document.getElementById('listView');
+    const detailView = document.getElementById('detailView');
+    const detailRoot = document.getElementById('detailRoot');
+
+    function renderDetail(p){
+      const min = Math.min(...p.packs.map(x=>x.price));
+      const stars = starsHTML(p.stars||4.5);
+
+      detailRoot.innerHTML = `
+        <div class="detail-left">
+          <div class="detail-hero">
+            <img src="${p.img}" alt="${p.name}" width="1000" height="1000">
+          </div>
+          <div class="detail-thumbs">
+            <img src="${p.img}" alt="${p.name} alt view">
+          </div>
+        </div>
+
+        <div class="detail-right">
+          <a class="back-link" href="products.html">← Back to all products</a>
+          <h2 class="detail-title">${p.name}</h2>
+
+          <div class="detail-rating">
+            <span class="stars">${stars}</span>
+            <span class="reviews">${(p.reviews||0)} reviews</span>
+          </div>
+
+          <div class="detail-price" id="detailPrice" data-unit="${min}">
+            ${money(min)}
+          </div>
+
+          <div class="detail-sub">All inclusive. Shipping calculated at checkout.</div>
+
+          <div class="detail-packs" id="packRow" role="radiogroup" aria-label="Pack Size">
+            ${p.packs.map((pk,i)=>`<button class="pack ${i===0?'active':''}" data-price="${pk.price}" aria-checked="${i===0?'true':'false'}">${pk.label}</button>`).join('')}
+          </div>
+
+          <div class="detail-qty-row">
+            <div class="qty-control soft lg">
+              <button class="minus" id="dq-minus" aria-label="Decrease quantity">−</button>
+              <span class="count" id="dq-count">1</span>
+              <button class="plus" id="dq-plus" aria-label="Increase quantity">+</button>
+            </div>
+            <a class="btn-solid" id="dq-add" href="#">Add to cart</a>
+          </div>
+
+          <p class="detail-desc">Classic cookie freshly baked with pure butter and premium ingredients.</p>
+
+          <details class="acc">
+            <summary>Highlights</summary>
+            <ul>${(p.highlights||[]).map(x=>`<li>${x}</li>`).join('')}</ul>
+          </details>
+
+          <details class="acc">
+            <summary>Shipping</summary>
+            <ul>${(p.shipping||[]).map(x=>`<li>${x}</li>`).join('')}</ul>
+          </details>
+
+          <details class="acc">
+            <summary>Ingredients</summary>
+            <p>${p.ingredients||'—'}</p>
+          </details>
+
+          <div class="share-row">
+            <a class="share" href="https://wa.me/?text=${encodeURIComponent(p.name + ' — ' + location.href)}" target="_blank" rel="noopener">
+              <i class="fa-brands fa-whatsapp"></i> Share
+            </a>
+          </div>
+        </div>
+      `;
+
+      // handlers
+      const priceEl = document.getElementById('detailPrice');
+      const packRow = document.getElementById('packRow');
+      let unit = min;
+      let qty = 1;
+      const dqMinus = document.getElementById('dq-minus');
+      const dqPlus  = document.getElementById('dq-plus');
+      const dqCount = document.getElementById('dq-count');
+      const dqAdd   = document.getElementById('dq-add');
+
+      function update(){ priceEl.textContent = money(unit*qty); dqCount.textContent = qty; }
+
+      packRow.querySelectorAll('.pack').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          packRow.querySelectorAll('.pack').forEach(b=>{ b.classList.remove('active'); b.setAttribute('aria-checked','false'); });
+          btn.classList.add('active'); btn.setAttribute('aria-checked','true');
+          unit = Number(btn.dataset.price);
+          qty = 1;
+          update();
+        });
+      });
+      dqMinus.addEventListener('click', ()=>{ if(qty>1){ qty--; update(); }});
+      dqPlus .addEventListener('click', ()=>{ if(qty<10){ qty++; update(); }});
+      dqAdd  .addEventListener('click', (e)=>{
+        e.preventDefault();
+        const key = `${p.name}|${document.querySelector('.pack.active').textContent}|${unit}`;
+        const cart = getCart();
+        const found = cart.find(i=>i.key===key);
+        if(found){ found.qty += qty; } else { cart.push({ key, name:p.name, weight:document.querySelector('.pack.active').textContent, price:unit, qty }); }
+        saveCart(cart);
+        try{ gtag('event','add_to_cart',{currency:'INR', value: unit*qty, items:[{item_name:p.name, price:unit, quantity:qty}]}); }catch(_){}
+      });
+
+      update();
+    }
+
+    // ---------- ROUTER ----------
+    function route(){
+      const sp = new URLSearchParams(location.search);
+      const slug = sp.get('product');
+
+      if(slug){
+        listView.classList.add('hidden');
+        detailView.classList.remove('hidden');
+
+        const p = bySlug(slug);
+        if(!p){ detailRoot.innerHTML = '<p>Product not found.</p>'; return; }
+        renderDetail(p);
+      }else{
+        detailView.classList.add('hidden');
+        listView.classList.remove('hidden');
+        initFromURL();
+        renderGrid();
+      }
+      updateCartCount();
+    }
+    window.addEventListener('popstate', route);
+    route();
   </script>
 
   <!-- toast host -->
