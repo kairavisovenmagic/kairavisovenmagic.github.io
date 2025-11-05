@@ -3,67 +3,40 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Cart | Kairavi’s Oven Magic</title>
+  <title>Checkout | Kairavi’s Oven Magic</title>
   <link rel="icon" href="images/logo.png"/>
-  <link rel="stylesheet" href="style.css?v=13"/>
+  <link rel="stylesheet" href="style.css?v=14"/>
 
-  <!-- ✅ Google Analytics (GA4) -->
+  <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-4W0YRB7QQ2"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-4W0YRB7QQ2');
+    window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
+    gtag('js',new Date()); gtag('config','G-4W0YRB7QQ2');
   </script>
 
+  <!-- Razorpay -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
   <style>
-    /* --- Cart page enhancements (small scoped styles) --- */
-    .cart-wrap {display:grid;grid-template-columns:2fr 1fr;gap:22px}
-    .cart-card, .summary-card {
-      background:#fff;border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,.06);
-      padding:16px;
-    }
-    .cart-head {display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-    .cart-head h2{font-size:1.3rem}
-    .empty {
-      text-align:center;color:#7a5b47;padding:26px 14px;border:1px dashed #e7ddd6;border-radius:12px;
-      background:#fffdf9
-    }
-
-    /* table -> responsive cards on mobile */
-    .cart-table{width:100%;border-collapse:collapse}
+    /* Compact, clean checkout layout */
+    .checkout-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:22px}
+    .card{background:#fff;border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,.06);padding:16px}
+    .card h3{margin-bottom:10px}
+    .muted{color:#7a5b47}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+    .field{display:flex;flex-direction:column;gap:6px}
+    .field input,.field textarea,.field select{padding:10px;border:1px solid #e6dcd5;border-radius:10px;background:#fff;font-size:.95rem}
+    .field textarea{min-height:80px;resize:vertical}
+    .sum-row{display:flex;justify-content:space-between;margin:8px 0}
+    .sum-row.total{font-weight:800}
+    .pill{display:inline-block;background:#faf7f3;border:1px solid #e6dcd5;border-radius:999px;padding:6px 10px;font-size:.9rem}
+    .cart-table{width:100%;border-collapse:collapse;margin-top:8px}
     .cart-table th,.cart-table td{padding:10px;border-bottom:1px solid #eee;text-align:left}
-    .cart-table th{font-size:.9rem;color:#7a5b47;text-transform:uppercase;letter-spacing:.02em}
     .cart-item-thumb{display:flex;gap:10px;align-items:center}
-    .cart-item-thumb img{width:52px;height:52px;object-fit:cover;border-radius:8px}
-    .cart-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .summary-card{position:sticky;top:82px;height:max-content}
-    .summary-row{display:flex;justify-content:space-between;margin:8px 0}
-    .summary-row.total{font-weight:800;font-size:1.05rem}
-    .free-meter{background:#faf7f3;border:1px solid #e6dcd5;border-radius:10px;padding:8px 10px;margin-top:10px}
-    .free-meter small{display:block;color:#7a5b47}
-    .free-bar{height:7px;background:#f0e7df;border-radius:999px;overflow:hidden;margin-top:6px}
-    .free-bar > i{display:block;height:100%;width:0;background:#25d366;border-radius:999px}
-
-    .cust-form{margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
-    .cust-form input, .cust-form textarea, .cust-form select{
-      width:100%;padding:10px;border:1px solid #e6dcd5;border-radius:10px;background:#fff;font-size:.95rem
-    }
-    .cust-form textarea{min-height:80px;resize:vertical}
-
-    .mini-note{color:#7a5b47;font-size:.88rem;margin-top:6px}
-
-    @media (max-width: 980px){
-      .cart-wrap{grid-template-columns:1fr}
-      .summary-card{position:relative;top:auto}
-    }
-    @media (max-width: 680px){
-      .cart-table thead{display:none}
-      .cart-table tr{display:block;border:1px solid #eee;border-radius:12px;padding:10px;margin-bottom:10px}
-      .cart-table td{display:flex;justify-content:space-between;border:none;padding:6px 4px}
-      .cart-table td::before{content:attr(data-label);font-weight:600;color:#7a5b47}
-      .cart-item-thumb{justify-content:flex-start}
-    }
+    .cart-item-thumb img{width:48px;height:48px;border-radius:8px;object-fit:cover}
+    .mini{font-size:.88rem}
+    @media (max-width:980px){.checkout-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -80,327 +53,278 @@
       <a class="brand" href="index.html"><img src="images/logo.png" alt="logo"><strong>Kairavi’s Oven Magic</strong></a>
       <nav class="menu">
         <a href="index.html">Home</a>
-        <a href="products.html" aria-current="page">Products</a>
+        <a href="products.html">Products</a>
         <a href="contact.html">Contact</a>
-        <a href="cart.html">Cart <span class="badge" id="cartCount">0</span></a>
-        <!-- Auth controls -->
+        <a href="cart.html" aria-current="page">Cart</a>
         <a id="loginLink" href="login.html">Login</a>
         <a id="logoutLink" href="#" style="display:none">Logout</a>
       </nav>
     </div>
   </header>
 
-  <!-- CART -->
   <section class="section">
-    <div class="wrap">
-      <div class="cart-wrap">
+    <div class="wrap checkout-grid">
 
-        <!-- Left: items -->
-        <div class="cart-card">
-          <div class="cart-head">
-            <h2>Your Cart</h2>
-            <button class="btn" id="clearCart" style="background:#eee;color:#333">Clear Cart</button>
-          </div>
-
-          <table class="cart-table" id="cartTable">
-            <thead>
-              <tr>
-                <th style="width:42%">Item</th>
-                <th>Weight</th>
-                <th>Qty</th>
-                <th>Price</th>
-                <th>Total</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-
-          <div id="emptyState" class="empty" style="display:none">
-            Your cart is empty. <br/>Discover your favourites on the <a href="products.html" style="text-decoration:underline">Products</a> page.
-          </div>
-
-          <div class="cart-actions">
-            <a class="btn btn-ghost" href="products.html">Continue Shopping</a>
-          </div>
+      <!-- LEFT: Contact + Delivery + Payment -->
+      <div class="card">
+        <h3>Contact</h3>
+        <div class="field">
+          <label class="muted">Email</label>
+          <input id="email" type="email" placeholder="you@example.com">
         </div>
+        <label class="mini" style="display:flex;gap:8px;align-items:center;margin-top:8px">
+          <input id="newsletter" type="checkbox" checked> Keep me up to date on offers by email
+        </label>
 
-        <!-- Right: summary -->
-        <aside class="summary-card">
-          <h3 style="margin-bottom:8px">Order Summary</h3>
-          <div class="summary-row"><span>Items</span><span id="itemsCount">0</span></div>
-          <div class="summary-row"><span>Subtotal</span><span>₹<span id="subtotal">0</span></span></div>
-          <div class="summary-row"><span>Delivery (Pune)</span><span id="deliveryText">Calculated</span></div>
-          <div class="free-meter">
-            <small id="freeNote">Add more to reach ₹999 for free delivery</small>
-            <div class="free-bar"><i id="freeBar"></i></div>
+        <h3 style="margin-top:18px">Delivery</h3>
+        <div class="field">
+          <label class="muted">Country/Region</label>
+          <select id="country"><option value="India">India</option></select>
+        </div>
+        <div class="row">
+          <div class="field"><label class="muted">First name</label><input id="firstName"></div>
+          <div class="field"><label class="muted">Last name</label><input id="lastName"></div>
+        </div>
+        <div class="field">
+          <label class="muted">Address</label>
+          <input id="address1" placeholder="House, street, area">
+        </div>
+        <div class="field">
+          <label class="muted">Apartment, suite, etc. (optional)</label>
+          <input id="address2">
+        </div>
+        <div class="row-3">
+          <div class="field"><label class="muted">City</label><input id="city" value="Pune"></div>
+          <div class="field">
+            <label class="muted">State</label>
+            <select id="state"><option>Maharashtra</option></select>
           </div>
-          <div class="summary-row total" style="margin-top:8px"><span>Total</span><span>₹<span id="grandTotal">0</span></span></div>
+          <div class="field"><label class="muted">PIN code</label><input id="pincode" inputmode="numeric" maxlength="6"></div>
+        </div>
+        <div class="field">
+          <label class="muted">Phone</label>
+          <input id="phone" inputmode="tel" placeholder="+91 …">
+        </div>
+        <label class="mini" style="display:flex;gap:8px;align-items:center;margin-top:8px">
+          <input id="saveInfo" type="checkbox"> Save this information for next time
+        </label>
 
-          <div class="mini-note">Pay on delivery (cash/UPI). We’ll confirm your slot on WhatsApp.</div>
+        <h3 style="margin-top:18px">Shipping method</h3>
+        <div id="shipBox" class="pill">Enter pincode to view shipping methods…</div>
 
-          <!-- Customer details (used for Firestore + WhatsApp) -->
-          <div class="cust-form">
-            <input id="custName" placeholder="Your Name *" required />
-            <textarea id="custAddress" placeholder="Address (with area) *" required></textarea>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-              <input id="custPincode" placeholder="Pincode *" inputmode="numeric" />
-              <select id="custPayment">
-                <option>Cash</option>
-                <option>UPI</option>
-                <option>Card</option>
-              </select>
-            </div>
-            <input id="custPhone" placeholder="Phone (optional)" inputmode="tel" />
-            <input id="custEmail" placeholder="Email (optional)" inputmode="email" />
-          </div>
+        <h3 style="margin-top:18px">Payment</h3>
+        <p class="mini muted">All transactions are secure and encrypted.</p>
+        <label class="pill" style="display:flex;gap:8px;align-items:center;margin-top:8px">
+          <input type="radio" name="pay" id="payRzp" checked>
+          Razorpay Secure (UPI, Cards, Wallets, Netbanking)
+        </label>
 
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
-            <a class="btn btn-primary" id="waCheckout" href="#" target="_blank" rel="noopener">Order on WhatsApp</a>
-            <button class="btn btn-primary" id="placeOrderBtn" type="button">Place Order</button>
-          </div>
-        </aside>
-
+        <button id="payBtn" class="btn btn-primary" style="margin-top:14px">Pay now</button>
       </div>
+
+      <!-- RIGHT: Order Summary -->
+      <aside class="card">
+        <h3>Order Summary</h3>
+        <table class="cart-table" id="cartTable">
+          <thead><tr><th>Item</th><th>Qty</th><th>Total</th></tr></thead>
+          <tbody></tbody>
+        </table>
+
+        <div class="sum-row"><span>Items</span><span id="itemsCount">0</span></div>
+        <div class="sum-row"><span>Subtotal</span><span>₹<span id="subtotal">0</span></span></div>
+        <div class="sum-row"><span>Delivery</span><span id="deliveryText">—</span></div>
+        <div class="sum-row total"><span>Total</span><span>₹<span id="grandTotal">0</span></span></div>
+
+        <div class="mini muted" style="margin-top:8px">
+          Pay online via Razorpay. We’ll confirm your slot on WhatsApp/SMS.
+        </div>
+      </aside>
+
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer>
     <div class="wrap footer-grid">
       <div class="small">© 2025 Kairavi’s Oven Magic — Kairavi Food Products</div>
-      <div class="small" style="text-align:right">
-        Email: <a href="mailto:kairavisovenmagic@gmail.com">kairavisovenmagic@gmail.com</a>
-      </div>
+      <div class="small" style="text-align:right">Email: <a href="mailto:kairavisovenmagic@gmail.com">kairavisovenmagic@gmail.com</a></div>
     </div>
   </footer>
 
-  <!-- WhatsApp Floating -->
-  <a class="whatsapp-float" href="https://wa.me/919766964845" target="_blank" aria-label="WhatsApp">
-    <img src="images/whatsapp.png" alt="WhatsApp">
-  </a>
-
-  <!-- Cart Logic (render + WhatsApp link) -->
+  <!-- ========= Checkout Logic ========= -->
   <script>
+    /* --------- CONFIG YOU MUST SET --------- */
+    const RAZORPAY_KEY_ID   = 'rzp_test_XXXXXXXXXXXX';     // TODO: replace with your Razorpay key id
+    const SHIPPING_API_URL  = ''; // e.g. 'https://kom-quote.yourworker.workers.dev/quote'
+    const FREE_LIMIT        = 999;
+
     const CART_KEY='kom_cart';
     const getCart=()=>JSON.parse(localStorage.getItem(CART_KEY)||'[]');
     const setCart=c=>localStorage.setItem(CART_KEY,JSON.stringify(c));
 
+    // UI refs
     const tbody=document.querySelector('#cartTable tbody');
-    const subtotalEl=document.getElementById('subtotal');
-    const grandEl=document.getElementById('grandTotal');
     const itemsCountEl=document.getElementById('itemsCount');
-    const waBtn=document.getElementById('waCheckout');
-    const clearBtn=document.getElementById('clearCart');
-    const freeNote=document.getElementById('freeNote');
-    const freeBar=document.getElementById('freeBar');
-    const emptyState=document.getElementById('emptyState');
-    const deliveryText=document.getElementById('deliveryText');
+    const subtotalEl=document.getElementById('subtotal');
+    const deliveryEl=document.getElementById('deliveryText');
+    const grandEl=document.getElementById('grandTotal');
+    const payBtn=document.getElementById('payBtn');
+    const shipBox=document.getElementById('shipBox');
 
-    // Customer fields
-    const nameEl=document.getElementById('custName');
-    const addrEl=document.getElementById('custAddress');
-    const pinEl=document.getElementById('custPincode');
-    const payEl=document.getElementById('custPayment');
-    const phoneEl=document.getElementById('custPhone');
-    const emailEl=document.getElementById('custEmail');
+    const pincodeEl=document.getElementById('pincode');
+    const cityEl=document.getElementById('city');
+    const stateEl=document.getElementById('state');
 
-    const FREE_LIMIT = 999;
-    const DELIVERY_FLAT = 49; // change if needed
-
-    function formatINR(n){ return (n||0).toLocaleString('en-IN'); }
-
-    function buildRow(row,i,cart){
-      const tr=document.createElement('tr');
-      const line=row.price*row.qty;
-
-      tr.innerHTML=`
-        <td data-label="Item">
-          <div class="cart-item-thumb">
-            <img src="${guessImage(row.name)}" alt="${row.name}">
-            <div><strong>${row.name}</strong><div class="mini-note">${row.weight}</div></div>
-          </div>
-        </td>
-        <td data-label="Weight">${row.weight}</td>
-        <td data-label="Qty">
-          <div class="qty-control">
-            <button class="minus" aria-label="Decrease">−</button>
-            <span class="count">${row.qty}</span>
-            <button class="plus" aria-label="Increase">+</button>
-          </div>
-        </td>
-        <td data-label="Price">₹${formatINR(row.price)}</td>
-        <td data-label="Total">₹${formatINR(line)}</td>
-        <td data-label="">
-          <button class="remove" title="Remove" style="border:none;background:transparent;cursor:pointer">🗑️</button>
-        </td>
-      `;
-
-      tr.querySelector('.minus').onclick=()=>{if(row.qty>1){row.qty--;setCart(cart);render()}};
-      tr.querySelector('.plus').onclick =()=>{if(row.qty<99){row.qty++;setCart(cart);render()}};
-      tr.querySelector('.remove').onclick=()=>{cart.splice(i,1);setCart(cart);render()};
-      return tr;
+    // weight from items (very rough: 250 g = 0.25 kg each)
+    function cartWeightKg(cart){
+      let w=0;
+      cart.forEach(i=>{
+        const grams=/(\d+)\s*?g/i.test(i.weight)?(+RegExp.$1):250;
+        w+= (grams/1000)*i.qty;
+      });
+      return Math.max(0.25, +w.toFixed(2));
     }
 
-    // Best-effort thumbnail guess by name; fallback image if not found
+    function formatINR(n){return (n||0).toLocaleString('en-IN')}
+
     function guessImage(name){
-      const key = (name||'').toLowerCase();
-      const map = {
-        'gulkand':'images/gulkand.jpg',
-        'wheat':'images/wheat.jpg',
-        'ragi':'images/ragi.jpg',
-        'oats':'images/oats.jpg',
-        'maize':'images/maize.jpg',
-        'jowar':'images/jowar.jpg',
-        'upvas':'images/upvas.jpg',
-        'chocolate':'images/chocolate.jpg',
-        'ajwain sticks':'images/ajwain-sticks.jpg',
-        'ajwain cookies':'images/ajwain-cookies.jpg',
-        'jeera':'images/jeera.jpg',
-        'marble':'images/marble.jpg'
+      const key=(name||'').toLowerCase();
+      const map={
+        'gulkand':'images/gulkand.jpg','wheat':'images/wheat.jpg','ragi':'images/ragi.jpg','oats':'images/oats.jpg',
+        'maize':'images/maize.jpg','jowar':'images/jowar.jpg','upvas':'images/upvas.jpg','chocolate':'images/chocolate.jpg',
+        'ajwain sticks':'images/ajwain-sticks.jpg','ajwain cookies':'images/ajwain-cookies.jpg','jeera':'images/jeera.jpg','marble':'images/marble.jpg'
       };
-      for(const k in map){ if(key.includes(k)) return map[k]; }
+      for(const k in map){ if(key.includes(k)) return map[k] }
       return 'images/wheat.jpg';
     }
 
-    function render(){
+    function renderCart(){
       const cart=getCart();
       tbody.innerHTML='';
       let subtotal=0, items=0;
-
-      cart.forEach((row,i)=>{
-        items += row.qty;
-        subtotal += row.price*row.qty;
-        tbody.appendChild(buildRow(row,i,cart));
+      cart.forEach(r=>{
+        const line=r.price*r.qty; items+=r.qty; subtotal+=line;
+        const tr=document.createElement('tr');
+        tr.innerHTML=`
+          <td>
+            <div class="cart-item-thumb">
+              <img src="${guessImage(r.name)}" alt="${r.name}">
+              <div><strong>${r.name}</strong><div class="mini muted">${r.weight}</div></div>
+            </div>
+          </td>
+          <td>${r.qty}</td>
+          <td>₹${formatINR(line)}</td>`;
+        tbody.appendChild(tr);
       });
-
-      itemsCountEl.textContent = items;
-      subtotalEl.textContent = formatINR(subtotal);
-
-      // Delivery calc + free meter
-      let delivery = subtotal >= FREE_LIMIT ? 0 : DELIVERY_FLAT;
-      deliveryText.textContent = delivery === 0 ? 'FREE' : `₹${formatINR(delivery)}`;
-
-      const grand = subtotal + delivery;
-      grandEl.textContent = formatINR(grand);
-
-      // Free bar
-      const pct = Math.min(100, Math.max(0, Math.round((subtotal/FREE_LIMIT)*100)));
-      freeBar.style.width = pct + '%';
-      freeNote.textContent = subtotal >= FREE_LIMIT
-        ? '🎉 You qualify for FREE delivery in Pune!'
-        : `Add ₹${formatINR(FREE_LIMIT - subtotal)} more for free delivery`;
-
-      // Empty state
-      const isEmpty = cart.length === 0;
-      document.getElementById('cartTable').style.display = isEmpty ? 'none' : '';
-      emptyState.style.display = isEmpty ? '' : 'none';
-
-      // Build WhatsApp message
-      const lines = cart.map(r=>`${r.name} (${r.weight}) x ${r.qty} = ₹${formatINR(r.qty*r.price)}`).join('%0A');
-      const details = [
-        `Total: ₹${formatINR(grand)} (Subtotal ₹${formatINR(subtotal)}${delivery?`, Delivery ₹${formatINR(delivery)}`:` – Free Delivery`})`,
-        '',
-        `Name: ${encodeURIComponent(nameEl.value || '')}`,
-        `Address: ${encodeURIComponent(addrEl.value || '')}`,
-        `Pincode: ${encodeURIComponent(pinEl.value || '')}`,
-        `Payment: ${encodeURIComponent(payEl.value || 'Cash')}`,
-        `Phone: ${encodeURIComponent(phoneEl.value || '')}`,
-        `Email: ${encodeURIComponent(emailEl.value || '')}`
-      ].join('%0A');
-
-      const text = encodeURIComponent(lines) + '%0A%0A' + details;
-      waBtn.href = `https://wa.me/919766964845?text=${text}`;
-      waBtn.target = '_blank';
-      waBtn.rel = 'noopener';
-
-      // Disable buttons if missing details / empty cart
-      const missing = (nameEl.value.trim()==='' || addrEl.value.trim()==='' || pinEl.value.trim()==='');
-      const disabled = missing || isEmpty;
-
-      function setBtnState(el, ok){
-        el.classList.toggle('btn-ghost', !ok);
-        el.classList.toggle('btn-primary', ok);
-        el.style.pointerEvents = ok ? 'auto' : 'none';
-        el.style.opacity = ok ? 1 : .6;
-      }
-
-      setBtnState(waBtn, !disabled);
-      const placeBtn = document.getElementById('placeOrderBtn');
-      setBtnState(placeBtn, !disabled);
-      placeBtn.textContent = disabled ? 'Fill details to Place Order' : 'Place Order';
+      itemsCountEl.textContent=items;
+      subtotalEl.textContent=formatINR(subtotal);
+      return {subtotal, items, weightKg: cartWeightKg(cart)};
     }
 
-    // React to customer input
-    ['custName','custAddress','custPincode','custPayment','custPhone','custEmail'].forEach(id=>{
-      const el = document.getElementById(id);
-      el.addEventListener('input', render);
-      el.addEventListener('change', render);
+    // fallback estimator if API missing/unavailable
+    function estimateShipping({subtotal, pincode, weightKg}){
+      if(subtotal>=FREE_LIMIT) return 0;
+      // simple slabs by weight only (can be tuned)
+      const w = Math.ceil(weightKg*4)/4; // quarter-kg steps
+      if(!pincode || pincode.length<6) return 79;          // unknown → mid
+      if(w<=0.5) return 49;
+      if(w<=1.0) return 69;
+      if(w<=2.0) return 89;
+      return 129 + Math.ceil((w-2)*2)*10; // +₹10 per extra 0.5kg
+    }
+
+    async function fetchShippingQuote({pincode, weightKg, subtotal}){
+      if(subtotal>=FREE_LIMIT) return 0;
+      if(!SHIPPING_API_URL){ return estimateShipping({subtotal,pincode,weightKg}); }
+      try{
+        const res = await fetch(SHIPPING_API_URL, {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ pincode, weight_kg: weightKg })
+        });
+        if(!res.ok) throw new Error('quote failed');
+        const data = await res.json();               // expect: {amount: number, vendor:'Delhivery'}
+        return Math.max(0, Math.round(data.amount));
+      }catch(e){
+        console.warn('Shipping quote fallback:', e);
+        return estimateShipping({subtotal,pincode,weightKg});
+      }
+    }
+
+    let totals={subtotal:0, delivery:0, grand:0, weightKg:0};
+    async function recalc(){
+      const snap = renderCart();
+      totals.subtotal=snap.subtotal; totals.weightKg=snap.weightKg;
+
+      const pincode = (pincodeEl.value||'').trim();
+      shipBox.textContent = pincode && pincode.length===6 ? 'Calculating shipping…' : 'Enter pincode to view shipping methods…';
+
+      const delivery = await fetchShippingQuote({pincode, weightKg: snap.weightKg, subtotal: snap.subtotal});
+      totals.delivery = delivery;
+      totals.grand = snap.subtotal + delivery;
+
+      deliveryEl.textContent = delivery===0 ? 'FREE' : `₹${formatINR(delivery)}`;
+      grandEl.textContent    = formatINR(totals.grand);
+      if(pincode && pincode.length===6){
+        shipBox.textContent = delivery===0 ? 'Free delivery (order ≥ ₹999)' : `Standard Delivery • ₹${formatINR(delivery)} • via courier`;
+      }
+      payBtn.disabled = (snap.items===0 || !pincode || pincode.length<6);
+      payBtn.style.opacity = payBtn.disabled ? .6 : 1;
+    }
+
+    // Recalc on start and when pincode changes
+    document.addEventListener('DOMContentLoaded', recalc);
+    ['pincode','city','state'].forEach(id=>{
+      document.getElementById(id).addEventListener('input', recalc);
+      document.getElementById(id).addEventListener('change', recalc);
     });
 
-    document.addEventListener('DOMContentLoaded', render);
-    clearBtn.onclick=()=>{ if(confirm('Clear cart?')){ setCart([]); render(); } };
+    // Razorpay pay now
+    payBtn.addEventListener('click', ()=>{
+      if(payBtn.disabled) return;
+      const name = (document.getElementById('firstName').value+' '+document.getElementById('lastName').value).trim() || 'Customer';
+      const email= document.getElementById('email').value || 'na@example.com';
+      const phone= document.getElementById('phone').value || '9999999999';
+      const address = [
+        document.getElementById('address1').value,
+        document.getElementById('address2').value,
+        document.getElementById('city').value,
+        document.getElementById('state').value,
+        document.getElementById('pincode').value
+      ].filter(Boolean).join(', ');
+
+      const options={
+        key: RAZORPAY_KEY_ID,
+        amount: totals.grand * 100,       // paise
+        currency: 'INR',
+        name: 'Kairavi’s Oven Magic',
+        description: 'Cookie Order',
+        prefill: { name, email, contact: phone },
+        notes: {
+          address,
+          weight_kg: String(totals.weightKg),
+          shipping_fee: String(totals.delivery),
+          subtotal: String(totals.subtotal)
+        },
+        theme: { color: '#ff7043' },
+        handler: function (resp) {
+          // Success – clear cart, save order if you want (Firestore), redirect
+          localStorage.removeItem(CART_KEY);
+          alert('Payment successful! Order ID: '+resp.razorpay_payment_id);
+          window.location.href = 'thankyou.html';
+        },
+        modal: {
+          ondismiss: function(){ console.log('Payment modal closed'); }
+        }
+      };
+      const rzp = new Razorpay(options);
+      rzp.open();
+    });
   </script>
 
-  <!-- Header auth link switch (Login ↔ My Account / Admin + Logout) -->
+  <!-- Header auth switch -->
   <script type="module">
-    import { attachHeaderAuth } from './auth.js?v=13';
+    import { attachHeaderAuth } from './auth.js?v=14';
     attachHeaderAuth();
   </script>
 
-  <!-- ✅ Firestore: Place Order -->
-  <script type="module">
-    import { db } from './auth.js?v=13';
-    import { collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
-
-    function getCart(){ return JSON.parse(localStorage.getItem('kom_cart')||'[]'); }
-
-    async function placeOrder() {
-      const cart = getCart();
-      if (!cart.length) { alert('Cart is empty'); return; }
-
-      const name    = document.getElementById('custName')?.value.trim() || '';
-      const address = document.getElementById('custAddress')?.value.trim() || '';
-      const pincode = document.getElementById('custPincode')?.value.trim() || '';
-      const payment = document.getElementById('custPayment')?.value || 'Cash';
-      const phone   = document.getElementById('custPhone')?.value.trim() || '';
-      const email   = document.getElementById('custEmail')?.value.trim() || '';
-      if (!name || !address || !pincode) { alert('Please fill name, address and pincode.'); return; }
-
-      // compute amounts similar to render()
-      const subtotal = cart.reduce((s,i)=> s + i.price*i.qty, 0);
-      const delivery = subtotal >= 999 ? 0 : 49;
-      const total    = subtotal + delivery;
-
-      const items = cart.map(i => ({
-        name: i.name || (i.key ? i.key.split('|')[0] : ''),
-        weight: i.weight, price: i.price, qty: i.qty
-      }));
-
-      const order = {
-        orderId: 'KOM-' + Date.now(),
-        customer: { name, phone, email, address: `${address}, ${pincode}` },
-        items,
-        amounts: { subtotal, shipping: delivery, total },
-        payment,
-        status: 'NEW',
-        createdAt: serverTimestamp()
-      };
-
-      try{
-        await addDoc(collection(db, 'orders'), order);
-        alert('Order placed! We’ll contact you soon.');
-        localStorage.removeItem('kom_cart');
-        window.location.href = 'thankyou.html';
-      }catch(e){
-        alert('Could not place order: ' + (e?.message || e));
-      }
-    }
-
-    document.getElementById('placeOrderBtn').addEventListener('click', placeOrder);
-  </script>
-
-  <!-- (Optional) base toast node if your CSS already styles .toast -->
-  <div class="toast" style="display:block;opacity:0;pointer-events:none"></div>
 </body>
 </html>
