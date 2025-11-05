@@ -14,33 +14,27 @@
       --brand:#f15a24; --brand-900:#cc4b1e; --ring:rgba(241,90,36,.18);
       --card:#fff; --stroke:#f0e6df; --shadow:0 8px 30px rgba(0,0,0,.08);
       --radius:16px;
-      --ok:#10b981; --warn:#f59e0b; --bad:#ef4444;
     }
     body{ background:var(--bg); color:var(--ink); }
-
     .wrap-page{max-width:1100px;margin:24px auto 80px;padding:0 16px}
 
-    .kpi{
-      display:grid; gap:16px;
-      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      margin-bottom:14px;
-    }
-    .kpi .card{
-      background:#fff;border:1px solid #ffe3d4;border-radius:var(--radius);
-      box-shadow:var(--shadow);padding:14px 16px
-    }
+    /* KPIs */
+    .kpi{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-bottom:14px}
+    .kpi .card{background:#fff;border:1px solid #ffe3d4;border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px}
     .kpi .label{color:var(--muted);font-size:.9rem}
     .kpi .value{font-weight:800;font-size:1.4rem;margin-top:4px}
 
+    /* Toolbar */
     .toolbar{display:flex;gap:10px;align-items:center;margin:12px 0 8px}
     .toolbar input,.toolbar select,.toolbar button{
-      border:1px solid #eadace;border-radius:12px;background:#fff;
-      padding:10px 12px;font:inherit
+      border:1px solid #eadace;border-radius:12px;background:#fff;padding:10px 12px;font:inherit
     }
     .btn{cursor:pointer}
     .btn-primary{background:var(--brand);border-color:var(--brand);color:#fff}
     .btn-ghost{background:#fff}
 
+    /* Table */
+    .table-shell{overflow:auto;border:1px solid #ffe3d4;border-radius:12px}
     table{width:100%;border-collapse:collapse;background:#fff}
     th,td{padding:12px;border-bottom:1px solid #f1e6df;vertical-align:top}
     th{color:#8a4b2b;text-transform:uppercase;font-size:.78rem;letter-spacing:.04em}
@@ -64,9 +58,8 @@
     .panel{background:#fff;border:1px solid #f1e6df;border-radius:12px;padding:12px}
     .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .muted{color:var(--muted)}
-    .right{display:flex;gap:8px;align-items:center}
 
-    /* Invoice (print window) */
+    /* Print invoice (used inside print window) */
     .print-wrap{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
     .print-h{display:flex;gap:12px;align-items:center}
     .print-h img{width:42px;height:42px}
@@ -77,10 +70,7 @@
     .print-footer{margin-top:10px;font-size:.9rem;color:#6b7280}
     @media print{ body{background:#fff} }
 
-    .toast{
-      position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
-      background:#111827;color:#fff;padding:10px 14px;border-radius:10px;opacity:0;transition:opacity .2s;z-index:10000
-    }
+    .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 14px;border-radius:10px;opacity:0;transition:opacity .2s;z-index:10000}
     .toast.show{opacity:1}
   </style>
 </head>
@@ -89,9 +79,7 @@
   <!-- Header -->
   <header class="site-header">
     <div class="wrap nav">
-      <a class="brand" href="index.html">
-        <img src="images/logo.png" alt="logo"/><strong>Kairavi’s Oven Magic</strong>
-      </a>
+      <a class="brand" href="index.html"><img src="images/logo.png" alt="logo"/><strong>Kairavi’s Oven Magic</strong></a>
       <nav class="menu">
         <a href="index.html">Home</a>
         <a href="products.html">Products</a>
@@ -126,8 +114,8 @@
       <div class="muted" id="countNote" style="margin-left:auto"></div>
     </div>
 
-    <!-- Table -->
-    <div style="overflow:auto;border:1px solid #ffe3d4;border-radius:12px">
+    <!-- Orders table -->
+    <div class="table-shell">
       <table id="tbl">
         <thead>
           <tr>
@@ -136,7 +124,7 @@
             <th>Items</th>
             <th style="min-width:80px">Total</th>
             <th style="min-width:100px">Status</th>
-            <th style="min-width:200px">Actions</th>
+            <th style="min-width:220px">Actions</th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
@@ -149,9 +137,7 @@
   <div class="modal" id="modal">
     <div class="head">
       <div id="mTitle"></div>
-      <div class="right">
-        <button class="btn btn-ghost" id="mClose"><i class="fa fa-xmark"></i> Close</button>
-      </div>
+      <button class="btn btn-ghost" id="mClose"><i class="fa fa-xmark"></i> Close</button>
     </div>
     <div class="body" id="mBody"></div>
   </div>
@@ -172,84 +158,71 @@
     const fmtINR = n => (n||0).toLocaleString('en-IN');
     const toast = msg => { const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1100); };
 
-    // Safe order-id display if explicit not present
-    const fmtOrderId = (o) => {
-      const explicit = pick(o,'orderId');
-      if (explicit) return explicit;
-      const base = o.orderNumber || o.seq || (o.createdAt?.seconds) || Math.floor(Date.now()/1000);
-      return 'KOM-' + String(base).toString().padStart(6,'0').slice(-6);
+    // Read a dotted path safely
+    const read = (obj, path) => {
+      let v = obj;
+      for (const p of path.split('.')) { if (v && p in v) v = v[p]; else return undefined; }
+      return v;
     };
 
-    // pick a value from nested paths
-    const pick = (obj, ...names) => {
-      for (const n of names) {
-        let v = obj; let ok = true;
-        for (const part of n.split('.')) {
-          if (v && Object.prototype.hasOwnProperty.call(v, part)) v = v[part];
-          else { ok = false; break; }
-        }
-        if (ok && v !== undefined && v !== null && String(v).trim() !== '') return v;
+    // Prefer first non-empty field among many options
+    const pick = (obj, ...paths) => {
+      for (const p of paths) {
+        const v = typeof p === 'function' ? p(obj) : read(obj, p);
+        if (v !== undefined && v !== null && String(v).trim() !== '') return v;
       }
       return '';
     };
 
-    // --- ROBUST FIELD PATHS (adds notes.address + split variants) ---
+    // Where orders may store data (supports many structures)
     const PATHS = {
       name:   ['customer.name','custName','customerName','name'],
       phone:  ['customer.phone','custPhone','customerPhone','phone'],
       email:  ['customer.email','custEmail','customerEmail','email'],
-
-      // single string address anywhere
-      address: [
-        'delivery.address','delivery.addr','deliveryAddress',
+      address:[
+        'delivery.address','delivery.addr','delivery.address1','deliveryAddress',
         'shipping.address','shipping.addr',
-        'customer.address','customerAddress','custAddress',
-        'notes.address',           // Razorpay notes route
+        'customer.address','custAddress','customerAddress',
         'address','addr'
       ],
-
-      // parts
-      address1: ['delivery.address1','shipping.address1','customer.address1','address1','delivery.addr1','shipping.addr1'],
-      address2: ['delivery.address2','shipping.address2','customer.address2','address2','delivery.addr2','shipping.addr2'],
-      city:     ['delivery.city','shipping.city','customer.city','city'],
-      state:    ['delivery.state','shipping.state','customer.state','state'],
-
-      pincode: [
+      pincode:[
         'delivery.pincode','delivery.pin','delivery.postalCode',
         'shipping.pincode','shipping.pin','shipping.postalCode',
-        'customer.pincode','customer.pin',
-        'notes.pincode',
-        'pincode','pin','zip','zipCode','postalCode'
+        'customer.pincode','custPincode','pincode','pin','zip'
       ],
-
-      payment:['delivery.payment','shipping.payment','custPayment','payment','payMode','notes.payment'],
-
-      deliveryFee:['delivery.fee','deliveryFee','delivery','amounts.shipping']
+      payment:['delivery.payment','shipping.payment','custPayment','payment','payMode'],
+      deliveryFee:['delivery.fee','deliveryFee','delivery']
     };
 
-    const getField = (o, keys) => pick(o, ...keys) || '—';
+    const getF = (o, keyGroup) => pick(o, ...PATHS[keyGroup]) || '—';
 
-    function composeAddress(o){
-      const single = pick(o, ...PATHS.address);
-      if (single) return single;
-
-      const a1 = pick(o, ...PATHS.address1);
-      const a2 = pick(o, ...PATHS.address2);
-      const city = pick(o, ...PATHS.city);
-      const state = pick(o, ...PATHS.state);
-      const pin = pick(o, ...PATHS.pincode);
-
-      const lines = [a1, a2, [city, state].filter(Boolean).join(', '), pin].filter(s=>s && String(s).trim()!=='');
-      return lines.length ? lines.join(', ') : '—';
-    }
-
+    // Data
     let ORDERS = [];
+    let ORDER_NO_MAP = Object.create(null); // id -> KOM-xxxxxx
+
+    // Generate stable sequential numbers (UI only)
+    const BASE_SEQ = 176000;
+    function makeSequentialNumbers(docs){
+      // sort oldest->newest to assign ascending numbers
+      const sorted = [...docs].sort((a,b)=>{
+        const ta = (a.createdAt?.seconds || Date.parse(a.createdAt)||0);
+        const tb = (b.createdAt?.seconds || Date.parse(b.createdAt)||0);
+        return ta - tb;
+      });
+      const map = Object.create(null);
+      sorted.forEach((o,i)=>{
+        const num = BASE_SEQ + i + 1;
+        map[o.id] = `KOM-${num}`;
+      });
+      return map;
+    }
 
     // ---------- load orders ----------
     async function loadOrders() {
       const qRef = query(collection(db,'orders'), orderBy('createdAt','desc'));
       const snap = await getDocs(qRef);
       ORDERS = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+      ORDER_NO_MAP = makeSequentialNumbers(ORDERS);
       renderAll();
     }
 
@@ -260,7 +233,7 @@
       const total = ORDERS.length;
       const newC = ORDERS.filter(o => (o.status||'NEW')==='NEW').length;
       const conf  = ORDERS.filter(o => (o.status||'NEW')==='CONFIRMED').length;
-      const rev   = ORDERS.reduce((s,o)=>s + (o.grandTotal||o.amounts?.total||0), 0);
+      const rev   = ORDERS.reduce((s,o)=>s + (o.grandTotal || o.amounts?.total || 0), 0);
       $('kpiTotal').textContent = total;
       $('kpiNew').textContent = newC;
       $('kpiConf').textContent = conf;
@@ -273,31 +246,31 @@
 
       const rows = ORDERS.filter(o=>{
         const matchStatus = !st || (o.status||'NEW')===st;
+        const displayId = ORDER_NO_MAP[o.id] || o.orderId || o.id;
         const matchTerm = !term ||
-          (fmtOrderId(o)||'').toLowerCase().includes(term) ||
-          (getField(o, PATHS.name)||'').toLowerCase().includes(term) ||
-          (getField(o, PATHS.phone)||'').toLowerCase().includes(term) ||
-          (getField(o, PATHS.email)||'').toLowerCase().includes(term);
+          (displayId||'').toLowerCase().includes(term) ||
+          (getF(o,'name')||'').toLowerCase().includes(term) ||
+          (getF(o,'phone')||'').toLowerCase().includes(term) ||
+          (getF(o,'email')||'').toLowerCase().includes(term);
         return matchStatus && matchTerm;
       });
 
       $('countNote').textContent = `${rows.length} order${rows.length===1?'':'s'}`;
-      const tbody = $('tbody');
-      tbody.innerHTML = rows.map(tr).join('');
+      $('tbody').innerHTML = rows.map(rowHTML).join('');
       rows.forEach(o=>{
-        $('btnView-'+o.id)?.addEventListener('click',()=>openModal(o));
-        $('btnConf-'+o.id)?.addEventListener('click',()=>setStatus(o,'CONFIRMED'));
-        $('btnShip-'+o.id)?.addEventListener('click',()=>setStatus(o,'SHIPPED'));
-        $('btnClose-'+o.id)?.addEventListener('click',()=>setStatus(o,'CLOSED'));
+        $(`btnView-${o.id}`)?.addEventListener('click',()=>openModal(o));
+        $(`btnConf-${o.id}`)?.addEventListener('click',()=>setStatus(o,'CONFIRMED'));
+        $(`btnShip-${o.id}`)?.addEventListener('click',()=>setStatus(o,'SHIPPED'));
+        $(`btnClose-${o.id}`)?.addEventListener('click',()=>setStatus(o,'CLOSED'));
       });
     }
 
-    function tr(o){
+    function rowHTML(o){
       const ts = o.createdAt?.seconds ? new Date(o.createdAt.seconds*1000) : (o.createdAt? new Date(o.createdAt): new Date());
       const when = ts.toLocaleString();
-      const orderId = fmtOrderId(o);
-      const name = getField(o, PATHS.name);
-      const ph   = getField(o, PATHS.phone);
+      const orderIdDisp = ORDER_NO_MAP[o.id] || o.orderId || o.id;
+      const name = getF(o,'name');
+      const ph   = getF(o,'phone');
 
       const itemsTxt = Array.isArray(o.items)
         ? o.items.map(it => `${it.name||''}${it.weight?` (${it.weight})`:''} × ${it.qty||1}`).join(', ')
@@ -309,15 +282,17 @@
         return `<span class="badge ${map[s]||'b-new'}">${s}</span>`;
       };
 
+      const total = o.grandTotal ?? o.amounts?.total ?? 0;
+
       return `
         <tr>
           <td><div>${when}</div></td>
           <td>
-            <div style="font-weight:700">${orderId}</div>
+            <div style="font-weight:700">${orderIdDisp}</div>
             <div class="muted">${name || '—'} • ${ph || '—'}</div>
           </td>
           <td>${itemsTxt}</td>
-          <td>₹${fmtINR(o.grandTotal||o.amounts?.total||0)}</td>
+          <td>₹${fmtINR(total)}</td>
           <td>${badge(o.status)}</td>
           <td>
             <button class="btn btn-ghost" id="btnView-${o.id}"><i class="fa fa-eye"></i> View</button>
@@ -338,26 +313,27 @@
 
     // ---------- modal + invoice ----------
     function openModal(order){
+      const orderIdDisp = ORDER_NO_MAP[order.id] || order.orderId || order.id;
       $('mTitle').innerHTML =
-        `<strong>${fmtOrderId(order)}</strong> • ${new Date((order?.createdAt?.seconds||Date.now()/1000)*1000).toLocaleString()}`;
+        `<strong>${orderIdDisp}</strong> • ${new Date((order?.createdAt?.seconds||Date.now()/1000)*1000).toLocaleString()}`;
 
-      $('mBody').innerHTML = modalInner(order);
+      $('mBody').innerHTML = modalInner(order, orderIdDisp);
       $('overlay').style.display='block';
       $('modal').style.display='block';
 
-      $('btnPrint')?.addEventListener('click', () => printInvoice(order));
+      $('btnPrint')?.addEventListener('click', () => printInvoice(order, orderIdDisp));
       $('mClose').onclick = closeModal;
     }
     function closeModal(){ $('overlay').style.display='none'; $('modal').style.display='none'; }
     $('overlay').onclick = closeModal;
 
-    function modalInner(order) {
-      const name  = getField(order, PATHS.name);
-      const phone = getField(order, PATHS.phone);
-      const email = getField(order, PATHS.email);
-      const addr  = composeAddress(order);
-      const pin   = pick(order, ...PATHS.pincode) || '—';
-      const pay   = getField(order, PATHS.payment);
+    function modalInner(order, orderIdDisp) {
+      const name  = getF(order,'name');
+      const phone = getF(order,'phone');
+      const email = getF(order,'email');
+      const addr  = getF(order,'address');
+      const pin   = getF(order,'pincode');
+      const pay   = getF(order,'payment');
 
       const items = Array.isArray(order.items) ? order.items : [];
       const rows = items.map(it => `
@@ -369,8 +345,9 @@
         </tr>
       `).join('');
 
-      const subtotal = order.subtotal ?? items.reduce((s,i)=>s+(i.price||0)*(i.qty||1),0);
-      const delivery = (pick(order, ...PATHS.deliveryFee) || 0) * 1;
+      const subtotal = order.subtotal ?? order.amounts?.subtotal
+        ?? items.reduce((s,i)=>s+(i.price||0)*(i.qty||1),0);
+      const delivery = (pick(order, ...PATHS.deliveryFee) || order.amounts?.shipping || 0) * 1;
       const total    = order.grandTotal ?? order.amounts?.total ?? (subtotal + delivery);
 
       return `
@@ -409,7 +386,7 @@
       `;
     }
 
-    // Fetch logo and convert to data URL so it prints everywhere
+    // ---------- invoice helpers ----------
     async function logoDataURL() {
       const url = new URL('images/logo.png', location.href).href;
       const res = await fetch(url, { cache: 'no-store' });
@@ -421,16 +398,15 @@
       });
     }
 
-    function buildInvoiceHTML(order, logoData) {
-      const orderId = fmtOrderId(order);
+    function buildInvoiceHTML(order, orderIdDisp, logoData) {
       const when = new Date((order?.createdAt?.seconds||Date.now()/1000)*1000).toLocaleString();
 
-      const name  = getField(order, PATHS.name);
-      const phone = getField(order, PATHS.phone);
-      const email = getField(order, PATHS.email);
-      const addr  = composeAddress(order);
-      const pin   = pick(order, ...PATHS.pincode) || '—';
-      const pay   = getField(order, PATHS.payment);
+      const name  = getF(order,'name');
+      const phone = getF(order,'phone');
+      const email = getF(order,'email');
+      const addr  = getF(order,'address');
+      const pin   = getF(order,'pincode');
+      const pay   = getF(order,'payment');
 
       const items = Array.isArray(order.items) ? order.items : [];
       const rows = items.map(it => `
@@ -442,15 +418,16 @@
         </tr>
       `).join('');
 
-      const subtotal = order.subtotal ?? items.reduce((s,i)=>s+(i.price||0)*(i.qty||1),0);
-      const delivery = (pick(order, ...PATHS.deliveryFee) || 0) * 1;
+      const subtotal = order.subtotal ?? order.amounts?.subtotal
+        ?? items.reduce((s,i)=>s+(i.price||0)*(i.qty||1),0);
+      const delivery = (pick(order, ...PATHS.deliveryFee) || order.amounts?.shipping || 0) * 1;
       const total    = order.grandTotal ?? order.amounts?.total ?? (subtotal + delivery);
 
       return `
         <html>
           <head>
             <meta charset="utf-8"/>
-            <title>Invoice ${orderId}</title>
+            <title>Invoice ${orderIdDisp}</title>
             <style>${document.querySelector('style').innerHTML} body{padding:20px}</style>
           </head>
           <body class="print-wrap">
@@ -463,7 +440,7 @@
             </div>
 
             <div style="margin-top:10px">
-              <div><strong>Invoice:</strong> ${orderId}</div>
+              <div><strong>Invoice:</strong> ${orderIdDisp}</div>
               <div><strong>Date:</strong> ${when}</div>
             </div>
 
@@ -493,26 +470,40 @@
             </table>
 
             <div class="print-footer">Thank you for ordering with Kairavi’s Oven Magic! For support, write to kairavisovenmagic@gmail.com</div>
-            <script>
-              window.onload = () => { setTimeout(() => { window.print(); }, 200); };
-            <\/script>
+            <script>window.onload = () => { setTimeout(() => { window.print(); }, 150); }<\/script>
           </body>
         </html>
       `;
     }
 
-    async function printInvoice(order){
+    // Print: open window immediately (keeps user gesture), then inject invoice HTML
+    async function printInvoice(order, orderIdDisp){
+      const w = window.open('', '_blank', 'noopener,noreferrer,width=900,height=900');
+      if (!w) { alert('Popup blocked. Please allow popups for this site to print.'); return; }
+
+      // tiny placeholder so window opens instantly
+      w.document.open();
+      w.document.write(`<html><head><title>Preparing invoice…</title>
+        <style>body{font-family:system-ui,Segoe UI,Roboto,Arial;padding:24px}.muted{color:#6b7280}</style>
+      </head><body>
+        <div style="font-weight:700;font-size:18px;margin-bottom:8px">Preparing invoice…</div>
+        <div class="muted">Print dialog will appear shortly.</div>
+      </body></html>`);
+      w.document.close();
+
       try{
-        const logo = await logoDataURL();            // embedded logo
-        const html = buildInvoiceHTML(order, logo);  // full HTML with logo
-        const w = window.open('', '_blank', 'noopener,noreferrer,width=900,height=900');
-        if (!w) { alert('Popup blocked. Please allow popups for this site to print.'); return; }
+        const logo = await logoDataURL();
+        const html = buildInvoiceHTML(order, orderIdDisp, logo);
         w.document.open();
         w.document.write(html);
         w.document.close();
       }catch(e){
         console.error(e);
-        alert('Could not prepare invoice for print.');
+        w.document.open();
+        w.document.write(`<html><body style="font-family:system-ui;padding:24px">
+          <h2>Could not prepare invoice</h2><p>Please try again.</p>
+        </body></html>`);
+        w.document.close();
       }
     }
 
