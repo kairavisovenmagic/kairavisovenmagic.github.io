@@ -8,66 +8,60 @@
   <link rel="icon" href="images/logo.png"/>
   <link rel="stylesheet" href="style.css"/>
 
-  <!-- Page-scoped fixes to avoid overlap -->
-  <style>
-    /* Contact cards grid */
-    .contact-wrap{width:90%;max-width:1100px;margin:auto}
-    .contact-grid{
-      display:grid;gap:18px;
-      grid-template-columns:repeat(3, minmax(260px,1fr));
-    }
-    .contact-card{
-      background:#fff;border-radius:16px;box-shadow:0 2px 10px rgba(0,0,0,.06);
-      padding:22px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;
-    }
-    .contact-card .emoji{
-      font-size:36px;line-height:1;margin-bottom:6px;opacity:.9
-    }
-    .contact-card h3{margin:6px 0 4px}
-    .contact-card p{color:var(--muted);margin:2px 0 12px}
-    .contact-card .btn{margin-top:8px}
-
-    /* Info + Map grid */
-    .info-grid{
-      display:grid;gap:18px;margin-top:10px;
-      grid-template-columns:repeat(2, minmax(300px,1fr));
-    }
-    .info-card{
-      background:#fff;border-radius:16px;box-shadow:0 2px 10px rgba(0,0,0,.06);padding:18px
-    }
-
-    /* Inputs tidy */
-    .contact-form input,.contact-form textarea{
-      width:100%;padding:10px;border:1px solid #e6dcd5;border-radius:10px;background:#fff
-    }
-    .contact-form .two-col{
-      display:grid;gap:12px;grid-template-columns:repeat(2, minmax(180px,1fr));
-    }
-
-    /* Tighten freebar on very small screens */
-    @media (max-width: 980px){
-      .contact-grid{grid-template-columns:repeat(2, minmax(240px,1fr))}
-      .info-grid{grid-template-columns:1fr}
-    }
-    @media (max-width: 640px){
-      .contact-grid{grid-template-columns:1fr}
-      .contact-form .two-col{grid-template-columns:1fr}
-    }
-  </style>
-
   <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-4W0YRB7QQ2"></script>
   <script>
-    window.dataLayer=window.dataLayer||[];
+    window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js',new Date()); gtag('config','G-4W0YRB7QQ2');
+    gtag('js', new Date());
+    gtag('config', 'G-4W0YRB7QQ2');
   </script>
+
+  <!-- Page-specific polish -->
+  <style>
+    /* Small upgrades to match the design and fix overlap */
+    .contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .contact-card{
+      background:#fff;border-radius:16px;box-shadow:0 2px 10px rgba(0,0,0,.06);
+      padding:22px;text-align:center
+    }
+    .contact-card .emoji{font-size:28px;margin-bottom:8px}
+    .contact-card h3{margin:6px 0 6px}
+    .contact-card p{color:var(--muted);margin-bottom:12px}
+
+    .info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+    .info-card{
+      background:#fff;border-radius:16px;box-shadow:0 2px 10px rgba(0,0,0,.06);
+      padding:18px
+    }
+    /* Fixed bullets + padding so nothing bleeds outside */
+    .service-box{padding:22px 24px}
+    .service-box h3{margin:0 0 10px 0;font-weight:600}
+    .service-box ul{margin:0;padding-left:20px;list-style-position:inside;color:#4b3d33}
+    .service-box li{line-height:1.8}
+
+    .map-card{overflow:hidden;padding:0}
+    .map-card iframe{display:block;width:100%;height:300px;border:0;border-radius:16px}
+
+    /* Form inputs tidy */
+    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .form-input, .form-textarea{
+      width:100%;padding:10px;border:1px solid #e6dcd5;border-radius:10px;background:#fff
+    }
+
+    /* Responsive */
+    @media (max-width:980px){
+      .contact-grid{grid-template-columns:1fr}
+      .info-grid{grid-template-columns:1fr}
+      .map-card iframe{height:260px}
+    }
+  </style>
 </head>
 <body>
 
   <!-- FREE DELIVERY BAR -->
   <div class="freebar">
-    FREE delivery over ₹1599 • Pune city
+    FREE delivery over ₹999 • Pune city
     <a href="products.html">Shop now →</a>
   </div>
 
@@ -99,7 +93,7 @@
 
   <!-- CONTACT CARDS -->
   <section class="section" style="padding-top:0">
-    <div class="contact-wrap contact-grid">
+    <div class="wrap contact-grid">
       <div class="contact-card">
         <div class="emoji">💬</div>
         <h3>WhatsApp</h3>
@@ -129,26 +123,26 @@
       <h3 style="margin-bottom:8px">Quick Order / Enquiry</h3>
       <p class="sub" style="margin-bottom:12px">Fill the details and send via WhatsApp or Email.</p>
 
-      <form id="contactForm" class="card contact-form" style="padding:18px">
-        <div class="two-col">
+      <form id="contactForm" class="card" style="padding:18px">
+        <div class="form-grid">
           <label>
             <span class="sub">Full Name</span>
-            <input id="name" type="text" required placeholder="Your name"/>
+            <input id="name" type="text" required placeholder="Your name" class="form-input"/>
           </label>
           <label>
             <span class="sub">Phone</span>
-            <input id="phone" type="tel" required placeholder="10-digit mobile"/>
+            <input id="phone" type="tel" required placeholder="10-digit mobile" class="form-input"/>
           </label>
         </div>
 
         <label style="display:block;margin-top:12px">
           <span class="sub">Address (for delivery)</span>
-          <textarea id="address" rows="3" placeholder="Flat/Street, Area, City"></textarea>
+          <textarea id="address" rows="3" placeholder="Flat/Street, Area, City" class="form-textarea"></textarea>
         </label>
 
         <label style="display:block;margin-top:12px">
           <span class="sub">Order / Message</span>
-          <textarea id="message" rows="4" placeholder="e.g., 2× Gulkand 250g, 1× Wheat 250g. Preferred delivery time."></textarea>
+          <textarea id="message" rows="4" placeholder="e.g., 2× Gulkand 250g, 1× Wheat 250g. Preferred delivery time." class="form-textarea"></textarea>
         </label>
 
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
@@ -162,20 +156,19 @@
   <!-- MAP / SERVICE AREA & HOURS -->
   <section class="section" style="padding-top:0">
     <div class="wrap info-grid">
-      <div class="info-card">
+      <div class="info-card service-box">
         <h3>Service Area & Timings</h3>
-        <ul class="sub" style="margin-top:8px;line-height:1.8">
+        <ul class="sub">
           <li>Pune city delivery • FREE over ₹1599</li>
-          <li>Fresh batches: Mon–Sat</li>
+          <li>Fresh batches: Mon – Sat</li>
           <li>Order window: 8:30 AM – 7:30 PM</li>
           <li>Pickup available (Kharadi area)</li>
         </ul>
       </div>
 
-      <div class="info-card" style="overflow:hidden;padding:0">
+      <div class="info-card map-card">
         <iframe
           title="Kharadi, Pune"
-          width="100%" height="300" style="border:0;display:block;border-radius:16px"
           loading="lazy" allowfullscreen
           referrerpolicy="no-referrer-when-downgrade"
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3783.681280075235!2d73.949!3d18.561!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2c3%3A0x0!2sKharadi%2C%20Pune!5e0!3m2!1sen!2sin!4v1700000000000">
@@ -207,24 +200,31 @@
       const p=fmt(document.getElementById('phone').value);
       const a=fmt(document.getElementById('address').value);
       const m=fmt(document.getElementById('message').value);
-      const lines=['New enquiry/order:', n&&`Name: ${n}`, p&&`Phone: ${p}`, a&&`Address: ${a}`, m&&`Message: ${m}`].filter(Boolean);
+      const lines = [
+        'New enquiry/order:',
+        n?`Name: ${n}`:'',
+        p?`Phone: ${p}`:'',
+        a?`Address: ${a}`:'',
+        m?`Message: ${m}`:''
+      ].filter(Boolean);
       return lines.join('\n');
     }
     document.getElementById('sendWA').addEventListener('click',()=>{
-      const text=encodeURIComponent(buildMessage());
+      const text = encodeURIComponent(buildMessage());
       window.open(`https://wa.me/919766964845?text=${text}`,'_blank');
     });
     document.getElementById('sendEmail').addEventListener('click',()=>{
-      const subject=encodeURIComponent('New Order / Enquiry - Kairavi’s Oven Magic');
-      const body=encodeURIComponent(buildMessage());
+      const subject = encodeURIComponent('New Order / Enquiry - Kairavi’s Oven Magic');
+      const body = encodeURIComponent(buildMessage());
       window.location.href=`mailto:kairavisovenmagic@gmail.com?subject=${subject}&body=${body}`;
     });
   </script>
 
-  <!-- Firebase header logic (My Account/Admin switch + Logout) -->
+  <!-- Firebase header auth: Login ↔ My Account/Admin + Logout popup -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
-    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
+    import { getAuth, onAuthStateChanged, signOut }
+      from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
 
     const firebaseConfig = {
       apiKey: "AIzaSyCk4rYYxGWI9XBLXiIR1uaIFAnf8WHZP2w",
@@ -236,8 +236,8 @@
     };
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const ADMIN_EMAILS = ['kairavisovenmagic@gmail.com'];
 
+    const ADMIN_EMAILS = ['kairavisovenmagic@gmail.com'];
     const loginLink  = document.getElementById('loginLink');
     const logoutLink = document.getElementById('logoutLink');
 
@@ -272,12 +272,16 @@
       logoutLink.addEventListener('click', async (e)=>{
         e.preventDefault();
         if(!confirm('Log out from Kairavi’s Oven Magic?')) return;
-        try{ await signOut(auth); toastMsg('Logged out successfully!'); setTimeout(()=>{ location.href='index.html'; }, 900); }
-        catch(err){ alert('Logout failed: ' + (err?.message||err)); }
+        try{
+          await signOut(auth);
+          toastMsg('Logged out successfully!');
+          setTimeout(()=>{ window.location.href='index.html'; }, 900);
+        }catch(err){ alert('Logout failed: ' + (err?.message||err)); }
       });
     }
   </script>
 
+  <!-- tiny toast placeholder -->
   <div class="toast" style="display:none"></div>
 </body>
 </html>
