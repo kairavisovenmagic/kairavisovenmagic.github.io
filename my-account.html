@@ -1,125 +1,79 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>My Account — Kairavi’s Oven Magic</title>
   <link rel="icon" href="images/logo.png"/>
-  <link rel="stylesheet" href="style.css?v=16"/>
+  <link rel="stylesheet" href="style.css?v=17"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
     :root{
       --bg:#FFF7F0; --ink:#1f2328; --muted:#6b7280;
-      --brand:#f15a24; --brand-900:#cc4b1e; --ring:rgba(241,90,36,.18);
+      --brand:#f15a24; --brand-900:#cc4b1e; --ring:rgba(241,90,36,.14);
       --card:#fff; --stroke:#f0e6df; --shadow:0 8px 30px rgba(0,0,0,.08);
       --radius:18px;
     }
-    body{ background:var(--bg); color:var(--ink); }
-    .page{ max-width:1100px; margin:40px auto 60px; padding:0 20px; }
-    .title{ font-size:34px; margin:0 0 6px; font-weight:700; }
-    .sub{ color:var(--muted); margin:0 0 30px; }
+    body{background:var(--bg); color:var(--ink)}
+    .page{max-width:1050px;margin:34px auto 60px;padding:0 16px}
+    .title{font-size:30px;margin:0 0 6px;font-weight:800;letter-spacing:.2px}
+    .sub{color:var(--muted);margin:0 0 22px}
 
-    /* === layout === */
-    .account-grid{
-      display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap:20px;
-    }
+    /* Layout */
+    .grid{display:grid; grid-template-columns:1.2fr 2fr; gap:18px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
 
-    .card{
-      background:#fff;
-      border:1px solid #ffe3d4;
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:18px;
-    }
-    .card h2{
-      font-size:18px;
-      margin:0 0 14px;
-      border-bottom:1px dashed #f1e6df;
-      padding-bottom:6px;
-    }
+    .card{background:#fff;border:1px solid #ffe3d4;border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
+    .card h2{font-size:18px;margin:0 0 12px}
+    .divider{border-top:1px dashed #f1e6df;margin:10px 0}
 
-    .profile-info{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      margin-bottom:14px;
-    }
-    .profile-info img{
-      width:54px; height:54px;
-      border-radius:50%;
-      border:1px solid #f3e0d6;
-      object-fit:cover;
-    }
+    /* Profile panel */
+    .profile{display:flex;gap:12px;align-items:center}
+    .avatar{width:54px;height:54px;border-radius:50%;border:1px solid #f3e0d6;object-fit:cover}
+    .muted{color:var(--muted)}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid #ffe3d4;background:#fffaf7;padding:6px 10px;border-radius:999px;font-size:.86rem;color:#8a4b2b}
 
-    .muted{ color:var(--muted); }
-    .stats{
-      display:flex; justify-content:space-between; gap:10px;
-    }
-    .stat-box{
-      flex:1;
-      text-align:center;
-      border:1px solid #ffe3d4;
-      border-radius:12px;
-      padding:10px 0;
-    }
-    .stat-value{ font-weight:700; font-size:20px; }
-    .stat-label{ color:var(--muted); font-size:13px; }
+    /* Counters */
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+    .kpi{border:1px solid #ffe3d4;border-radius:12px;padding:10px 8px;text-align:center}
+    .kpi .v{font-weight:800;font-size:18px}
+    .kpi .l{font-size:.86rem;color:var(--muted)}
 
-    .list{ display:grid; gap:10px; }
-    .list-item{
-      padding:8px 0;
-      border-bottom:1px dashed #f1e6df;
-    }
+    /* Orders panel */
+    .tabs{display:flex;gap:8px;margin-top:2px}
+    .tab{border:1px solid #eadace;background:#fff;padding:8px 12px;border-radius:999px;font-weight:600;color:#663b26;cursor:pointer}
+    .tab.active{background:var(--brand);border-color:var(--brand);color:#fff}
+    .tab small{opacity:.85;font-weight:700;margin-left:6px}
 
-    .btn{
-      display:flex; align-items:center; gap:8px;
-      padding:10px 14px;
-      border-radius:12px;
-      border:1px solid #eadace;
-      background:#fff;
-      cursor:pointer;
-      justify-content:center;
-      transition:.2s;
-    }
-    .btn:hover{ background:#fafafa; }
-    .btn-primary{
-      background:var(--brand); color:#fff; border-color:var(--brand);
-    }
-    .btn-primary:hover{ background:var(--brand-900); }
+    .orders{margin-top:12px;display:grid;gap:10px}
+    .order{border:1px solid #f1e6df;border-radius:14px;padding:12px;background:#fff}
+    .h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .items{color:var(--muted);margin-top:4px}
+    .cta-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      background:#fffaf7;
-      border:1px solid #ffe3d4;
-      border-radius:999px;
-      padding:8px 14px;
-      color:#8a4b2b;
-      font-size:14px;
-    }
+    .st{display:inline-block;padding:4px 10px;border-radius:999px;font-size:.82rem;font-weight:700}
+    .NEW,.PENDING,.CONFIRMED,.PROCESSING{background:#fff3e8;border:1px solid #ffd4b8}
+    .PACKED,.SHIPPED{background:#eaf7ff;border:1px solid #cdeefe}
+    .DELIVERED,.CLOSED{background:#e9fce9;border:1px solid #c5f1c5}
+    .CANCELLED{background:#fde8e8;border:1px solid #fdcdcd}
 
-    .toast{
-      position:fixed; left:50%; bottom:18px;
-      transform:translateX(-50%);
-      background:#111827; color:#fff;
-      padding:10px 14px; border-radius:10px;
-      opacity:0; transition:opacity .2s;
-      z-index:9999;
-    }
-    .toast.show{ opacity:1; }
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;border:1px solid #eadace;background:#fff;cursor:pointer}
+    .btn:hover{background:#fafafa}
+    .btn-ghost{background:#fff}
+    .btn-primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+    .btn-primary:hover{background:var(--brand-900)}
+    .btn-copy{padding:6px 10px;border-radius:8px;border:1px dashed #e7d4c9;background:#fffaf7;color:#7b4a31}
 
-    /* Status chip for orders */
-    .st{display:inline-block;padding:4px 10px;border-radius:999px;font-size:.82rem}
-    .NEW{background:#eef2ff}
-    .CONFIRMED{background:#e9fce9}
-    .SHIPPED{background:#eaf7ff}
-    .CLOSED{background:#f4f4f5}
+    .empty{border:1px dashed #f1e6df;border-radius:14px;padding:16px;text-align:center;color:#7a5b47;background:#fffdf9}
+
+    .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 14px;border-radius:10px;opacity:0;transition:opacity .2s;z-index:9999}
+    .toast.show{opacity:1}
   </style>
 </head>
 <body>
+  <!-- Header -->
   <header class="site-header">
     <div class="wrap nav">
       <a class="brand" href="index.html">
@@ -128,6 +82,7 @@
       <nav class="menu">
         <a href="index.html">Home</a>
         <a href="products.html">Products</a>
+        <a href="cart.html">Cart</a>
         <a id="loginLink" href="login.html">Login</a>
         <a id="logoutLink" href="#" style="display:none">Logout</a>
       </nav>
@@ -136,178 +91,193 @@
 
   <main class="page">
     <h1 class="title">My Account</h1>
-    <p class="sub">Welcome to your account area. View your profile, actions, and recent activity.</p>
+    <p class="sub">Welcome! See your profile and orders below.</p>
 
-    <div class="account-grid">
-      <!-- Profile -->
-      <div class="card">
+    <div class="grid">
+      <!-- LEFT: Profile -->
+      <section class="card">
         <h2>Profile</h2>
-        <div class="profile-info">
-          <img id="accAvatar" src="images/logo.png" alt="Avatar">
+        <div class="profile">
+          <img id="accAvatar" class="avatar" src="images/logo.png" alt="Avatar"/>
           <div>
             <div id="accEmail" style="font-weight:700">—</div>
-            <div class="muted" id="accUid" style="font-size:12px">—</div>
+            <div id="accUid" class="muted" style="font-size:12px">—</div>
+            <div class="chips">
+              <span class="chip"><i class="fa fa-shield-halved"></i> Email verified: <strong id="emailVer">—</strong></span>
+              <button class="btn-copy" id="btnCopyId" title="Copy User ID"><i class="fa fa-copy"></i> Copy ID</button>
+            </div>
           </div>
         </div>
         <div class="stats">
-          <div class="stat-box">
-            <div class="stat-value" id="kOrders">0</div>
-            <div class="stat-label">Orders</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value" id="kPending">0</div>
-            <div class="stat-label">Pending</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value" id="kSpent">₹0</div>
-            <div class="stat-label">Total Spent</div>
-          </div>
+          <div class="kpi"><div class="v" id="kOrders">0</div><div class="l">Orders</div></div>
+          <div class="kpi"><div class="v" id="kPending">0</div><div class="l">Active</div></div>
+          <div class="kpi"><div class="v" id="kSpent">₹0</div><div class="l">Total spent</div></div>
         </div>
-      </div>
-
-      <!-- Recent Orders (replaces static 'Recent Activity') -->
-      <div class="card">
-        <h2>Recent Orders</h2>
-        <div id="activity" class="list">
-          <div class="muted">Loading your recent orders…</div>
-        </div>
-      </div>
-
-      <!-- Quick actions -->
-      <div class="card">
-        <h2>Quick Actions</h2>
-        <div class="list">
+        <div class="divider"></div>
+        <div class="cta-row">
           <a class="btn btn-primary" href="products.html"><i class="fa fa-cookie-bite"></i> Shop cookies</a>
           <a class="btn" href="cart.html"><i class="fa fa-cart-shopping"></i> View cart</a>
-          <a class="btn" href="mailto:kairavisovenmagic@gmail.com"><i class="fa fa-envelope"></i> Contact support</a>
-          <button class="btn" id="btnCopyId"><i class="fa fa-copy"></i> Copy User ID</button>
           <button class="btn" id="btnLogout"><i class="fa fa-right-from-bracket"></i> Logout</button>
         </div>
-      </div>
+      </section>
 
-      <!-- Status -->
-      <div class="card">
-        <h2>Account Status</h2>
-        <p><span class="pill"><i class="fa fa-shield-halved"></i> Email verified: <strong id="emailVer">—</strong></span></p>
-      </div>
+      <!-- RIGHT: Orders -->
+      <section class="card" style="min-height:300px">
+        <h2>Orders</h2>
+
+        <!-- Tabs -->
+        <div class="tabs" role="tablist" aria-label="Orders filter">
+          <button class="tab active" id="tab-current" role="tab" aria-selected="true">Current <small id="countCurrent">0</small></button>
+          <button class="tab" id="tab-past" role="tab" aria-selected="false">Past <small id="countPast">0</small></button>
+        </div>
+
+        <!-- Lists -->
+        <div id="listCurrent" class="orders" role="tabpanel" aria-labelledby="tab-current" style="display:block">
+          <div class="empty">Loading your orders…</div>
+        </div>
+
+        <div id="listPast" class="orders" role="tabpanel" aria-labelledby="tab-past" style="display:none">
+          <div class="empty">Loading your orders…</div>
+        </div>
+      </section>
     </div>
   </main>
 
   <div class="toast" id="toast"></div>
 
-  <!-- Auth header + guard -->
+  <!-- Header auth + require login -->
   <script type="module">
-    import { attachHeaderAuth, requireAuth } from "./auth.js?v=16";
+    import { attachHeaderAuth, requireAuth } from "./auth.js?v=17";
     attachHeaderAuth();
     await requireAuth();
   </script>
 
-  <!-- Profile + Recent Orders (Firestore) -->
+  <!-- Profile + Orders (Firestore) -->
   <script type="module">
-    import { auth, db } from "./auth.js?v=16";
+    import { auth, db } from "./auth.js?v=17";
     import { onAuthStateChanged, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
     import { collection, query, where, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 
     const $ = (id)=>document.getElementById(id);
-    const showToast = (m)=>{ const t=$('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1100); };
+    const toast = (m)=>{ const t=$('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1100); };
 
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) return;
+    // Tabs
+    const tabCurrent = $('tab-current');
+    const tabPast = $('tab-past');
+    const listCurrent = $('listCurrent');
+    const listPast = $('listPast');
 
-      // Profile header
+    function activate(which){
+      const isCurrent = which==='current';
+      tabCurrent.classList.toggle('active', isCurrent);
+      tabPast.classList.toggle('active', !isCurrent);
+      tabCurrent.setAttribute('aria-selected', isCurrent);
+      tabPast.setAttribute('aria-selected', !isCurrent);
+      listCurrent.style.display = isCurrent ? 'block' : 'none';
+      listPast.style.display    = isCurrent ? 'none'  : 'block';
+    }
+    tabCurrent.onclick = ()=>activate('current');
+    tabPast.onclick = ()=>activate('past');
+
+    // Render helper
+    const fmtINR = (n)=> (n||0).toLocaleString('en-IN');
+    const ACTIVE_STATES = ['NEW','PENDING','CONFIRMED','PROCESSING','PACKED','SHIPPED'];
+    const PAST_STATES   = ['DELIVERED','CLOSED','CANCELLED','COMPLETED'];
+
+    function orderRow(o, id){
+      const st = (o.status || 'NEW').toUpperCase();
+      const dt = o.createdAt?.toDate ? o.createdAt.toDate() : new Date();
+      const when = dt.toLocaleString();
+      const itemsTxt = (o.items || []).map(i => `${i.name} × ${i.qty}`).join(', ') || '-';
+      const totalRs = fmtINR(o.amounts?.total || 0);
+
+      return `
+        <div class="order">
+          <div class="h">
+            <div>
+              <div><strong>${o.orderId || id}</strong> • <span class="muted">${when}</span></div>
+              <div class="items">${itemsTxt}</div>
+            </div>
+            <div style="text-align:right">
+              <div><strong>₹${totalRs}</strong></div>
+              <div class="st ${st}" style="margin-top:6px">${st}</div>
+            </div>
+          </div>
+          <div class="cta-row">
+            <a class="btn btn-ghost" href="products.html"><i class="fa fa-repeat"></i> Reorder</a>
+            ${st==='SHIPPED' ? `<a class="btn btn-ghost" href="#" onclick="event.preventDefault(); alert('Tracking will be shared on WhatsApp/SMS.');"><i class="fa fa-truck"></i> Track</a>` : ''}
+          </div>
+        </div>`;
+    }
+
+    onAuthStateChanged(auth, async (user)=>{
+      if(!user) return;
+
+      // Profile
       $('accEmail').textContent = user.email || '';
-      $('accUid').textContent = user.uid || '';
+      $('accUid').textContent   = user.uid || '';
       $('emailVer').textContent = user.emailVerified ? 'Yes' : 'No';
-      if (user.photoURL) $('accAvatar').src = user.photoURL;
+      if(user.photoURL) $('accAvatar').src = user.photoURL;
 
       // Offer verify email
       if(!user.emailVerified){
-        const note = document.createElement('div');
-        note.innerHTML = `<div class="muted" style="margin-top:10px">Your email is not verified. <button class="btn btn-primary" id="btnVerify">Verify now</button></div>`;
-        document.querySelector('.account-grid').appendChild(note);
-        note.querySelector('#btnVerify').onclick = async ()=>{
+        const ask = document.createElement('button');
+        ask.className = 'btn';
+        ask.innerHTML = '<i class="fa fa-envelope-circle-check"></i> Verify email';
+        ask.onclick = async ()=>{
           await sendEmailVerification(user);
-          showToast('Verification email sent');
+          toast('Verification email sent');
         };
+        document.querySelector('.cta-row').appendChild(ask);
       }
 
-      // --- Firestore: fetch ALL orders for stats, then render top 5 for recent ---
-      const email = (user.email || '').toLowerCase();
-      if (!email) {
-        $('activity').innerHTML = `<div class="muted">No email on account.</div>`;
-        return;
-      }
+      // Orders
+      const email = (user.email||'').toLowerCase();
+      const qRef = query(
+        collection(db,'orders'),
+        where('customer.email','==',email),
+        orderBy('createdAt','desc')
+      );
 
-      try {
-        // Equality on customer.email + orderBy createdAt desc (may require composite index once)
-        const qRef = query(
-          collection(db, 'orders'),
-          where('customer.email', '==', email),
-          orderBy('createdAt', 'desc')
-        );
-
+      try{
         const snap = await getDocs(qRef);
 
-        let totalOrders = 0;
-        let pending = 0; // treat NEW or CONFIRMED as pending
-        let spent = 0;
-        const rows = [];
-
-        snap.forEach((doc) => {
+        let total=0, active=0, spent=0;
+        const curr=[], past=[];
+        snap.forEach(doc=>{
           const o = doc.data();
-          totalOrders += 1;
           const st = (o.status || 'NEW').toUpperCase();
-          if (st === 'NEW' || st === 'CONFIRMED') pending += 1;
-          spent += (o.amounts?.total || 0);
-
-          // Capture first 5 only for "Recent Orders"
-          if (rows.length < 5) {
-            const dt = o.createdAt?.toDate ? o.createdAt.toDate() : new Date();
-            const when = dt.toLocaleString();
-            const itemsTxt = (o.items || []).map(i => `${i.name} × ${i.qty}`).join(', ');
-            const totalRs = (o.amounts?.total || 0).toLocaleString('en-IN');
-
-            rows.push(`
-              <div class="list-item">
-                <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
-                  <div>
-                    <div><strong>${o.orderId || doc.id}</strong> • <span class="muted">${when}</span></div>
-                    <div class="muted" style="margin-top:4px">${itemsTxt || '-'}</div>
-                  </div>
-                  <div style="text-align:right">
-                    <div><strong>₹${totalRs}</strong></div>
-                    <div class="st ${st}" style="margin-top:4px">${st}</div>
-                  </div>
-                </div>
-              </div>
-            `);
-          }
+          total++; spent += (o.amounts?.total || 0);
+          if (ACTIVE_STATES.includes(st)) { active++; curr.push(orderRow(o, doc.id)); }
+          else { past.push(orderRow(o, doc.id)); }
         });
 
-        // Update stats
-        $('kOrders').textContent = totalOrders;
-        $('kPending').textContent = pending;
-        $('kSpent').textContent = '₹' + spent.toLocaleString('en-IN');
+        // KPIs
+        $('kOrders').textContent = total;
+        $('kPending').textContent = active;
+        $('kSpent').textContent = '₹'+fmtINR(spent);
 
-        // Render recent or empty state
-        $('activity').innerHTML = rows.length
-          ? rows.join('')
-          : `<div class="muted">No orders yet. Start with our <a href="products.html" style="text-decoration:underline">bestsellers</a>!</div>`;
+        // Counts
+        $('countCurrent').textContent = curr.length;
+        $('countPast').textContent    = past.length;
 
-      } catch (e) {
-        console.error('Failed to load orders:', e);
-        $('activity').innerHTML = `<div class="muted">Could not load your orders right now. Please try again later.</div>`;
+        // Lists
+        listCurrent.innerHTML = curr.length ? curr.join('') :
+          `<div class="empty">No current orders. <a href="products.html" style="text-decoration:underline">Shop now</a>.</div>`;
+
+        listPast.innerHTML = past.length ? past.join('') :
+          `<div class="empty">No past orders yet.</div>`;
+
+      }catch(e){
+        console.error(e);
+        listCurrent.innerHTML = `<div class="empty">Could not load your orders. Please try again.</div>`;
+        listPast.innerHTML    = `<div class="empty">Could not load your orders. Please try again.</div>`;
       }
     });
 
     // Actions
-    $('btnLogout').onclick = async ()=>{ await signOut(auth); location.href = 'index.html'; };
-    $('btnCopyId').onclick = ()=>{
-      const id = $('accUid').textContent.trim();
-      if(!id) return;
-      navigator.clipboard.writeText(id);
-      showToast('User ID copied');
-    };
+    $('btnLogout').onclick = async ()=>{ await signOut(auth); location.href='index.html'; };
+    $('btnCopyId').onclick = ()=>{ const t=$('accUid').textContent.trim(); if(!t) return; navigator.clipboard.writeText(t); toast('User ID copied'); };
   </script>
 </body>
 </html>
