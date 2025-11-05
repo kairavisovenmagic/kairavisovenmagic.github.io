@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Checkout | Kairavi’s Oven Magic</title>
   <link rel="icon" href="images/logo.png"/>
-  <link rel="stylesheet" href="style.css?v=15"/>
+  <link rel="stylesheet" href="style.css?v=16"/>
 
   <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-4W0YRB7QQ2"></script>
@@ -19,27 +19,33 @@
 
   <style>
     /* ---- Clean, Shopify-like layout ---- */
+    :root{
+      --ink:#1f2328; --muted:#7a5b47; --stroke:#e6dcd5; --bg:#fff;
+      --shadow:0 2px 6px rgba(0,0,0,.06); --radius:14px;
+    }
+    *{box-sizing:border-box}
     .checkout-grid{display:grid;grid-template-columns:1.55fr 1fr;gap:22px}
-    .card{background:#fff;border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,.06);padding:16px}
+    .card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
     .card h3{margin:4px 0 12px}
-    .muted{color:#7a5b47}
+    .muted{color:var(--muted)}
     .mini{font-size:.88rem}
     .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
     .field{display:flex;flex-direction:column;gap:6px}
     .field input,.field textarea,.field select{
-      padding:11px;border:1px solid #e6dcd5;border-radius:10px;background:#fff;font-size:.95rem
+      padding:12px;border:1px solid var(--stroke);border-radius:10px;background:#fff;font-size:1rem;
+      -webkit-tap-highlight-color: transparent;
     }
     .field textarea{min-height:80px;resize:vertical}
     .field input:invalid{border-color:#d33}
     .sum-row{display:flex;justify-content:space-between;margin:8px 0}
     .sum-row.total{font-weight:800}
-    .pill{display:flex;align-items:center;gap:8px;background:#faf7f3;border:1px solid #e6dcd5;border-radius:12px;padding:10px 12px;font-size:.95rem}
+    .pill{display:flex;align-items:center;gap:8px;background:#faf7f3;border:1px solid var(--stroke);border-radius:12px;padding:10px 12px;font-size:.95rem}
     .cart-table{width:100%;border-collapse:collapse;margin-top:6px}
-    .cart-table th,.cart-table td{padding:10px;border-bottom:1px solid #eee;text-align:left}
+    .cart-table th,.cart-table td{padding:10px;border-bottom:1px solid #eee;text-align:left;vertical-align:middle}
     .cart-item-thumb{display:flex;gap:10px;align-items:center}
     .cart-item-thumb img{width:48px;height:48px;border-radius:8px;object-fit:cover}
-    .pay-box{border:1px solid #e6dcd5;border-radius:12px;overflow:hidden;margin-top:8px}
+    .pay-box{border:1px solid var(--stroke);border-radius:12px;overflow:hidden;margin-top:8px}
     .pay-row{display:flex;align-items:center;gap:10px;padding:10px 12px}
     .pay-row+.pay-row{border-top:1px solid #eee}
     .pay-row input{accent-color:#1f6fff}
@@ -47,7 +53,27 @@
     .btn-primary[disabled]{opacity:.55;pointer-events:none}
     .help{position:relative;display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#eee;color:#333;font-size:.8rem;cursor:default}
     .help[data-tip]:hover:after{content:attr(data-tip);position:absolute;bottom:130%;left:50%;transform:translateX(-50%);white-space:nowrap;background:#222;color:#fff;padding:6px 8px;border-radius:8px;font-size:.8rem;box-shadow:0 2px 8px rgba(0,0,0,.25)}
-    @media (max-width:980px){.checkout-grid{grid-template-columns:1fr}}
+
+    /* --- Mobile & small screens --- */
+    @media (max-width:980px){
+      .checkout-grid{grid-template-columns:1fr}
+      .card{padding:14px}
+      .row,.row-3{grid-template-columns:1fr;gap:8px}
+      .cart-item-thumb img{width:44px;height:44px}
+    }
+    @media (max-width:680px){
+      html,body{scroll-behavior:smooth}
+      .field input,.field textarea,.field select{font-size:16px;padding:13px} /* avoid iOS zoom */
+      /* Order summary table -> stacked cards */
+      .cart-table thead{display:none}
+      .cart-table tr{display:block;border:1px solid #eee;border-radius:12px;padding:10px;margin-bottom:10px}
+      .cart-table td{display:flex;justify-content:space-between;border:none;padding:6px 4px}
+      .cart-item-thumb{justify-content:flex-start}
+      /* Pay now sticky for convenience */
+      .btn.btn-primary#payBtn{
+        position:sticky; bottom:12px; width:100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -81,7 +107,7 @@
         <h3>Contact</h3>
         <div class="field">
           <label class="muted">Email</label>
-          <input id="email" type="email" placeholder="you@example.com">
+          <input id="email" type="email" placeholder="you@example.com" autocomplete="email">
         </div>
         <label class="mini" style="display:flex;gap:8px;align-items:center;margin-top:8px">
           <input id="newsletter" type="checkbox" checked> Keep me up to date on offers by email
@@ -90,7 +116,7 @@
         <h3 style="margin-top:18px">Delivery</h3>
         <div class="field">
           <label class="muted">Country/Region</label>
-          <select id="country"><option value="India">India</option></select>
+          <select id="country" autocomplete="country-name"><option value="India">India</option></select>
         </div>
         <div class="row">
           <div class="field"><label class="muted">First name</label><input id="firstName" autocomplete="given-name"></div>
@@ -118,7 +144,7 @@
           </label>
           <!-- PHONE: mandatory with India 10-digit pattern starting 6–9 -->
           <input id="phone" inputmode="tel" placeholder="+91 9xxxxxxxxx"
-                 required pattern="^[6-9]\d{9}$" title="Enter a valid 10-digit Indian mobile number (starts with 6-9)">
+                 required pattern="^[6-9]\\d{9}$" title="Enter a valid 10-digit Indian mobile number (starts with 6-9)" autocomplete="tel-national">
           <span id="phoneErr" class="mini" style="color:#d33;display:none">Please enter a valid 10-digit phone number.</span>
         </div>
         <label class="mini" style="display:flex;gap:8px;align-items:center;margin-top:8px">
@@ -166,8 +192,8 @@
         </div>
         <a href="products.html"
            class="btn btn-ghost"
-            style="margin-top:12px;width:100%;display:inline-flex;justify-content:center">
-            ← Continue shopping
+           style="margin-top:12px;width:100%;display:inline-flex;justify-content:center">
+          ← Continue shopping
         </a>
       </aside>
 
@@ -359,7 +385,7 @@
 
   <!-- Header auth switch -->
   <script type="module">
-    import { attachHeaderAuth } from './auth.js?v=15';
+    import { attachHeaderAuth } from './auth.js?v=16';
     attachHeaderAuth();
   </script>
 </body>
