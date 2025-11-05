@@ -36,7 +36,7 @@
     .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid #ffe3d4;background:#fffaf7;padding:6px 10px;border-radius:999px;font-size:.86rem;color:#8a4b2b}
 
     /* Counters */
-    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+    .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
     .kpi{border:1px solid #ffe3d4;border-radius:12px;padding:10px 8px;text-align:center}
     .kpi .v{font-weight:800;font-size:18px}
     .kpi .l{font-size:.86rem;color:var(--muted)}
@@ -111,7 +111,6 @@
         <div class="stats">
           <div class="kpi"><div class="v" id="kOrders">0</div><div class="l">Orders</div></div>
           <div class="kpi"><div class="v" id="kPending">0</div><div class="l">Active</div></div>
-          <div class="kpi"><div class="v" id="kSpent">₹0</div><div class="l">Total spent</div></div>
         </div>
         <div class="divider"></div>
         <div class="cta-row">
@@ -242,7 +241,7 @@
       try{
         const snap = await getDocs(qRef);
 
-        let total=0, active=0, spent=0;
+        let total=0, active=0;
         const curr=[], past=[];
         snap.forEach(doc=>{
           const o = doc.data();
@@ -255,8 +254,7 @@
         // KPIs
         $('kOrders').textContent = total;
         $('kPending').textContent = active;
-        $('kSpent').textContent = '₹'+fmtINR(spent);
-
+        
         // Counts
         $('countCurrent').textContent = curr.length;
         $('countPast').textContent    = past.length;
