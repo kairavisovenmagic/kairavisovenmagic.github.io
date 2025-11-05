@@ -1,11 +1,11 @@
-this layout is good make phone mandatory "<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Checkout | Kairavi’s Oven Magic</title>
   <link rel="icon" href="images/logo.png"/>
-  <link rel="stylesheet" href="style.css?v=14"/>
+  <link rel="stylesheet" href="style.css?v=15"/>
 
   <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-4W0YRB7QQ2"></script>
@@ -18,24 +18,35 @@ this layout is good make phone mandatory "<!DOCTYPE html>
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
   <style>
-    /* Compact, clean checkout layout */
-    .checkout-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:22px}
+    /* ---- Clean, Shopify-like layout ---- */
+    .checkout-grid{display:grid;grid-template-columns:1.55fr 1fr;gap:22px}
     .card{background:#fff;border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,.06);padding:16px}
-    .card h3{margin-bottom:10px}
+    .card h3{margin:4px 0 12px}
     .muted{color:#7a5b47}
+    .mini{font-size:.88rem}
     .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
     .field{display:flex;flex-direction:column;gap:6px}
-    .field input,.field textarea,.field select{padding:10px;border:1px solid #e6dcd5;border-radius:10px;background:#fff;font-size:.95rem}
+    .field input,.field textarea,.field select{
+      padding:11px;border:1px solid #e6dcd5;border-radius:10px;background:#fff;font-size:.95rem
+    }
     .field textarea{min-height:80px;resize:vertical}
+    .field input:invalid{border-color:#d33}
     .sum-row{display:flex;justify-content:space-between;margin:8px 0}
     .sum-row.total{font-weight:800}
-    .pill{display:inline-block;background:#faf7f3;border:1px solid #e6dcd5;border-radius:999px;padding:6px 10px;font-size:.9rem}
-    .cart-table{width:100%;border-collapse:collapse;margin-top:8px}
+    .pill{display:flex;align-items:center;gap:8px;background:#faf7f3;border:1px solid #e6dcd5;border-radius:12px;padding:10px 12px;font-size:.95rem}
+    .cart-table{width:100%;border-collapse:collapse;margin-top:6px}
     .cart-table th,.cart-table td{padding:10px;border-bottom:1px solid #eee;text-align:left}
     .cart-item-thumb{display:flex;gap:10px;align-items:center}
     .cart-item-thumb img{width:48px;height:48px;border-radius:8px;object-fit:cover}
-    .mini{font-size:.88rem}
+    .pay-box{border:1px solid #e6dcd5;border-radius:12px;overflow:hidden;margin-top:8px}
+    .pay-row{display:flex;align-items:center;gap:10px;padding:10px 12px}
+    .pay-row+.pay-row{border-top:1px solid #eee}
+    .pay-row input{accent-color:#1f6fff}
+    .badge-cc i{display:inline-block;width:28px;height:18px;background:#e9eefc;border-radius:4px;margin-left:6px}
+    .btn-primary[disabled]{opacity:.55;pointer-events:none}
+    .help{position:relative;display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#eee;color:#333;font-size:.8rem;cursor:default}
+    .help[data-tip]:hover:after{content:attr(data-tip);position:absolute;bottom:130%;left:50%;transform:translateX(-50%);white-space:nowrap;background:#222;color:#fff;padding:6px 8px;border-radius:8px;font-size:.8rem;box-shadow:0 2px 8px rgba(0,0,0,.25)}
     @media (max-width:980px){.checkout-grid{grid-template-columns:1fr}}
   </style>
 </head>
@@ -55,7 +66,7 @@ this layout is good make phone mandatory "<!DOCTYPE html>
         <a href="index.html">Home</a>
         <a href="products.html">Products</a>
         <a href="contact.html">Contact</a>
-        <a href="cart.html" aria-current="page">Cart</a>
+        <a href="cart.html">Cart</a>
         <a id="loginLink" href="login.html">Login</a>
         <a id="logoutLink" href="#" style="display:none">Logout</a>
       </nav>
@@ -82,42 +93,57 @@ this layout is good make phone mandatory "<!DOCTYPE html>
           <select id="country"><option value="India">India</option></select>
         </div>
         <div class="row">
-          <div class="field"><label class="muted">First name</label><input id="firstName"></div>
-          <div class="field"><label class="muted">Last name</label><input id="lastName"></div>
+          <div class="field"><label class="muted">First name</label><input id="firstName" autocomplete="given-name"></div>
+          <div class="field"><label class="muted">Last name</label><input id="lastName" autocomplete="family-name"></div>
         </div>
         <div class="field">
           <label class="muted">Address</label>
-          <input id="address1" placeholder="House, street, area">
+          <input id="address1" placeholder="House, street, area" autocomplete="address-line1">
         </div>
         <div class="field">
           <label class="muted">Apartment, suite, etc. (optional)</label>
-          <input id="address2">
+          <input id="address2" autocomplete="address-line2">
         </div>
         <div class="row-3">
-          <div class="field"><label class="muted">City</label><input id="city" value="Pune"></div>
+          <div class="field"><label class="muted">City</label><input id="city" value="Pune" autocomplete="address-level2"></div>
           <div class="field">
             <label class="muted">State</label>
-            <select id="state"><option>Maharashtra</option></select>
+            <select id="state" autocomplete="address-level1"><option>Maharashtra</option></select>
           </div>
-          <div class="field"><label class="muted">PIN code</label><input id="pincode" inputmode="numeric" maxlength="6"></div>
+          <div class="field"><label class="muted">PIN code</label><input id="pincode" inputmode="numeric" maxlength="6" autocomplete="postal-code"></div>
         </div>
         <div class="field">
-          <label class="muted">Phone</label>
-          <input id="phone" inputmode="tel" placeholder="+91 …">
+          <label class="muted">Phone
+            <span class="help" data-tip="In case we need to contact you about your order">?</span>
+          </label>
+          <!-- PHONE: mandatory with India 10-digit pattern starting 6–9 -->
+          <input id="phone" inputmode="tel" placeholder="+91 9xxxxxxxxx"
+                 required pattern="^[6-9]\d{9}$" title="Enter a valid 10-digit Indian mobile number (starts with 6-9)">
+          <span id="phoneErr" class="mini" style="color:#d33;display:none">Please enter a valid 10-digit phone number.</span>
         </div>
         <label class="mini" style="display:flex;gap:8px;align-items:center;margin-top:8px">
           <input id="saveInfo" type="checkbox"> Save this information for next time
         </label>
 
         <h3 style="margin-top:18px">Shipping method</h3>
-        <div id="shipBox" class="pill">Enter pincode to view shipping methods…</div>
+        <div id="shipBox" class="pill">Enter pincode to view available shipping methods…</div>
 
         <h3 style="margin-top:18px">Payment</h3>
         <p class="mini muted">All transactions are secure and encrypted.</p>
-        <label class="pill" style="display:flex;gap:8px;align-items:center;margin-top:8px">
-          <input type="radio" name="pay" id="payRzp" checked>
-          Razorpay Secure (UPI, Cards, Wallets, Netbanking)
-        </label>
+
+        <!-- Payment selector (visual, we route both via Razorpay) -->
+        <div class="pay-box">
+          <label class="pay-row">
+            <input type="radio" name="payMethod" id="pmCard" checked>
+            <strong>Credit / Debit card</strong>
+            <span class="badge-cc" aria-hidden="true"><i></i><i></i><i></i></span>
+          </label>
+          <label class="pay-row">
+            <input type="radio" name="payMethod" id="pmRzp">
+            <strong>Razorpay Secure</strong>
+            <span class="mini muted">UPI, Cards, Wallets, Netbanking</span>
+          </label>
+        </div>
 
         <button id="payBtn" class="btn btn-primary" style="margin-top:14px">Pay now</button>
       </div>
@@ -150,16 +176,15 @@ this layout is good make phone mandatory "<!DOCTYPE html>
     </div>
   </footer>
 
-  <!-- ========= Checkout Logic ========= -->
+  <!-- ============ Checkout Logic ============ -->
   <script>
-    /* --------- CONFIG YOU MUST SET --------- */
-    const RAZORPAY_KEY_ID   = 'rzp_test_XXXXXXXXXXXX';     // TODO: replace with your Razorpay key id
-    const SHIPPING_API_URL  = ''; // e.g. 'https://kom-quote.yourworker.workers.dev/quote'
-    const FREE_LIMIT        = 999;
+    /* ------ CONFIG (SET THESE) ------ */
+    const RAZORPAY_KEY_ID  = 'rzp_test_XXXXXXXXXXXX';  // ← your key id
+    const SHIPPING_API_URL = '';                       // ← your quote endpoint (optional)
+    const FREE_LIMIT       = 999;
 
     const CART_KEY='kom_cart';
     const getCart=()=>JSON.parse(localStorage.getItem(CART_KEY)||'[]');
-    const setCart=c=>localStorage.setItem(CART_KEY,JSON.stringify(c));
 
     // UI refs
     const tbody=document.querySelector('#cartTable tbody');
@@ -171,10 +196,18 @@ this layout is good make phone mandatory "<!DOCTYPE html>
     const shipBox=document.getElementById('shipBox');
 
     const pincodeEl=document.getElementById('pincode');
-    const cityEl=document.getElementById('city');
-    const stateEl=document.getElementById('state');
+    const phoneEl=document.getElementById('phone');
+    const phoneErr=document.getElementById('phoneErr');
 
-    // weight from items (very rough: 250 g = 0.25 kg each)
+    function isPhoneValid(){
+      const v=(phoneEl.value||'').trim();
+      const ok=/^[6-9]\d{9}$/.test(v);
+      phoneErr.style.display = ok ? 'none' : 'block';
+      phoneEl.classList.toggle('invalid', !ok);
+      return ok;
+    }
+
+    // weight approximation from item weight text
     function cartWeightKg(cart){
       let w=0;
       cart.forEach(i=>{
@@ -183,7 +216,6 @@ this layout is good make phone mandatory "<!DOCTYPE html>
       });
       return Math.max(0.25, +w.toFixed(2));
     }
-
     function formatINR(n){return (n||0).toLocaleString('en-IN')}
 
     function guessImage(name){
@@ -223,13 +255,12 @@ this layout is good make phone mandatory "<!DOCTYPE html>
     // fallback estimator if API missing/unavailable
     function estimateShipping({subtotal, pincode, weightKg}){
       if(subtotal>=FREE_LIMIT) return 0;
-      // simple slabs by weight only (can be tuned)
       const w = Math.ceil(weightKg*4)/4; // quarter-kg steps
-      if(!pincode || pincode.length<6) return 79;          // unknown → mid
+      if(!pincode || pincode.length<6) return 79;
       if(w<=0.5) return 49;
       if(w<=1.0) return 69;
       if(w<=2.0) return 89;
-      return 129 + Math.ceil((w-2)*2)*10; // +₹10 per extra 0.5kg
+      return 129 + Math.ceil((w-2)*2)*10;
     }
 
     async function fetchShippingQuote({pincode, weightKg, subtotal}){
@@ -241,7 +272,7 @@ this layout is good make phone mandatory "<!DOCTYPE html>
           body: JSON.stringify({ pincode, weight_kg: weightKg })
         });
         if(!res.ok) throw new Error('quote failed');
-        const data = await res.json();               // expect: {amount: number, vendor:'Delhivery'}
+        const data = await res.json(); // expect: { amount: number }
         return Math.max(0, Math.round(data.amount));
       }catch(e){
         console.warn('Shipping quote fallback:', e);
@@ -255,7 +286,7 @@ this layout is good make phone mandatory "<!DOCTYPE html>
       totals.subtotal=snap.subtotal; totals.weightKg=snap.weightKg;
 
       const pincode = (pincodeEl.value||'').trim();
-      shipBox.textContent = pincode && pincode.length===6 ? 'Calculating shipping…' : 'Enter pincode to view shipping methods…';
+      shipBox.textContent = pincode && pincode.length===6 ? 'Calculating shipping…' : 'Enter pincode to view available shipping methods…';
 
       const delivery = await fetchShippingQuote({pincode, weightKg: snap.weightKg, subtotal: snap.subtotal});
       totals.delivery = delivery;
@@ -266,23 +297,29 @@ this layout is good make phone mandatory "<!DOCTYPE html>
       if(pincode && pincode.length===6){
         shipBox.textContent = delivery===0 ? 'Free delivery (order ≥ ₹999)' : `Standard Delivery • ₹${formatINR(delivery)} • via courier`;
       }
-      payBtn.disabled = (snap.items===0 || !pincode || pincode.length<6);
-      payBtn.style.opacity = payBtn.disabled ? .6 : 1;
+
+      const reqOk = snap.items>0 && pincode.length===6 && isPhoneValid()
+                    && (document.getElementById('address1').value.trim()!=='')
+                    && ((document.getElementById('firstName').value.trim()+document.getElementById('lastName').value.trim())!=='');
+      payBtn.disabled = !reqOk;
     }
 
-    // Recalc on start and when pincode changes
     document.addEventListener('DOMContentLoaded', recalc);
-    ['pincode','city','state'].forEach(id=>{
-      document.getElementById(id).addEventListener('input', recalc);
-      document.getElementById(id).addEventListener('change', recalc);
+    ['pincode','phone','address1','firstName','lastName'].forEach(id=>{
+      const el=document.getElementById(id);
+      el.addEventListener('input', recalc);
+      el.addEventListener('blur',  recalc);
     });
 
-    // Razorpay pay now
-    payBtn.addEventListener('click', ()=>{
+    // Razorpay checkout
+    document.getElementById('payBtn').addEventListener('click', ()=>{
       if(payBtn.disabled) return;
+
       const name = (document.getElementById('firstName').value+' '+document.getElementById('lastName').value).trim() || 'Customer';
       const email= document.getElementById('email').value || 'na@example.com';
-      const phone= document.getElementById('phone').value || '9999999999';
+      const phone= document.getElementById('phone').value.trim();
+      if(!/^[6-9]\d{9}$/.test(phone)){ isPhoneValid(); return; }
+
       const address = [
         document.getElementById('address1').value,
         document.getElementById('address2').value,
@@ -293,38 +330,32 @@ this layout is good make phone mandatory "<!DOCTYPE html>
 
       const options={
         key: RAZORPAY_KEY_ID,
-        amount: totals.grand * 100,       // paise
-        currency: 'INR',
-        name: 'Kairavi’s Oven Magic',
-        description: 'Cookie Order',
-        prefill: { name, email, contact: phone },
-        notes: {
+        amount: totals.grand*100,
+        currency:'INR',
+        name:'Kairavi’s Oven Magic',
+        description:'Cookie Order',
+        prefill:{ name, email, contact: phone },
+        notes:{
           address,
-          weight_kg: String(totals.weightKg),
-          shipping_fee: String(totals.delivery),
-          subtotal: String(totals.subtotal)
+          weight_kg:String(totals.weightKg),
+          shipping_fee:String(totals.delivery),
+          subtotal:String(totals.subtotal)
         },
-        theme: { color: '#ff7043' },
-        handler: function (resp) {
-          // Success – clear cart, save order if you want (Firestore), redirect
+        theme:{ color:'#1f6fff' },
+        handler: function (resp){
           localStorage.removeItem(CART_KEY);
-          alert('Payment successful! Order ID: '+resp.razorpay_payment_id);
-          window.location.href = 'thankyou.html';
-        },
-        modal: {
-          ondismiss: function(){ console.log('Payment modal closed'); }
+          alert('Payment successful! Transaction: '+resp.razorpay_payment_id);
+          window.location.href='thankyou.html';
         }
       };
-      const rzp = new Razorpay(options);
-      rzp.open();
+      new Razorpay(options).open();
     });
   </script>
 
   <!-- Header auth switch -->
   <script type="module">
-    import { attachHeaderAuth } from './auth.js?v=14';
+    import { attachHeaderAuth } from './auth.js?v=15';
     attachHeaderAuth();
   </script>
-
 </body>
 </html>
