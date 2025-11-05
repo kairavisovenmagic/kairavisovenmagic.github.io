@@ -13,35 +13,33 @@
       --bg:#FFF7F0; --ink:#1f2328; --muted:#6b7280;
       --brand:#f15a24; --brand-900:#cc4b1e; --ring:rgba(241,90,36,.18);
       --card:#fff; --stroke:#f0e6df; --shadow:0 8px 30px rgba(0,0,0,.08);
-      --radius:16px;
-      --ok:#10b981; --warn:#f59e0b; --bad:#ef4444;
+      --radius:14px;
     }
-    body{ background:var(--bg); color:var(--ink); }
+    body{background:var(--bg);color:var(--ink)}
+    .wrap{max-width:1100px;margin:22px auto 80px;padding:0 16px}
 
-    .wrap-page{max-width:1100px;margin:24px auto 80px;padding:0 16px}
+    /* Header strip */
+    h1{font-size:28px;margin:8px 0 12px;font-weight:800}
 
-    .kpi{
-      display:grid; gap:16px;
-      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      margin-bottom:14px;
-    }
-    .kpi .card{
-      background:#fff;border:1px solid #ffe3d4;border-radius:var(--radius);
-      box-shadow:var(--shadow);padding:14px 16px
-    }
-    .kpi .label{color:var(--muted);font-size:.9rem}
-    .kpi .value{font-weight:800;font-size:1.4rem;margin-top:4px}
+    /* KPIs */
+    .kpi{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-bottom:10px}
+    .kcard{background:#fff;border:1px solid #ffe3d4;border-radius:var(--radius);box-shadow:var(--shadow);padding:12px 14px}
+    .kcard .lab{color:var(--muted);font-size:.9rem}
+    .kcard .val{font-weight:800;font-size:1.3rem;margin-top:3px}
 
-    .toolbar{display:flex;gap:10px;align-items:center;margin:12px 0 8px}
-    .toolbar input,.toolbar select,.toolbar button{
-      border:1px solid #eadace;border-radius:12px;background:#fff;
-      padding:10px 12px;font:inherit
+    /* Toolbar */
+    .bar{display:flex;gap:10px;align-items:center;margin:10px 0}
+    .bar input,.bar select,.btn{
+      border:1px solid #eadace;border-radius:12px;background:#fff;padding:10px 12px;font:inherit
     }
     .btn{cursor:pointer}
     .btn-primary{background:var(--brand);border-color:var(--brand);color:#fff}
-    .btn-ghost{background:#fff}
+    .btn-primary:hover{background:var(--brand-900)}
+    .note{margin-left:auto;color:var(--muted)}
 
-    table{width:100%;border-collapse:collapse;background:#fff}
+    /* Table */
+    .table-wrap{overflow:auto;border:1px solid #ffe3d4;border-radius:12px;background:#fff}
+    table{width:100%;border-collapse:collapse}
     th,td{padding:12px;border-bottom:1px solid #f1e6df;vertical-align:top}
     th{color:#8a4b2b;text-transform:uppercase;font-size:.78rem;letter-spacing:.04em}
     tr:hover{background:#fffdf9}
@@ -52,13 +50,11 @@
     .b-ship{background:#eff6ff;border:1px solid #c7ddff;color:#165ebe}
     .b-close{background:#fef2f2;border:1px solid #ffc9c9;color:#a11a1a}
 
-    /* Modal */
+    /* Modal (order details) */
     .overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;z-index:9998}
-    .modal{
-      position:fixed;inset:40px auto auto 50%;transform:translateX(-50%);
-      width:min(950px,92vw);max-height:85vh;overflow:auto;background:#fff;
-      border-radius:16px;border:1px solid #ffe3d4;box-shadow:var(--shadow);display:none;z-index:9999
-    }
+    .modal{position:fixed;inset:40px auto auto 50%;transform:translateX(-50%);
+      width:min(950px,92vw);max-height:85vh;overflow:auto;background:#fff;border-radius:16px;border:1px solid #ffe3d4;
+      box-shadow:var(--shadow);display:none;z-index:9999}
     .modal .head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px dashed #f1e6df}
     .modal .body{padding:14px 16px}
     .panel{background:#fff;border:1px solid #f1e6df;border-radius:12px;padding:12px}
@@ -66,7 +62,7 @@
     .muted{color:var(--muted)}
     .right{display:flex;gap:8px;align-items:center}
 
-    /* Invoice (print window) */
+    /* Print invoice */
     .print-wrap{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
     .print-h{display:flex;gap:12px;align-items:center}
     .print-h img{width:42px;height:42px}
@@ -77,16 +73,21 @@
     .print-footer{margin-top:10px;font-size:.9rem;color:#6b7280}
     @media print{ body{background:#fff} }
 
-    .toast{
-      position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
-      background:#111827;color:#fff;padding:10px 14px;border-radius:10px;opacity:0;transition:opacity .2s;z-index:10000
-    }
+    /* Toast */
+    .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
+      background:#111827;color:#fff;padding:10px 14px;border-radius:10px;opacity:0;transition:opacity .2s;z-index:10000}
     .toast.show{opacity:1}
+
+    /* Mobile */
+    @media (max-width:720px){
+      .bar{flex-wrap:wrap}
+      th:nth-child(3), td:nth-child(3){min-width:260px}
+    }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Site header -->
   <header class="site-header">
     <div class="wrap nav">
       <a class="brand" href="index.html">
@@ -101,19 +102,19 @@
     </div>
   </header>
 
-  <main class="wrap-page">
-    <h1 style="margin:8px 0 12px;font-size:28px;font-weight:800">Admin Dashboard</h1>
+  <main class="wrap">
+    <h1>Admin Dashboard</h1>
 
     <!-- KPIs -->
     <section class="kpi">
-      <div class="card"><div class="label">Total orders</div><div class="value" id="kpiTotal">0</div></div>
-      <div class="card"><div class="label">NEW</div><div class="value" id="kpiNew">0</div></div>
-      <div class="card"><div class="label">CONFIRMED</div><div class="value" id="kpiConf">0</div></div>
-      <div class="card"><div class="label">Revenue (₹)</div><div class="value" id="kpiRev">0</div></div>
+      <div class="kcard"><div class="lab">Total orders</div><div class="val" id="kpiTotal">0</div></div>
+      <div class="kcard"><div class="lab">NEW</div><div class="val" id="kpiNew">0</div></div>
+      <div class="kcard"><div class="lab">CONFIRMED</div><div class="val" id="kpiConf">0</div></div>
+      <div class="kcard"><div class="lab">Revenue (₹)</div><div class="val" id="kpiRev">0</div></div>
     </section>
 
     <!-- Toolbar -->
-    <div class="toolbar">
+    <div class="bar">
       <input id="q" placeholder="Search name / phone / order id"/>
       <select id="statusSel">
         <option value="">All statuses</option>
@@ -123,20 +124,20 @@
         <option value="CLOSED">CLOSED</option>
       </select>
       <button class="btn btn-primary" id="btnRefresh"><i class="fa fa-arrows-rotate"></i> Refresh</button>
-      <div class="muted" id="countNote" style="margin-left:auto"></div>
+      <div class="note" id="countNote"></div>
     </div>
 
-    <!-- Table -->
-    <div style="overflow:auto;border:1px solid #ffe3d4;border-radius:12px">
+    <!-- Orders table -->
+    <div class="table-wrap">
       <table id="tbl">
         <thead>
           <tr>
-            <th style="min-width:180px">Created</th>
-            <th style="min-width:220px">Order / Customer</th>
+            <th style="min-width:170px">Created</th>
+            <th style="min-width:210px">Order / Customer</th>
             <th>Items</th>
             <th style="min-width:80px">Total</th>
             <th style="min-width:100px">Status</th>
-            <th style="min-width:200px">Actions</th>
+            <th style="min-width:220px">Actions</th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
@@ -144,13 +145,13 @@
     </div>
   </main>
 
-  <!-- Modal -->
+  <!-- Order modal -->
   <div class="overlay" id="overlay"></div>
   <div class="modal" id="modal">
     <div class="head">
       <div id="mTitle"></div>
       <div class="right">
-        <button class="btn btn-ghost" id="mClose"><i class="fa fa-xmark"></i> Close</button>
+        <button class="btn" id="mClose"><i class="fa fa-xmark"></i> Close</button>
       </div>
     </div>
     <div class="body" id="mBody"></div>
@@ -167,12 +168,11 @@
     attachHeaderAuth();
     await requireAdmin();
 
-    // ---------- helpers ----------
     const $ = id => document.getElementById(id);
     const fmtINR = n => (n||0).toLocaleString('en-IN');
     const toast = msg => { const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1100); };
 
-    // pick a value from a list of possible key paths (supports dot paths)
+    /* -------------------- field helpers -------------------- */
     const pick = (obj, ...names) => {
       for (const n of names) {
         let v = obj; let ok = true;
@@ -184,50 +184,68 @@
       }
       return '';
     };
-
-    // Accept many possible key names so UI works no matter how the order was saved
     const PATHS = {
       name:   ['customer.name','custName','customerName','name'],
       phone:  ['customer.phone','custPhone','customerPhone','phone'],
       email:  ['customer.email','custEmail','customerEmail','email'],
-      address:[
-        'delivery.address','delivery.addr','delivery.address1','deliveryAddress',
-        'shipping.address','shipping.addr',
-        'custAddress','customerAddress',
-        'address','addr'
-      ],
-      pincode:[
-        'delivery.pincode','delivery.pin','delivery.postalCode',
-        'shipping.pincode','shipping.pin','shipping.postalCode',
-        'custPincode','pincode','pin','zip'
-      ],
+      address:['delivery.address','delivery.addr','delivery.address1','shipping.address','custAddress','address','addr'],
+      pincode:['delivery.pincode','shipping.pincode','custPincode','pincode','pin','zip'],
       payment:['delivery.payment','shipping.payment','custPayment','payment','payMode'],
-      deliveryFee:['delivery.fee','deliveryFee','delivery'] // any of these for fee
+      deliveryFee:['delivery.fee','deliveryFee','delivery']
     };
     const getField = (o, keys) => pick(o, ...keys) || '—';
 
     let ORDERS = [];
 
-    // ---------- load orders ----------
+    /* -------------------- sequential order IDs --------------------
+       We display IDs as KOM-176001, KOM-176002, ... based on createdAt.
+       This is *display-only* (does not overwrite your DB).
+       If you want to permanently save them into Firestore for each order
+       that has no orderId yet, set PERSIST_IDS = true.
+    ----------------------------------------------------------------*/
+    const BASE_NUMBER = 176000;
+    const PERSIST_IDS = false; // ← flip to true to write missing orderId back once
+
+    async function applySequentialIds(list){
+      // oldest → newest
+      const ordered = [...list].sort((a,b)=>{
+        const as=(a.createdAt?.seconds)||0, bs=(b.createdAt?.seconds)||0;
+        return as-bs;
+      });
+      let n = BASE_NUMBER;
+      const mapId = new Map();
+      for (const o of ordered){
+        n += 1;
+        const displayId = `KOM-${String(n)}`;
+        mapId.set(o.id, displayId);
+        if (PERSIST_IDS && !o.orderId){
+          await updateDoc(doc(db,'orders',o.id), { orderId: displayId, updatedAt: serverTimestamp() });
+        }
+      }
+      // attach displayId on original list
+      list.forEach(o => o._displayId = mapId.get(o.id) || pick(o,'orderId','id'));
+    }
+
+    /* -------------------- load + render -------------------- */
     async function loadOrders() {
       const qRef = query(collection(db,'orders'), orderBy('createdAt','desc'));
       const snap = await getDocs(qRef);
       ORDERS = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+      await applySequentialIds(ORDERS);
       renderAll();
     }
 
-    // ---------- render ----------
     function renderAll(){ applyStats(); applyFilters(); }
 
     function applyStats(){
       const total = ORDERS.length;
       const newC = ORDERS.filter(o => (o.status||'NEW')==='NEW').length;
       const conf  = ORDERS.filter(o => (o.status||'NEW')==='CONFIRMED').length;
-      const rev   = ORDERS.reduce((s,o)=>s + (o.grandTotal||0), 0);
+      const rev   = ORDERS.reduce((s,o)=> s + (o.grandTotal || o.amounts?.total || 0), 0);
       $('kpiTotal').textContent = total;
-      $('kpiNew').textContent = newC;
-      $('kpiConf').textContent = conf;
-      $('kpiRev').textContent  = fmtINR(rev);
+      $('kpiNew').textContent   = newC;
+      $('kpiConf').textContent  = conf;
+      $('kpiRev').textContent   = fmtINR(rev);
     }
 
     function applyFilters(){
@@ -236,8 +254,9 @@
 
       const rows = ORDERS.filter(o=>{
         const matchStatus = !st || (o.status||'NEW')===st;
+        const orderIdDisp = (o._displayId || '').toLowerCase();
         const matchTerm = !term ||
-          (pick(o,'orderId','id')||'').toLowerCase().includes(term) ||
+          orderIdDisp.includes(term) ||
           (getField(o, PATHS.name)||'').toLowerCase().includes(term) ||
           (getField(o, PATHS.phone)||'').toLowerCase().includes(term) ||
           (getField(o, PATHS.email)||'').toLowerCase().includes(term);
@@ -258,7 +277,7 @@
     function tr(o){
       const ts = o.createdAt?.seconds ? new Date(o.createdAt.seconds*1000) : (o.createdAt? new Date(o.createdAt): new Date());
       const when = ts.toLocaleString();
-      const orderId = pick(o,'orderId','id');
+      const orderId = o._displayId || pick(o,'orderId','id');
       const name = getField(o, PATHS.name);
       const ph   = getField(o, PATHS.phone);
 
@@ -274,35 +293,37 @@
 
       return `
         <tr>
-          <td><div>${when}</div></td>
+          <td>${when}</td>
           <td>
             <div style="font-weight:700">${orderId}</div>
             <div class="muted">${name || '—'} • ${ph || '—'}</div>
           </td>
           <td>${itemsTxt}</td>
-          <td>₹${fmtINR(o.grandTotal||0)}</td>
+          <td>₹${fmtINR(o.grandTotal || o.amounts?.total || 0)}</td>
           <td>${badge(o.status)}</td>
           <td>
-            <button class="btn btn-ghost" id="btnView-${o.id}"><i class="fa fa-eye"></i> View</button>
-            <button class="btn btn-ghost" id="btnConf-${o.id}">Confirm</button>
-            <button class="btn btn-ghost" id="btnShip-${o.id}">Ship</button>
-            <button class="btn btn-ghost" id="btnClose-${o.id}">Close</button>
+            <button class="btn" id="btnView-${o.id}"><i class="fa fa-eye"></i> View</button>
+            <button class="btn" id="btnConf-${o.id}">Confirm</button>
+            <button class="btn" id="btnShip-${o.id}">Ship</button>
+            <button class="btn" id="btnClose-${o.id}">Close</button>
           </td>
         </tr>
       `;
     }
 
-    // ---------- status update ----------
+    /* -------------------- status -------------------- */
     async function setStatus(order, status){
       await updateDoc(doc(db,'orders',order.id), { status, updatedAt: serverTimestamp() });
       toast(`Status → ${status}`);
       await loadOrders();
     }
 
-    // ---------- modal + invoice ----------
+    /* -------------------- modal + print -------------------- */
     function openModal(order){
-      $('mTitle').innerHTML =
-        `<strong>${pick(order,'orderId','id')}</strong> • ${new Date((order?.createdAt?.seconds||Date.now()/1000)*1000).toLocaleString()}`;
+      const titleId = order._displayId || pick(order,'orderId','id');
+      $('mTitle').innerHTML = `<strong>${titleId}</strong> • ${
+        new Date((order?.createdAt?.seconds||Date.now()/1000)*1000).toLocaleString()
+      }`;
 
       $('mBody').innerHTML = modalInner(order);
       $('overlay').style.display='block';
@@ -365,27 +386,25 @@
           </table>
         </div>
 
-        <div style="display:flex;gap:8px;align-items:center;margin-top:12px">
+        <div style="display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap">
           <button class="btn btn-primary" id="btnPrint"><i class="fa fa-print"></i> Print Invoice</button>
-          <button class="btn btn-ghost" onclick="window.open('mailto:kairavisovenmagic@gmail.com')"><i class="fa fa-envelope"></i> Email</button>
+          <button class="btn" onclick="window.open('mailto:kairavisovenmagic@gmail.com')"><i class="fa fa-envelope"></i> Email</button>
         </div>
       `;
     }
 
-    // Fetch logo and convert to data URL so it prints everywhere
+    // Logo → data URL so it always prints (and in “Save as PDF”)
     async function logoDataURL() {
       const url = new URL('images/logo.png', location.href).href;
       const res = await fetch(url, { cache: 'no-store' });
       const blob = await res.blob();
       return await new Promise((resolve) => {
-        const r = new FileReader();
-        r.onload = () => resolve(r.result);   // data:image/png;base64,...
-        r.readAsDataURL(blob);
+        const r = new FileReader(); r.onload = () => resolve(r.result); r.readAsDataURL(blob);
       });
     }
 
     function buildInvoiceHTML(order, logoData) {
-      const orderId = pick(order,'orderId','id');
+      const orderId = order._displayId || pick(order,'orderId','id');
       const when = new Date((order?.createdAt?.seconds||Date.now()/1000)*1000).toLocaleString();
 
       const name  = getField(order, PATHS.name);
@@ -455,29 +474,28 @@
               </tfoot>
             </table>
 
-            <div class="print-footer">Thank you for ordering with Kairavi’s Oven Magic! For support, write to kairavisovenmagic@gmail.com</div>
-            <script>window.onload = () => { setTimeout(() => { window.print(); }, 150); }<\/script>
+            <div class="print-footer">Thanks for ordering with Kairavi’s Oven Magic • kairavisovenmagic@gmail.com</div>
+            <script>window.onload=()=>{setTimeout(()=>{window.print()},150)}<\/script>
           </body>
         </html>
       `;
     }
 
     async function printInvoice(order){
-      const logo = await logoDataURL();            // embedded logo
-      const html = buildInvoiceHTML(order, logo);  // full HTML with logo
+      const logo = await logoDataURL();
+      const html = buildInvoiceHTML(order, logo);
       const w = window.open('', '_blank', 'noopener,noreferrer,width=900,height=900');
-      if (!w) { alert('Popup blocked. Please allow popups for this site to print.'); return; }
-      w.document.open();
-      w.document.write(html);
-      w.document.close();
+      if (!w) { alert('Popup blocked. Allow popups to print / save PDF.'); return; }
+      w.document.open(); w.document.write(html); w.document.close();
+      // Users can choose “Save as PDF” in the print dialog to download .pdf with the logo embedded.
     }
 
-    // wire UI
+    /* wire UI */
     $('btnRefresh').onclick = loadOrders;
     $('q').addEventListener('input', applyFilters);
     $('statusSel').addEventListener('change', applyFilters);
 
-    // go!
+    /* go */
     loadOrders();
   </script>
 </body>
