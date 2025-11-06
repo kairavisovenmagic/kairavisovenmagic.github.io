@@ -120,16 +120,16 @@
     /* ---------- DATA (3 images each; packs include optional MRP) ---------- */
     const P = (o)=>({imgs:[o.img, ...(o.imgs||[])].slice(0,3).map(x=>x||o.img), ...o});
     const PRODUCTS = [
-      P({slug:"gulkand", name:"Gulkand Nankhatai", brand:"Kairavi's Homemade cookies.", price:250, img:"images/gulkand.jpg",
+      P({slug:"gulkand", name:"Gulkand Nankhatai", brand:"Kairavi's Homemade cookies.", price:249, img:"images/gulkand.jpg",
          imgs:["images/gulkand-box.jpg","images/gulkand-alt.jpg"], tags:"gulkand rose", best:true,
-         packs:[{label:"250 g", price:250, mrp:349},{label:"500 g", price:480, mrp:560}],
+         packs:[{label:"250 g", price:249, mrp:349},{label:"500 g", price:479, mrp:559}],
          highlights:["100% eggless","Made with real gulkand","No maida, no palm oil"],
          shipping:["Free delivery over ₹1599 in Pune","Dispatched in 24 hours"],
          ingredients:"Whole wheat flour, butter, gulkand, sugar, cardamom, baking soda"}),
 
-      P({slug:"wheat", name:"Wheat Nankhatai", brand:"Kairavi's Homemade cookies.", price:200, img:"images/wheat.jpg",
+      P({slug:"wheat", name:"Wheat Nankhatai", brand:"Kairavi's Homemade cookies.", price:199, img:"images/wheat.jpg",
          imgs:["images/wheat-box.jpg","images/wheat-alt.jpg"], tags:"wheat atta", best:true,
-         packs:[{label:"250 g", price:200, mrp:249},{label:"500 g", price:380, mrp:440}]}),
+         packs:[{label:"250 g", price:199, mrp:249},{label:"500 g", price:379, mrp:439}]}),
 
       P({slug:"ragi", name:"Ragi Nankhatai", brand:"Kairavi's Homemade cookies.", price:250, img:"images/ragi.jpg",
          imgs:["images/ragi-box.jpg","images/ragi-alt.jpg"], tags:"ragi finger millet",
