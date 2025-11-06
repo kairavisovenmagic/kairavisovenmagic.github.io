@@ -18,7 +18,6 @@
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
   <style>
-    /* ---- Clean, Shopify-like layout ---- */
     :root{
       --ink:#1f2328; --muted:#7a5b47; --stroke:#e6dcd5; --bg:#fff;
       --shadow:0 2px 6px rgba(0,0,0,.06); --radius:14px;
@@ -45,6 +44,13 @@
     .cart-table th,.cart-table td{padding:10px;border-bottom:1px solid #eee;text-align:left;vertical-align:middle}
     .cart-item-thumb{display:flex;gap:10px;align-items:center}
     .cart-item-thumb img{width:48px;height:48px;border-radius:8px;object-fit:cover}
+
+    /* Quantity control */
+    .qty-wrap{display:inline-flex;align-items:center;border:1px solid var(--stroke);border-radius:10px;overflow:hidden}
+    .qty-btn{width:34px;height:34px;border:none;background:#fafafa;cursor:pointer}
+    .qty-in{width:50px;height:34px;border:none;text-align:center;font:inherit}
+    .trash{border:1px solid var(--stroke);background:#fff;border-radius:10px;padding:6px 10px;margin-left:6px;cursor:pointer}
+
     .pay-box{border:1px solid var(--stroke);border-radius:12px;overflow:hidden;margin-top:8px}
     .pay-row{display:flex;align-items:center;gap:10px;padding:10px 12px}
     .pay-row+.pay-row{border-top:1px solid #eee}
@@ -54,7 +60,7 @@
     .help{position:relative;display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#eee;color:#333;font-size:.8rem;cursor:default}
     .help[data-tip]:hover:after{content:attr(data-tip);position:absolute;bottom:130%;left:50%;transform:translateX(-50%);white-space:nowrap;background:#222;color:#fff;padding:6px 8px;border-radius:8px;font-size:.8rem;box-shadow:0 2px 8px rgba(0,0,0,.25)}
 
-    /* --- Mobile & small screens --- */
+    /* --- Mobile --- */
     @media (max-width:980px){
       .checkout-grid{grid-template-columns:1fr}
       .card{padding:14px}
@@ -63,16 +69,12 @@
     }
     @media (max-width:680px){
       html,body{scroll-behavior:smooth}
-      .field input,.field textarea,.field select{font-size:16px;padding:13px} /* avoid iOS zoom */
-      /* Order summary table -> stacked cards */
+      .field input,.field textarea,.field select{font-size:16px;padding:13px}
       .cart-table thead{display:none}
       .cart-table tr{display:block;border:1px solid #eee;border-radius:12px;padding:10px;margin-bottom:10px}
       .cart-table td{display:flex;justify-content:space-between;border:none;padding:6px 4px}
       .cart-item-thumb{justify-content:flex-start}
-      /* Pay now sticky for convenience */
-      .btn.btn-primary#payBtn{
-        position:sticky; bottom:12px; width:100%;
-      }
+      .btn.btn-primary#payBtn{position:sticky; bottom:12px; width:100%}
     }
   </style>
 </head>
@@ -102,7 +104,7 @@
   <section class="section">
     <div class="wrap checkout-grid">
 
-      <!-- LEFT: Contact + Delivery + Payment -->
+      <!-- LEFT -->
       <div class="card">
         <h3>Contact</h3>
         <div class="field">
@@ -142,9 +144,8 @@
           <label class="muted">Phone
             <span class="help" data-tip="In case we need to contact you about your order">?</span>
           </label>
-          <!-- PHONE: mandatory with India 10-digit pattern starting 6–9 -->
           <input id="phone" inputmode="tel" placeholder="+91 9xxxxxxxxx"
-                 required pattern="^[6-9]\\d{9}$" title="Enter a valid 10-digit Indian mobile number (starts with 6-9)" autocomplete="tel-national">
+                 required pattern="^[6-9]\d{9}$" title="Enter a valid 10-digit Indian mobile number (starts with 6-9)" autocomplete="tel-national">
           <span id="phoneErr" class="mini" style="color:#d33;display:none">Please enter a valid 10-digit phone number.</span>
         </div>
         <label class="mini" style="display:flex;gap:8px;align-items:center;margin-top:8px">
@@ -157,7 +158,6 @@
         <h3 style="margin-top:18px">Payment</h3>
         <p class="mini muted">All transactions are secure and encrypted.</p>
 
-        <!-- Payment selector (visual, we route both via Razorpay) -->
         <div class="pay-box">
           <label class="pay-row">
             <input type="radio" name="payMethod" id="pmCard" checked>
@@ -207,15 +207,15 @@
     </div>
   </footer>
 
-  <!-- ============ Checkout Logic ============ -->
+  <!-- ============ Checkout Logic (with dynamic Qty) ============ -->
   <script>
-    /* ------ CONFIG (SET THESE) ------ */
-    const RAZORPAY_KEY_ID  = 'rzp_test_XXXXXXXXXXXX';  // ← your key id
-    const SHIPPING_API_URL = '';                       // ← your quote endpoint (optional)
+    const RAZORPAY_KEY_ID  = 'rzp_test_XXXXXXXXXXXX';
+    const SHIPPING_API_URL = '';
     const FREE_LIMIT       = 999;
 
     const CART_KEY='kom_cart';
     const getCart=()=>JSON.parse(localStorage.getItem(CART_KEY)||'[]');
+    const setCart=c=>localStorage.setItem(CART_KEY,JSON.stringify(c));
 
     // UI refs
     const tbody=document.querySelector('#cartTable tbody');
@@ -238,7 +238,7 @@
       return ok;
     }
 
-    // weight approximation from item weight text
+    // ---- helpers ----
     function cartWeightKg(cart){
       let w=0;
       cart.forEach(i=>{
@@ -248,7 +248,6 @@
       return Math.max(0.25, +w.toFixed(2));
     }
     function formatINR(n){return (n||0).toLocaleString('en-IN')}
-
     function guessImage(name){
       const key=(name||'').toLowerCase();
       const map={
@@ -260,40 +259,80 @@
       return 'images/wheat.jpg';
     }
 
+    // ---- render with dynamic qty ----
     function renderCart(){
       const cart=getCart();
       tbody.innerHTML='';
       let subtotal=0, items=0;
-      cart.forEach(r=>{
+
+      cart.forEach((r,idx)=>{
         const line=r.price*r.qty; items+=r.qty; subtotal+=line;
         const tr=document.createElement('tr');
+        tr.dataset.index = idx;
         tr.innerHTML=`
           <td>
             <div class="cart-item-thumb">
               <img src="${guessImage(r.name)}" alt="${r.name}">
-              <div><strong>${r.name}</strong><div class="mini muted">${r.weight}</div></div>
+              <div><strong>${r.name}</strong><div class="mini muted">${r.weight||''}</div></div>
             </div>
           </td>
-          <td>${r.qty}</td>
+          <td>
+            <div class="qty-wrap" aria-label="Change quantity">
+              <button class="qty-btn dec" type="button">−</button>
+              <input class="qty-in" type="number" min="1" max="99" value="${r.qty}">
+              <button class="qty-btn inc" type="button">+</button>
+            </div>
+            <button class="trash remove" type="button" title="Remove item">🗑</button>
+          </td>
           <td>₹${formatINR(line)}</td>`;
         tbody.appendChild(tr);
       });
+
       itemsCountEl.textContent=items;
       subtotalEl.textContent=formatINR(subtotal);
       return {subtotal, items, weightKg: cartWeightKg(cart)};
     }
 
-    // fallback estimator if API missing/unavailable
+    // event delegation for qty & remove
+    tbody.addEventListener('click', (e)=>{
+      const row = e.target.closest('tr'); if(!row) return;
+      const idx = +row.dataset.index;
+      const cart = getCart();
+      if(!cart[idx]) return;
+
+      if(e.target.classList.contains('dec')){
+        cart[idx].qty = Math.max(1, (cart[idx].qty||1)-1);
+        setCart(cart); recalc();
+      }
+      if(e.target.classList.contains('inc')){
+        cart[idx].qty = Math.min(99, (cart[idx].qty||1)+1);
+        setCart(cart); recalc();
+      }
+      if(e.target.classList.contains('remove')){
+        cart.splice(idx,1);
+        setCart(cart); recalc();
+      }
+    });
+
+    tbody.addEventListener('input',(e)=>{
+      if(!e.target.classList.contains('qty-in')) return;
+      const row=e.target.closest('tr'); const idx=+row.dataset.index;
+      const cart=getCart();
+      let val=parseInt(e.target.value||'1',10);
+      if(isNaN(val) || val<1) val=1; if(val>99) val=99;
+      cart[idx].qty=val; setCart(cart); recalc();
+    });
+
+    // ---- shipping ----
     function estimateShipping({subtotal, pincode, weightKg}){
       if(subtotal>=FREE_LIMIT) return 0;
-      const w = Math.ceil(weightKg*4)/4; // quarter-kg steps
+      const w = Math.ceil(weightKg*4)/4;
       if(!pincode || pincode.length<6) return 79;
       if(w<=0.5) return 49;
       if(w<=1.0) return 69;
       if(w<=2.0) return 89;
       return 129 + Math.ceil((w-2)*2)*10;
     }
-
     async function fetchShippingQuote({pincode, weightKg, subtotal}){
       if(subtotal>=FREE_LIMIT) return 0;
       if(!SHIPPING_API_URL){ return estimateShipping({subtotal,pincode,weightKg}); }
@@ -303,7 +342,7 @@
           body: JSON.stringify({ pincode, weight_kg: weightKg })
         });
         if(!res.ok) throw new Error('quote failed');
-        const data = await res.json(); // expect: { amount: number }
+        const data = await res.json();
         return Math.max(0, Math.round(data.amount));
       }catch(e){
         console.warn('Shipping quote fallback:', e);
@@ -342,7 +381,7 @@
       el.addEventListener('blur',  recalc);
     });
 
-    // Razorpay checkout
+    // ---- Razorpay checkout ----
     document.getElementById('payBtn').addEventListener('click', ()=>{
       if(payBtn.disabled) return;
 
